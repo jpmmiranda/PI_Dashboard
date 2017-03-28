@@ -2161,36 +2161,12 @@ if (typeof NProgress != 'undefined') {
 				
 			}
 			
-			//Acessos por data
-
-			if ($('#acessosChart').length ){	
 			
-			  var ctx = document.getElementById("acessosChart");
-
-			  var lineChart = new Chart(ctx, {
-				type: 'line',
-				data: {
-				  labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
-				  datasets: [{
-					label: "Acessos Autorizados",
-					backgroundColor: "rgba(38, 185, 154, 0.31)",
-					borderColor: "rgba(38, 185, 154, 0.7)",
-					pointBorderColor: "rgba(38, 185, 154, 0.7)",
-					pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
-					pointHoverBackgroundColor: "#fff",
-					pointHoverBorderColor: "rgba(220,220,220,1)",
-					pointBorderWidth: 1,
-					data: [31, 74, 6, 39, 20, 85, 7]
-				  }]
-				},
-			  });
-			
-			}
 			  // Line chart
 			 
 			if ($('#lineChart').length ){	
-			
-			  var ctx = document.getElementById("lineChart");
+
+			 /* var ctx = document.getElementById("lineChart");
 			  var lineChart = new Chart(ctx, {
 				type: 'line',
 				data: {
@@ -2203,11 +2179,51 @@ if (typeof NProgress != 'undefined') {
 					pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
 					pointHoverBackgroundColor: "#fff",
 					pointHoverBorderColor: "rgba(220,220,220,1)",
-					pointBorderWidth: 1,
-					data: [31, 74, 6, 39, 20, 85, 7]
+					pointBorderWidth: 1
 				  }]
 				},
-			  });
+			  });*/
+
+
+$.ajax({
+		url: "http://localhost:8888/teste.php",
+		method: "GET",
+		success: function(data) {
+			console.log(data);
+			var score = [];
+
+			for(var i in data) {
+				score.push(data[i].ola);
+			}
+
+			var chartdata = {
+				labels: ["Janeiro"],
+				datasets : [
+					{
+						label: 'Player Score',
+						backgroundColor: "rgba(38, 185, 154, 0.31)",
+						borderColor: "rgba(38, 185, 154, 0.7)",
+						pointBorderColor: "rgba(38, 185, 154, 0.7)",
+						pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
+						pointHoverBackgroundColor: "#fff",
+						pointHoverBorderColor: "rgba(220,220,220,1)",
+						pointBorderWidth: 1,
+						data: score
+					}
+				]
+			};
+
+			var ctx = $("#lineChart");
+
+			var barGraph = new Chart(ctx, {
+				type: 'bar',
+				data: chartdata
+			});
+		},
+		error: function(data) {
+			console.log(data);
+		}
+	});
 			
 			}
 				
@@ -5040,7 +5056,7 @@ if (typeof NProgress != 'undefined') {
 	   
 	   
 	$(document).ready(function() {
-				
+	
 		init_sparklines();
 		init_flot_chart();
 		init_sidebar();
