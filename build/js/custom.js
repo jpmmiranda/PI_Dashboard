@@ -2166,41 +2166,22 @@ if (typeof NProgress != 'undefined') {
 			 
 			if ($('#lineChart').length ){	
 
-			 /* var ctx = document.getElementById("lineChart");
-			  var lineChart = new Chart(ctx, {
-				type: 'line',
-				data: {
-				  labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
-				  datasets: [{
-					label: "Acessos Autorizados",
-					backgroundColor: "rgba(38, 185, 154, 0.31)",
-					borderColor: "rgba(38, 185, 154, 0.7)",
-					pointBorderColor: "rgba(38, 185, 154, 0.7)",
-					pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
-					pointHoverBackgroundColor: "#fff",
-					pointHoverBorderColor: "rgba(220,220,220,1)",
-					pointBorderWidth: 1
-				  }]
-				},
-			  });*/
-
-
 $.ajax({
 		url: "http://localhost:8888/teste.php",
 		method: "GET",
 		success: function(data) {
 			console.log(data);
-			var score = [];
+			var valores = [];
 
 			for(var i in data) {
-				score.push(data[i].ola);
+				valores.push(data[i].AcessosConcedidos);
 			}
 
 			var chartdata = {
-				labels: ["Janeiro"],
+				labels:  ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
 				datasets : [
 					{
-						label: 'Player Score',
+						label: "Total de Acessos",
 						backgroundColor: "rgba(38, 185, 154, 0.31)",
 						borderColor: "rgba(38, 185, 154, 0.7)",
 						pointBorderColor: "rgba(38, 185, 154, 0.7)",
@@ -2208,7 +2189,7 @@ $.ajax({
 						pointHoverBackgroundColor: "#fff",
 						pointHoverBorderColor: "rgba(220,220,220,1)",
 						pointBorderWidth: 1,
-						data: score
+						data: valores
 					}
 				]
 			};
@@ -2216,7 +2197,7 @@ $.ajax({
 			var ctx = $("#lineChart");
 
 			var barGraph = new Chart(ctx, {
-				type: 'bar',
+				type: 'line',
 				data: chartdata
 			});
 		},
@@ -2230,37 +2211,190 @@ $.ajax({
 			  // Bar chart
 			  
 			if ($('#mybarChart').length ){ 
-			  
-			  var ctx = document.getElementById("mybarChart");
-			  var mybarChart = new Chart(ctx, {
-				type: 'bar',
-				data: {
-				  labels: ["Janeiro", "February", "March", "April", "May", "June", "July"],
-				  datasets: [{
-					label: '# of Votes',
-					backgroundColor: "#26B99A",
-					data: [51, 30, 40, 28, 92, 50, 45]
-				  }, {
-					label: '# of Votes',
-					backgroundColor: "#03586A",
-					data: [41, 56, 25, 48, 72, 34, 12]
-				  }]
-				},
+            			  
+            	
 
-				options: {
-				  scales: {
-					yAxes: [{
-					  ticks: {
-						beginAtZero: true
-					  }
-					}]
-				  }
-				}
-			  });
+            		$.ajax({
+            			url: "http://localhost:8888/acessosPorPilarete.php",
+            			method: "GET",
+                        
+            			success: function(data) {
+            				console.log(2);
+            				var valores = [];
+            				var pilaretes = [];
+
+            				for(var i in data) {
+            					valores.push(data[i].AcessosConcedidos);
+            					pilaretes.push(data[i].Pilarete);
+
+            				}
+
+            			var chartdata = {
+            				labels:  pilaretes,
+            				datasets : [
+            					{
+            						label: "Total de Acessos",
+            						backgroundColor: "rgba(38, 185, 154, 0.31)",
+            						data: valores,
+            						options: {
+            						  scales: {
+            							yAxes: [{
+            							  ticks: {
+            								beginAtZero: true
+            							  }
+            							}]
+            						  }
+            						}
+            					}
+            				]
+            			};
+
+            			var ctx = $("#mybarChart");
+
+            			var barGraph = new Chart(ctx, {
+            				type: 'bar',
+            				data: chartdata
+            			});
+            		},
+            		error: function(data) {
+            			console.log(data);
+            		}
+	           });
 			  
 			} 
+			if($('#tabelaMotivos').length){
+
+
+
+			$.ajax({
+					url: "http://localhost:8888/tabelaAcessosNaoConcedidos.php",
+					method: "GET",
+					success: function(data) {
+						console.log(data);
+						var Acessos = [];
+						var Validacao = []
+						var dataset=[]
+						for(var i in data) {
+							var addData = [ data[i].ValidacaoAcesso,data[i].AcessosNaoConcedidos]
+                dataset.push(addData);
+							
+
+						}
+
+					$('#tabelaMotivos').DataTable( {
+			        data: dataset,
+			        columns: [
+			            { title: "Motivos" },
+			            { title: "Número de ocorrências" }
+			        ]
+			        });
+			    },
+					error: function(data) {
+						console.log(data);
+								}
+			    					});
+	}
+			  
+if ($('#mybarChart2').length ){ 
 			  
 
+$.ajax({
+		url: "http://localhost:8888/acessosPorUtilizador.php",
+		method: "GET",
+		success: function(data) {
+			console.log(data);
+			var valores = [];
+			var telefone = []
+
+			for(var i in data) {
+				valores.push(data[i].AcessosConcedidos);
+				telefone.push(data[i].Telefone);
+
+			}
+
+			var chartdata = {
+				labels:  telefone,
+				datasets : [
+					{
+						label: "Total de Acessos",
+						backgroundColor: "rgba(38, 185, 154, 0.31)",
+						data: valores,
+						options: {
+						  scales: {
+							yAxes: [{
+							  ticks: {
+								beginAtZero: true
+							  }
+							}]
+						  }
+						}
+					}
+				]
+			};
+
+			var ctx = $("#mybarChart2");
+
+			var barGraph = new Chart(ctx, {
+				type: 'bar',
+				data: chartdata
+			});
+		},
+		error: function(data) {
+			console.log(data);
+		}
+	});
+			  
+			} 
+			if ($('#mybarChartAcessosNegados').length ){ 
+			  
+
+$.ajax({
+		url: "http://localhost:8888/acessosNegadosPorUtilizador.php",
+		method: "GET",
+		success: function(data) {
+			console.log(data);
+			var valores = [];
+			var telefone = []
+
+			for(var i in data) {
+				valores.push(data[i].AcessosNaoConcedidos);
+				telefone.push(data[i].Telefone);
+
+			}
+
+			var chartdata = {
+				labels:  telefone,
+				datasets : [
+					{
+						label: "Total de Acessos Negados",
+						backgroundColor: "rgba(38, 185, 154, 0.31)",
+						data: valores,
+						options: {
+						  scales: {
+							yAxes: [{
+							  ticks: {
+								beginAtZero: true
+							  }
+							}]
+						  }
+						}
+					}
+				]
+			};
+
+			var ctx = $("#mybarChartAcessosNegados");
+
+			var barGraph = new Chart(ctx, {
+				type: 'bar',
+				data: chartdata
+			});
+		},
+		error: function(data) {
+			console.log(data);
+		}
+	});
+			  
+			}
 			  // Doughnut chart
 			  
 			if ($('#canvasDoughnut').length ){ 
