@@ -15,8 +15,12 @@ if(!$mysqli){
 	die("Connection failed: " . $mysqli->error);
 }
 
+$inicio = $_POST["de"];
+$fim = $_POST["ate"];
+
+
 //query to get data from the table
-$query = sprintf("SELECT count(*) as AcessosConcedidos, monthName(DataHora) as mes FROM RegistoAcessos where year(DataHora)=2016 and ValidacaoAcesso like 'Acesso Concedido' group by month(DataHora);");
+$query = sprintf("SELECT count(*) as AcessosConcedidos, monthName(DataHora) as mes FROM RegistoAcessos where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' group by month(DataHora);");
 
 //execute query
 $result = $mysqli->query($query);

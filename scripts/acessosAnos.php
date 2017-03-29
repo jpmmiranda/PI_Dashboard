@@ -16,7 +16,7 @@ if(!$mysqli){
 }
 
 //query to get data from the table
-$query = sprintf("SELECT count(*) as AcessosConcedidos, Pilarete FROM RegistoAcessos where year(DataHora)=2016 and ValidacaoAcesso regexp '^Acesso Concedido' group by Pilarete;");
+$query = sprintf("SELECT count(*) as AcessosConcedidos, monthName(DataHora) as mes FROM RegistoAcessos where YEAR(datahora) = YEAR(CURDATE()) and ValidacaoAcesso like 'Acesso Concedido' group by month(DataHora);");
 
 //execute query
 $result = $mysqli->query($query);

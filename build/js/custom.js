@@ -1627,6 +1627,8 @@ if (typeof NProgress != 'undefined') {
 			});
 			$('#reportrange').on('apply.daterangepicker', function(ev, picker) {
 			  console.log("apply event fired, start/end dates are " + picker.startDate.format('MMMM D, YYYY') + " to " + picker.endDate.format('MMMM D, YYYY'));
+              init_charts(picker.startDate.format('MMMM D, YYYY'),picker.endDate.format('MMMM D, YYYY'));
+
 			});
 			$('#reportrange').on('cancel.daterangepicker', function(ev, picker) {
 			  console.log("cancel event fired");
@@ -1980,9 +1982,9 @@ if (typeof NProgress != 'undefined') {
 				});
 				
 			};
-	   
+	
 		
-		function init_charts() {
+		function init_charts(de, ate) {
 			
 				console.log('run_charts  typeof [' + typeof (Chart) + ']');
 			
@@ -2166,44 +2168,49 @@ if (typeof NProgress != 'undefined') {
 			 
 			if ($('#lineChart').length ){	
 
-$.ajax({
-		url: "http://localhost:8888/teste.php",
-		method: "GET",
-		success: function(data) {
-			console.log(data);
-			var valores = [];
+                 $.ajax({
 
-			for(var i in data) {
-				valores.push(data[i].AcessosConcedidos);
-			}
+                    type: 'POST',
 
-			var chartdata = {
-				labels:  ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
-				datasets : [
-					{
-						label: "Total de Acessos",
-						backgroundColor: "rgba(38, 185, 154, 0.31)",
-						borderColor: "rgba(38, 185, 154, 0.7)",
-						pointBorderColor: "rgba(38, 185, 154, 0.7)",
-						pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
-						pointHoverBackgroundColor: "#fff",
-						pointHoverBorderColor: "rgba(220,220,220,1)",
-						pointBorderWidth: 1,
-						data: valores
-					}
-				]
-			};
+            		url: "http://localhost:8888/teste.php",
+                    data: {de : de, ate : ate}, 
 
-			var ctx = $("#lineChart");
+            		success: function(data) {
 
-			var barGraph = new Chart(ctx, {
-				type: 'line',
-				data: chartdata
-			});
-		},
-		error: function(data) {
-			console.log(data);
-		}
+            			var valores = [];
+
+            			for(var i in data) {
+            				valores.push(data[i].AcessosConcedidos);
+            			}
+
+            			var chartdata = {
+            				labels:  ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+            				datasets : [
+            					{
+            						label: "Total de Acessos",
+            						backgroundColor: "rgba(38, 185, 154, 0.31)",
+            						borderColor: "rgba(38, 185, 154, 0.7)",
+            						pointBorderColor: "rgba(38, 185, 154, 0.7)",
+            						pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
+            						pointHoverBackgroundColor: "#fff",
+            						pointHoverBorderColor: "rgba(220,220,220,1)",
+            						pointBorderWidth: 1,
+            						data: valores
+            					}
+            				]
+            			};
+
+            			var ctx = $("#lineChart");
+
+            			var barGraph = new Chart(ctx, {
+            				type: 'line',
+            				data: chartdata
+            			});
+            		},
+            		error: function(data) {
+            			console.log(data);
+            		}
+
 	});
 			
 			}
@@ -5190,7 +5197,8 @@ $.ajax({
 	   
 	   
 	$(document).ready(function() {
-	
+	   var today = (new Date()).toISOString().substring(0, 19).replace('T', ' ')
+
 		init_sparklines();
 		init_flot_chart();
 		init_sidebar();
@@ -5209,7 +5217,7 @@ $.ajax({
 		init_daterangepicker_reservation();
 		init_SmartWizard();
 		init_EasyPieChart();
-		init_charts();
+		init_charts(today,today);
 		init_echarts();
 		init_morris_charts();
 		init_skycons();
