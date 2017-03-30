@@ -2208,6 +2208,7 @@ if (typeof NProgress != 'undefined') {
                     type: 'POST',
 
             		url: "http://localhost:8888/teste.php",
+            		//url: "http://localhost:8080/teste.php",
                     data: {de : de, ate : ate, tipo : tipo}, 
             		success: function(data) {
                    
@@ -2271,6 +2272,7 @@ if (typeof NProgress != 'undefined') {
 
             		$.ajax({
             			url: "http://localhost:8888/acessosPorPilarete.php",
+            			//url: "http://localhost:8080/acessosPorPilarete.php",
             			method: "GET",
                         
             			success: function(data) {
@@ -2323,6 +2325,7 @@ if (typeof NProgress != 'undefined') {
 
 			$.ajax({
 					url: "http://localhost:8888/tabelaAcessosNaoConcedidos.php",
+					//url: "http://localhost:8080/tabelaAcessosNaoConcedidos.php",
 					method: "GET",
 					success: function(data) {
 						console.log(data);
@@ -2355,6 +2358,7 @@ if ($('#mybarChart2').length ){
 
 $.ajax({
 		url: "http://localhost:8888/acessosPorUtilizador.php",
+		//url: "http://localhost:8080/acessosPorUtilizador.php",
 		method: "GET",
 		success: function(data) {
 			console.log(data);
@@ -2405,6 +2409,8 @@ $.ajax({
 
 $.ajax({
 		url: "http://localhost:8888/acessosNegadosPorUtilizador.php",
+		//url: "http://localhost:8080/acessosNegadosPorUtilizador.php",
+
 		method: "GET",
 		success: function(data) {
 			console.log(data);
