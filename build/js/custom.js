@@ -49,7 +49,8 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
     $NAV_MENU = $('.nav_menu'),
     $FOOTER = $('footer');
 
-	
+	var barGraph;
+
 	
 // Sidebar
 function init_sidebar() {
@@ -1583,15 +1584,15 @@ if (typeof NProgress != 'undefined') {
 			  startDate: moment().subtract(29, 'days'),
 			  endDate: moment(),
 			  minDate: '01/01/2016',
-			  maxDate: '12/31/2017',
+			  maxDate: '12/31/2030',
 			  dateLimit: {
-				days: 60
+				days: 366
 			  },
 			  showDropdowns: true,
 			  showWeekNumbers: true,
 			  timePicker: true,
 			  timePickerIncrement: 1,
-			  timePicker12Hour: true,
+			  timePicker24Hour: true,
 			  ranges: {
 				'Hoje': [moment(), moment()],
 				'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
@@ -1606,15 +1607,15 @@ if (typeof NProgress != 'undefined') {
 			  applyClass: 'btn-small btn-primary',
 			  cancelClass: 'btn-small',
 			  format: 'MM/DD/YYYY',
-			  separator: ' to ',
+			  separator: ' de ',
               locale: {
-                    applyLabel: 'Submit',
-                    cancelLabel: 'Clear',
-                    fromLabel: 'From',
-                    toLabel: 'To',
-                    customRangeLabel: 'Custom',
-                    daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-                    monthNames: ['Janeiro', 'Fevereiro', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    applyLabel: 'Ok',
+                    cancelLabel: 'Cancelar',
+                    fromLabel: 'De',
+                    toLabel: 'Até',
+                    customRangeLabel: 'Personalizar',
+                    daysOfWeek: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+                    monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
                     firstDay: 1
                   }
 			 
@@ -1629,8 +1630,10 @@ if (typeof NProgress != 'undefined') {
 			  console.log("hide event fired");
 			});
 			$('#reportrange').on('apply.daterangepicker', function(ev, picker) {
-			  console.log("apply event fired, start/end dates are " + picker.startDate.format('YYYY/MM/DD') + " to " + picker.endDate.format('YYYY/MM/DD'));
-              init_charts(picker.startDate.format('YYYY/MM/DD'),picker.endDate.format('YYYY/MM/DD'));
+			  console.log("apply event fired, start/end dates are " + picker.startDate.format('YYYY/MM/DD HH:mm') + " to " + picker.endDate.format('YYYY/MM/DD HH:mm'));
+              barGraph.destroy();
+
+              init_charts(picker.startDate.format('YYYY/MM/DD HH:mm'),picker.endDate.format('YYYY/MM/DD HH:mm'));
 
 			});
 			$('#reportrange').on('cancel.daterangepicker', function(ev, picker) {
@@ -1670,7 +1673,7 @@ if (typeof NProgress != 'undefined') {
 				  showWeekNumbers: true,
 				  timePicker: false,
 				  timePickerIncrement: 1,
-				  timePicker12Hour: true,
+				  timePicker12Hour: false,
 				  ranges: {
 					'Today': [moment(), moment()],
 					'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
@@ -1985,7 +1988,6 @@ if (typeof NProgress != 'undefined') {
 				});
 				
 			};
-	
 		
 		function init_charts(de, ate) {
 			
@@ -2169,39 +2171,39 @@ if (typeof NProgress != 'undefined') {
 			
 			  // Line chart
 			 
-			if ($('#lineChart').length ){	
-                var labels=[];
+			if ($('#lineChart').length ){
+                var labels=["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
                 var tipo=0;
                 var c = new Date(de)
                 var d = new Date(ate)
-
-                if((d.getDate() - c.getDate())==0 &&  (d.getMonth() == c.getMonth())){
-                    labels = ["0h","1h","2h","3h","4h","5h","6h","7h","8h","9h","10h","11h","12h","13h","14h","15h","16h","17h","18h","19h","20h","21h","22h","23h"];
+                if((d.getDate() - c.getDate())==0 &&  (d.getMonth() == c.getMonth()) && (d.getFullYear()==c.getFullYear())){
+                    //labels = ["0h","1h","2h","3h","4h","5h","6h","7h","8h","9h","10h","11h","12h","13h","14h","15h","16h","17h","18h","19h","20h","21h","22h","23h"];
                     tipo=1;
                 }
 
-                else if ((d.getDate()-c.getDate())==1  && (d.getMonth() == c.getMonth())){
-                     labels = ["0h","1h","2h","3h","4h","5h","6h","7h","8h","9h","10h","11h","12h","13h","14h","15h","16h","17h","18h","19h","20h","21h","22h","23h"];
+                else if ((d.getDate()-c.getDate())==1  && (d.getMonth() == c.getMonth())&& (d.getFullYear()==c.getFullYear())){
+                     //labels = ["0h","1h","2h","3h","4h","5h","6h","7h","8h","9h","10h","11h","12h","13h","14h","15h","16h","17h","18h","19h","20h","21h","22h","23h"];
                      tipo =2;
                  }
 
-                else if ((d.getDate() - c.getDate())<=8 && (d.getMonth() == c.getMonth())){
-                      labels = ["Segunda","Terça","Quarta","Quinta","Sexta","Sabado","Domingo"];
+                else if ((d.getDate() - c.getDate())<=8 && (d.getMonth() == c.getMonth())&& (d.getFullYear()==c.getFullYear())){
+                     // labels = ["Segunda","Terça","Quarta","Quinta","Sexta","Sabado","Domingo"];
                       tipo =3;
                   }
 
-                else if ((d.getDate() - c.getDate())<=30  && (d.getMonth() == c.getMonth())){
-                     labels = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"];
+                else if ((d.getDate() - c.getDate())<=31  && (d.getMonth() == c.getMonth()) && (d.getFullYear()==c.getFullYear())){
+                     //labels = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"];
                      tipo =4;
                  }
 
                 else {
-                    labels = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+                    //labels = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
                     tipo =5;
                 }
                 
                 var de = c.toISOString().substring(0, 19).replace('T', ' ')
                 var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+                   
 
                  $.ajax({
 
@@ -2211,18 +2213,26 @@ if (typeof NProgress != 'undefined') {
             		//url: "http://localhost:8080/teste.php",
                     data: {de : de, ate : ate, tipo : tipo}, 
             		success: function(data) {
-                   
-
-            			var valores = [];
-                        var label =[]
+                    
+            			console.log(de);
+            			var valores = new Array();
+                        var label =new Array();
 
             			for(var i in data) {
             				valores.push(data[i].AcessosConcedidos);
-                            //label.push(data[i].x);
+                            label.push(data[i].lab);
+            			}
+
+            			if(tipo==5){
+
+            				for(var i in label) {
+	                            label[i]=labels[i];
+
+            				}
             			}
 
             			var chartdata = {
-            				labels:  labels,
+            				labels:  label,
             				datasets : [
             					{
             						label: "Total de Acessos",
@@ -2241,7 +2251,7 @@ if (typeof NProgress != 'undefined') {
 
             			var ctx = $("#lineChart");
 
-            			var barGraph = new Chart(ctx, {
+            			barGraph = new Chart(ctx, {
             				type: 'line',
             				data: chartdata,
                             options: {
