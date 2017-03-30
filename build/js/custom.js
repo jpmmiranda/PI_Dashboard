@@ -1570,12 +1570,13 @@ if (typeof NProgress != 'undefined') {
 	   
 		function init_daterangepicker() {
 
+
 			if( typeof ($.fn.daterangepicker) === 'undefined'){ return; }
 			console.log('init_daterangepicker');
 		
 			var cb = function(start, end, label) {
 			  console.log(start.toISOString(), end.toISOString(), label);
-			  $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+			  $('#reportrange span').html(start.format('DD-MM-YYYY') + ' Até ' + end.format('DD-MM-YYYY'));
 			};
 
 			var optionSet1 = {
@@ -1595,9 +1596,10 @@ if (typeof NProgress != 'undefined') {
 				'Hoje': [moment(), moment()],
 				'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
 				'Últimos 7 Dias': [moment().subtract(6, 'days'), moment()],
-				'Últimos 30 Dias': [moment().subtract(29, 'days'), moment()],
 				'Este Mês': [moment().startOf('month'), moment().endOf('month')],
-				'Último Mês': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+				'Último Mês': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                'Este Ano': [moment().startOf('year'), moment().endOf('year')],
+                'Último Ano': [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')]
 			  },
 			  opens: 'left',
 			  buttonClasses: ['btn btn-default'],
@@ -1605,16 +1607,17 @@ if (typeof NProgress != 'undefined') {
 			  cancelClass: 'btn-small',
 			  format: 'MM/DD/YYYY',
 			  separator: ' to ',
-			  locale: {
-				applyLabel: 'OK',
-				cancelLabel: 'Cancelar',
-				fromLabel: 'De',
-				toLabel: 'Até',
-				customRangeLabel: 'Personalizar',
-				daysOfWeek: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
-				monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-				firstDay: 1
-			  }
+              locale: {
+                    applyLabel: 'Submit',
+                    cancelLabel: 'Clear',
+                    fromLabel: 'From',
+                    toLabel: 'To',
+                    customRangeLabel: 'Custom',
+                    daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+                    monthNames: ['Janeiro', 'Fevereiro', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    firstDay: 1
+                  }
+			 
 			};
 			
 			$('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
@@ -1626,8 +1629,8 @@ if (typeof NProgress != 'undefined') {
 			  console.log("hide event fired");
 			});
 			$('#reportrange').on('apply.daterangepicker', function(ev, picker) {
-			  console.log("apply event fired, start/end dates are " + picker.startDate.format('MMMM D, YYYY') + " to " + picker.endDate.format('MMMM D, YYYY'));
-              init_charts(picker.startDate.format('MMMM D, YYYY'),picker.endDate.format('MMMM D, YYYY'));
+			  console.log("apply event fired, start/end dates are " + picker.startDate.format('YYYY/MM/DD') + " to " + picker.endDate.format('YYYY/MM/DD'));
+              init_charts(picker.startDate.format('YYYY/MM/DD'),picker.endDate.format('YYYY/MM/DD'));
 
 			});
 			$('#reportrange').on('cancel.daterangepicker', function(ev, picker) {
@@ -2167,24 +2170,58 @@ if (typeof NProgress != 'undefined') {
 			  // Line chart
 			 
 			if ($('#lineChart').length ){	
+                var labels=[];
+                var tipo=0;
+                var c = new Date(de)
+                var d = new Date(ate)
+
+                if((d.getDate() - c.getDate())==0 &&  (d.getMonth() == c.getMonth())){
+                    labels = ["0h","1h","2h","3h","4h","5h","6h","7h","8h","9h","10h","11h","12h","13h","14h","15h","16h","17h","18h","19h","20h","21h","22h","23h"];
+                    tipo=1;
+                }
+
+                else if ((d.getDate()-c.getDate())==1  && (d.getMonth() == c.getMonth())){
+                     labels = ["0h","1h","2h","3h","4h","5h","6h","7h","8h","9h","10h","11h","12h","13h","14h","15h","16h","17h","18h","19h","20h","21h","22h","23h"];
+                     tipo =2;
+                 }
+
+                else if ((d.getDate() - c.getDate())<=8 && (d.getMonth() == c.getMonth())){
+                      labels = ["Segunda","Terça","Quarta","Quinta","Sexta","Sabado","Domingo"];
+                      tipo =3;
+                  }
+
+                else if ((d.getDate() - c.getDate())<=30  && (d.getMonth() == c.getMonth())){
+                     labels = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"];
+                     tipo =4;
+                 }
+
+                else {
+                    labels = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+                    tipo =5;
+                }
+                
+                var de = c.toISOString().substring(0, 19).replace('T', ' ')
+                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
 
                  $.ajax({
 
                     type: 'POST',
 
             		url: "http://localhost:8888/teste.php",
-                    data: {de : de, ate : ate}, 
-
+                    data: {de : de, ate : ate, tipo : tipo}, 
             		success: function(data) {
+                   
 
             			var valores = [];
+                        var label =[]
 
             			for(var i in data) {
             				valores.push(data[i].AcessosConcedidos);
+                            //label.push(data[i].x);
             			}
 
             			var chartdata = {
-            				labels:  ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+            				labels:  labels,
             				datasets : [
             					{
             						label: "Total de Acessos",
@@ -2197,6 +2234,7 @@ if (typeof NProgress != 'undefined') {
             						pointBorderWidth: 1,
             						data: valores
             					}
+
             				]
             			};
 
@@ -2204,14 +2242,24 @@ if (typeof NProgress != 'undefined') {
 
             			var barGraph = new Chart(ctx, {
             				type: 'line',
-            				data: chartdata
+            				data: chartdata,
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                }
+                            }
+
             			});
             		},
             		error: function(data) {
             			console.log(data);
             		}
 
-	});
+	               });
 			
 			}
 				
@@ -5194,10 +5242,10 @@ $.ajax({
 			}
 	   
 		}  
-	   
+
 	   
 	$(document).ready(function() {
-	   var today = (new Date()).toISOString().substring(0, 19).replace('T', ' ')
+	   var today = new Date();
 
 		init_sparklines();
 		init_flot_chart();

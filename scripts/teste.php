@@ -15,12 +15,22 @@ if(!$mysqli){
 	die("Connection failed: " . $mysqli->error);
 }
 
+$tipo = $_POST["tipo"];
 $inicio = $_POST["de"];
 $fim = $_POST["ate"];
 
 
 //query to get data from the table
-$query = sprintf("SELECT count(*) as AcessosConcedidos, monthName(DataHora) as mes FROM RegistoAcessos where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' group by month(DataHora);");
+if($tipo == 1)
+	$query = sprintf("SELECT count(*) as AcessosConcedidos, hour(DataHora) as x FROM RegistoAcessos where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' group by hour(DataHora);");
+else if($tipo == 2)
+		$query = sprintf("SELECT count(*) as AcessosConcedidos, hour(DataHora) as x FROM RegistoAcessos where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' group by hour(DataHora);");
+else if($tipo == 3)
+		$query = sprintf("SELECT count(*) as AcessosConcedidos, weekday(DataHora) as x FROM RegistoAcessos where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' group by weekday(DataHora);");
+else if($tipo == 4)
+		$query = sprintf("SELECT count(*) as AcessosConcedidos, dayofmonth(DataHora) as x FROM RegistoAcessos where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' group by dayofmonth(DataHora);");
+else 
+		$query = sprintf("SELECT count(*) as AcessosConcedidos, monthName(DataHora) as x FROM RegistoAcessos where year(DataHora) =year('$inicio') and ValidacaoAcesso like 'Acesso Concedido' group by month(DataHora);");
 
 //execute query
 $result = $mysqli->query($query);

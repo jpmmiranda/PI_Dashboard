@@ -124,6 +124,8 @@ html , body{
 .daterangepicker.picker_4 .calendar-table td.active {
     background: #34495E
 }
+
+
 .calendar-exibit .show-calendar {
     float: none;
     display: block;
@@ -175,6 +177,7 @@ html , body{
 .nav-sm .navbar.nav_title a span {
     display: none
 }
+
 .nav-sm .navbar.nav_title a i {
     font-size: 27px;
     margin: 13px 0 0 3px
