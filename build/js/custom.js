@@ -1989,6 +1989,9 @@ if (typeof NProgress != 'undefined') {
 				
 			};
 		
+
+		/* Função que inicializa os graficos */
+
 		function init_charts(de, ate) {
 			
 				console.log('run_charts  typeof [' + typeof (Chart) + ']');
@@ -2169,7 +2172,7 @@ if (typeof NProgress != 'undefined') {
 			}
 			
 			
-			  // Line chart
+			  /* Grafico de linhas da pagina Acessos Concedidos*/
 			 
 			if ($('#lineChart').length ){
                 var labels=["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
@@ -2282,7 +2285,6 @@ if (typeof NProgress != 'undefined') {
 
             		$.ajax({
             			url: "http://localhost:8888/acessosPorPilarete.php",
-            			//url: "http://localhost:8080/acessosPorPilarete.php",
             			method: "GET",
                         
             			success: function(data) {
