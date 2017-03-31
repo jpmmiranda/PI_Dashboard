@@ -23,7 +23,7 @@ if($tipo == 1)
 else if($tipo == 2)
 		$query = sprintf("SELECT count(*) as AcessosConcedidos, hour(DataHora) as lab FROM RegistoAcessos where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' group by hour(DataHora);");
 else if($tipo == 3)
-		$query = sprintf("SELECT count(*) as AcessosConcedidos, weekday(DataHora) as lab FROM RegistoAcessos where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' group by weekday(DataHora);");
+		$query = sprintf("SELECT count(*) as AcessosConcedidos, day(DataHora) as lab FROM RegistoAcessos where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' group by day(DataHora);");
 else if($tipo == 4)
 		$query = sprintf("SELECT count(*) as AcessosConcedidos, dayofmonth(DataHora) as lab FROM RegistoAcessos where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' group by dayofmonth(DataHora);");
 else if($tipo == 5)

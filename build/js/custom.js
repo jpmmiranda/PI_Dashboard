@@ -2177,43 +2177,46 @@ if (typeof NProgress != 'undefined') {
 			if ($('#lineChart').length ){
                 var labels=["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
                 var tipo=0;
+                var nomeLabel;
                 var c = new Date(de)
                 var d = new Date(ate)
+
                 if((d.getDate() - c.getDate())==0 &&  (d.getMonth() == c.getMonth()) && (d.getFullYear()==c.getFullYear())){
-                    //labels = ["0h","1h","2h","3h","4h","5h","6h","7h","8h","9h","10h","11h","12h","13h","14h","15h","16h","17h","18h","19h","20h","21h","22h","23h"];
                     tipo=1;
+                    nomeLabel="Horas"
                 }
 
                 else if ((d.getDate()-c.getDate())==1  && (d.getMonth() == c.getMonth())&& (d.getFullYear()==c.getFullYear())){
-                     //labels = ["0h","1h","2h","3h","4h","5h","6h","7h","8h","9h","10h","11h","12h","13h","14h","15h","16h","17h","18h","19h","20h","21h","22h","23h"];
                      tipo =2;
+                     nomeLabel="Dias"
+
                  }
 
                 else if ((d.getDate() - c.getDate())<=8 && (d.getMonth() == c.getMonth())&& (d.getFullYear()==c.getFullYear())){
-                     // labels = ["Segunda","Terça","Quarta","Quinta","Sexta","Sabado","Domingo"];
                       tipo =3;
+                      nomeLabel="Dias"
                   }
 
                 else if ((d.getDate() - c.getDate())<=31  && (d.getMonth() == c.getMonth()) && (d.getFullYear()==c.getFullYear())){
-                     //labels = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"];
                      tipo =4;
+                     nomeLabel="Dias"
                  }
 
                 else {
-                    //labels = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
                     tipo =5;
+                    nomeLabel="Meses"
                 }
                 
                 var de = c.toISOString().substring(0, 19).replace('T', ' ')
                 var ate = d.toISOString().substring(0, 19).replace('T', ' ')
-                   
+
+
 
                  $.ajax({
 
                     type: 'POST',
 
             		url: "http://localhost:8888/teste.php",
-            		//url: "http://localhost:8080/teste.php",
                     data: {de : de, ate : ate, tipo : tipo}, 
             		success: function(data) {
                     
@@ -2260,9 +2263,20 @@ if (typeof NProgress != 'undefined') {
                             options: {
                                 scales: {
                                     yAxes: [{
+                                    	scaleLabel: {
+									        display: true,
+									        labelString: 'Acessos'
+									    },
                                         ticks: {
-                                            beginAtZero: true
+                                            beginAtZero: true,
+
                                         }
+                                    }],
+                                    xAxes: [{
+                                    	scaleLabel: {
+									        display: true,
+									        labelString: nomeLabel
+									    }
                                     }]
                                 }
                             }
