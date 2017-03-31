@@ -16,7 +16,7 @@ mysqli_set_charset($connection->conn, "utf8");
 
 
 //query to get data from the table
-$query = sprintf("SELECT count(*) as AcessosConcedidos, Pilarete FROM RegistoAcessos where year(DataHora)=2016 and ValidacaoAcesso regexp '^Acesso Concedido'   group by Pilarete ;");
+$query = sprintf("SELECT count(*) as AcessosConcedidos, Pilarete FROM RegistoAcessos where year(DataHora)=2016 and ValidacaoAcesso regexp '^Acesso Concedido'   group by Pilarete order by AcessosConcedidos desc ;");
 
 //execute query
 $result = $connection->conn->query($query);
