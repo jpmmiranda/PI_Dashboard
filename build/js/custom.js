@@ -2170,6 +2170,85 @@ if (typeof NProgress != 'undefined') {
 				});		
 				
 			}
+
+			if ($('#compAnos').length ){	
+			
+			  var ctx = document.getElementById("compAnos");
+
+			  $.ajax({
+				url: "http://localhost:8888/acessosAnos.php",
+				method: "GET",
+				success: function(data) {
+					console.log(data);
+					var score = [];
+					var anoY = [];
+
+					for(var i in data) {
+						if (data[i].year==2015)
+							{score.push(data[i].AcessosConcedidos);}
+						else {anoY.push(data[i].AcessosConcedidos);}
+					}
+
+					var chartdata = {
+						labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+						datasets : [
+							{
+								label: '2015',
+								backgroundColor: "rgba(38, 185, 154, 0.31)",
+								borderColor: "rgba(38, 185, 154, 0.7)",
+								pointBorderColor: "rgba(38, 185, 154, 0.7)",
+								pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
+								pointHoverBackgroundColor: "#fff",
+								pointHoverBorderColor: "rgba(220,220,220,1)",
+								pointBorderWidth: 1,
+								data: score
+							},  {
+								label: "2016",
+								backgroundColor: "rgba(3, 88, 106, 0.3)",
+								borderColor: "rgba(3, 88, 106, 0.70)",
+								pointBorderColor: "rgba(3, 88, 106, 0.70)",
+								pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
+								pointHoverBackgroundColor: "#fff",
+								pointHoverBorderColor: "rgba(151,187,205,1)",
+								pointBorderWidth: 1,
+								data: anoY
+								}	
+						]
+					};
+
+					var ctx = $("#compAnos");
+
+					var barGraph = new Chart(ctx, {
+						type: 'line',
+						data: chartdata,
+						options: {
+                                scales: {
+                                    yAxes: [{
+                                    	scaleLabel: {
+									        display: true,
+									        labelString: 'Acessos'
+									    },
+                                        ticks: {
+                                            beginAtZero: true,
+
+                                        }
+                                    }],
+                                    xAxes: [{
+                                    	scaleLabel: {
+									        display: true,
+									        labelString: 'Meses'
+									    }
+                                    }]
+                                }
+                            }
+					});
+				},
+				error: function(data) {
+					console.log(data);
+				}
+			});
+			
+			}
 			
 			
 			  /* Grafico de linhas da pagina Acessos Concedidos*/

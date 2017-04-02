@@ -13,7 +13,7 @@ if(!$connection->conn){
 }
 
 //query to get data from the table
-$query = sprintf("SELECT count(*) as AcessosConcedidos, monthName(DataHora) as mes FROM RegistoAcessos where YEAR(datahora) = YEAR(CURDATE()) and ValidacaoAcesso like 'Acesso Concedido' group by month(DataHora);");
+$query = sprintf("SELECT count(*) as AcessosConcedidos, month(DataHora), year(DataHora) as year FROM RegistoAcessos where YEAR(datahora) = YEAR(CURDATE())-1 or YEAR(datahora) = YEAR(CURDATE())-2 and ValidacaoAcesso like 'Acesso Concedido' group by month(DataHora), year(DataHora);");
 
 //execute query
 $result = $connection->conn->query($query);
