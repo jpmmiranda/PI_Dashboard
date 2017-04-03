@@ -2222,16 +2222,36 @@ if (typeof NProgress != 'undefined') {
             		url: "http://localhost:8888/teste.php",
                     data: {de : de, ate : ate, tipo : tipo}, 
             		success: function(data) {
-                    
-            			console.log(de);
-            			var valores = new Array();
+
+            			var valoresE = new Array();
+            			var valoresS = new Array();
                         var label =new Array();
-
+                        var x;
             			for(var i in data) {
-            				valores.push(data[i].AcessosConcedidos);
-                            label.push(data[i].lab);
-            			}
 
+            				if(data[i].lab!=x){
+	            				x = data[i].lab;
+	            				if (data[i].ee=="Entrada"){
+	            					valoresE.push(data[i].AcessosConcedidos);
+	            				} 
+	            				if (data[i].es=="Saída"){
+	            					valoresS.push(data[i].AcessosConcedidos);
+	            				}
+
+	            				label.push(data[i].lab);
+	            			}else{
+	            				if (data[i].ee=="Entrada"){
+	            					valoresE[x] = valoresE[x] + (data[i].AcessosConcedidos);
+	            				} 
+	            				if (data[i].es=="Saída"){
+	            					valoresS[x] = valoresS[x] + (data[i].AcessosConcedidos);
+	            				}
+	            			    label.push(data[i].lab);
+
+	            			}
+
+            				
+            			}
             			if(tipo==5){
 
             				for(var i in label) {
@@ -2244,7 +2264,7 @@ if (typeof NProgress != 'undefined') {
             				labels:  label,
             				datasets : [
             					{
-            						label: "Total de Acessos",
+            						label: "Total de Entradas",
             						backgroundColor: "rgba(38, 185, 154, 0.31)",
             						borderColor: "rgba(38, 185, 154, 0.7)",
             						pointBorderColor: "rgba(38, 185, 154, 0.7)",
@@ -2252,11 +2272,23 @@ if (typeof NProgress != 'undefined') {
             						pointHoverBackgroundColor: "#fff",
             						pointHoverBorderColor: "rgba(220,220,220,1)",
             						pointBorderWidth: 1,
-            						data: valores
-            					}
+            						data: valoresE
+            					},{
+									label: "Total de Saídas",
+									backgroundColor: "rgba(3, 88, 106, 0.3)",
+									borderColor: "rgba(3, 88, 106, 0.70)",
+									pointBorderColor: "rgba(3, 88, 106, 0.70)",
+									pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
+									pointHoverBackgroundColor: "#fff",
+									pointHoverBorderColor: "rgba(151,187,205,1)",
+									pointBorderWidth: 1,
+									data: valoresS
+								}	
 
             				]
             			};
+
+            			
 
             			var ctx = $("#lineChart");
 
