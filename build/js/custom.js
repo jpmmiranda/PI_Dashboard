@@ -50,6 +50,7 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
     $FOOTER = $('footer');
 
 	var barGraph;
+	var compAnos;
 
 	
 // Sidebar
@@ -1764,6 +1765,7 @@ if (typeof NProgress != 'undefined') {
   
 		}
 		
+
 		 
 		function init_daterangepicker_reservation() {
 	      
@@ -2171,87 +2173,7 @@ if (typeof NProgress != 'undefined') {
 				
 			}
 
-			//Gráfico que compara 2 anos seguidos
 
-			if ($('#compAnos').length ){	
-			
-			  var ctx = document.getElementById("compAnos");
-
-			  $.ajax({
-				url: "http://localhost:8888/acessosAnos.php",
-				method: "GET",
-				success: function(data) {
-					console.log(data);
-					var score = [];
-					var anoY = [];
-
-					for(var i in data) {
-						if (data[i].year==2015)
-							{score.push(data[i].AcessosConcedidos);}
-						else {anoY.push(data[i].AcessosConcedidos);}
-					}
-
-					var chartdata = {
-						labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
-						datasets : [
-							{
-								label: '2015',
-								backgroundColor: "rgba(38, 185, 154, 0.31)",
-								borderColor: "rgba(38, 185, 154, 0.7)",
-								pointBorderColor: "rgba(38, 185, 154, 0.7)",
-								pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
-								pointHoverBackgroundColor: "#fff",
-								pointHoverBorderColor: "rgba(220,220,220,1)",
-								pointBorderWidth: 1,
-								data: score
-							},  {
-								label: "2016",
-								backgroundColor: "rgba(3, 88, 106, 0.3)",
-								borderColor: "rgba(3, 88, 106, 0.70)",
-								pointBorderColor: "rgba(3, 88, 106, 0.70)",
-								pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
-								pointHoverBackgroundColor: "#fff",
-								pointHoverBorderColor: "rgba(151,187,205,1)",
-								pointBorderWidth: 1,
-								data: anoY
-								}	
-						]
-					};
-
-					var ctx = $("#compAnos");
-
-					var barGraph = new Chart(ctx, {
-						type: 'line',
-						data: chartdata,
-						options: {
-                                scales: {
-                                    yAxes: [{
-                                    	scaleLabel: {
-									        display: true,
-									        labelString: 'Acessos'
-									    },
-                                        ticks: {
-                                            beginAtZero: true,
-
-                                        }
-                                    }],
-                                    xAxes: [{
-                                    	scaleLabel: {
-									        display: true,
-									        labelString: 'Meses'
-									    }
-                                    }]
-                                }
-                            }
-					});
-				},
-				error: function(data) {
-					console.log(data);
-				}
-			});
-			
-			}
-			
 			
 			  /* Grafico de linhas da pagina Acessos Concedidos*/
 			 
@@ -2714,6 +2636,96 @@ if (typeof NProgress != 'undefined') {
 			}
 		}
 
+
+		function init_ano() {
+		    var year = 2016;
+		    for(i = 0; i < 15; i++){        
+		    $("#selecaoano").get(0).options[$("#selecaoano").get(0).options.length] = new Option(year, year);
+		        year=year+1;
+		    }
+
+		}
+		
+		//Gráfico que compara 2 anos seguidos
+
+		function init_graficoAnos(ano){
+			  var ctx = document.getElementById("compAnos");
+
+			  $.ajax({
+	
+                    type: 'POST',
+					url: "http://localhost:8888/acessosAnos.php",
+                    data: {ano: ano},
+				success: function(data) {
+					console.log(data);
+					var score = [];
+					var anoY = [];
+
+					for(var i in data) {
+						if (data[i].year==ano)
+							{score.push(data[i].AcessosConcedidos);}
+						else {anoY.push(data[i].AcessosConcedidos);}
+					}
+
+					var chartdata = {
+						labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+						datasets : [
+							{
+								label: ano,
+								backgroundColor: "rgba(38, 185, 154, 0.31)",
+								borderColor: "rgba(38, 185, 154, 0.7)",
+								pointBorderColor: "rgba(38, 185, 154, 0.7)",
+								pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
+								pointHoverBackgroundColor: "#fff",
+								pointHoverBorderColor: "rgba(220,220,220,1)",
+								pointBorderWidth: 1,
+								data: score
+							},  {
+								label: ano-1,
+								backgroundColor: "rgba(3, 88, 106, 0.3)",
+								borderColor: "rgba(3, 88, 106, 0.70)",
+								pointBorderColor: "rgba(3, 88, 106, 0.70)",
+								pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
+								pointHoverBackgroundColor: "#fff",
+								pointHoverBorderColor: "rgba(151,187,205,1)",
+								pointBorderWidth: 1,
+								data: anoY
+								}	
+						]
+					};
+
+					var ctx = $("#compAnos");
+
+					   compAnos = new Chart(ctx, {
+						type: 'line',
+						data: chartdata,
+						options: {
+                                scales: {
+                                    yAxes: [{
+                                    	scaleLabel: {
+									        display: true,
+									        labelString: 'Acessos'
+									    },
+                                        ticks: {
+                                            beginAtZero: true,
+
+                                        }
+                                    }],
+                                    xAxes: [{
+                                    	scaleLabel: {
+									        display: true,
+									        labelString: 'Meses'
+									    }
+                                    }]
+                                }
+                            }
+					});
+				},
+				error: function(data) {
+					console.log(data);
+				}
+			});
+		}
 		/* COMPOSE */
 		
 		function init_compose() {
@@ -5356,7 +5368,8 @@ if (typeof NProgress != 'undefined') {
 	   
 	$(document).ready(function() {
 	   var today = new Date();
-
+	   init_ano();
+	   init_graficoAnos($('#selecaoano option:selected').val());
 		init_sparklines();
 		init_flot_chart();
 		init_sidebar();
@@ -5391,6 +5404,10 @@ if (typeof NProgress != 'undefined') {
 		init_CustomNotification();
 		init_autosize();
 		init_autocomplete();
+		$('#selecaoano').change(function(){
+			 compAnos.destroy();
+	  		 init_graficoAnos($('#selecaoano option:selected').val());
+        });
 				
 	});	
 	
