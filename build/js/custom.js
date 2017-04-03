@@ -2171,6 +2171,8 @@ if (typeof NProgress != 'undefined') {
 				
 			}
 
+			//Gráfico que compara 2 anos seguidos
+
 			if ($('#compAnos').length ){	
 			
 			  var ctx = document.getElementById("compAnos");
@@ -2470,7 +2472,7 @@ if (typeof NProgress != 'undefined') {
 
 					for(var i in data) {
 						valores.push(data[i].AcessosConcedidos);
-						telefone.push(data[i].Telefone);
+						telefone.push(data[i].nContribuinte);
 
 					}
 

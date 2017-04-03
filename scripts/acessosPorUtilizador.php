@@ -13,7 +13,7 @@ if(!$connection->conn){
 }
 
 //query to get data from the table
-$query = sprintf("SELECT count(*) as AcessosConcedidos, Telefone FROM RegistoAcessos where year(DataHora)=2016 and ValidacaoAcesso like 'Acesso Concedido' group by Telefone order by AcessosConcedidos desc limit 10;");
+$query = sprintf("SELECT count(*) as AcessosConcedidos, nContribuinte FROM RegistoAcessos where year(DataHora)=2016 and ValidacaoAcesso like 'Acesso Concedido' group by Telefone order by AcessosConcedidos desc limit 10;");
 
 //execute query
 $result = $connection->conn->query($query);
