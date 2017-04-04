@@ -1595,9 +1595,9 @@ if (typeof NProgress != 'undefined') {
 			  timePickerIncrement: 1,
 			  timePicker24Hour: true,
 			  ranges: {
-				'Hoje': [moment(), moment()],
-				'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-				'Últimos 7 Dias': [moment().subtract(6, 'days'), moment()],
+				'Hoje': [moment().startOf('day'), moment().endOf('day')],
+				'Ontem': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+				'Últimos 7 Dias': [moment().subtract(6, 'days').startOf('day'), moment()],
 				'Este Mês': [moment().startOf('month'), moment().endOf('month')],
 				'Último Mês': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
                 'Este Ano': [moment().startOf('year'), moment().endOf('year')],
@@ -1607,7 +1607,7 @@ if (typeof NProgress != 'undefined') {
 			  buttonClasses: ['btn btn-default'],
 			  applyClass: 'btn-small btn-primary',
 			  cancelClass: 'btn-small',
-			  format: 'MM/DD/YYYY',
+			  format: 'DD/MM/YYYY',
 			  separator: ' de ',
               locale: {
                     applyLabel: 'Ok',
@@ -1622,7 +1622,7 @@ if (typeof NProgress != 'undefined') {
 			 
 			};
 			
-			$('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+			$('#reportrange span').html(moment().format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY'));
 			$('#reportrange').daterangepicker(optionSet1, cb);
 			$('#reportrange').on('show.daterangepicker', function() {
 			  console.log("show event fired");
@@ -2183,33 +2183,36 @@ if (typeof NProgress != 'undefined') {
                 var nomeLabel;
                 var c = new Date(de)
                 var d = new Date(ate)
+                var prim = moment(de,'YYYY/MM/DD');
+				var ult = moment(ate,'YYYY/MM/DD');
+				var diffDays = ult.diff(prim, 'days');
 
-                if((d.getDate() - c.getDate())==0 &&  (d.getMonth() == c.getMonth()) && (d.getFullYear()==c.getFullYear())){
+                if(diffDays==0){
                     tipo=1;
                     nomeLabel="Horas"
                 }
 
-                else if ((d.getDate()-c.getDate())==1  && (d.getMonth() == c.getMonth())&& (d.getFullYear()==c.getFullYear())){
+                else if (diffDays==1){
                      tipo =2;
                      nomeLabel="Dias"
 
                  }
 
-                else if ((d.getDate() - c.getDate())<=8 && (d.getMonth() == c.getMonth())&& (d.getFullYear()==c.getFullYear())){
-                      tipo =3;
-                      nomeLabel="Dias"
-                  }
-
-                else if ((d.getDate() - c.getDate())<=31  && (d.getMonth() == c.getMonth()) && (d.getFullYear()==c.getFullYear())){
+                else if (diffDays<=31){
                      tipo =4;
                      nomeLabel="Dias"
                  }
 
-                else {
+                else if(diffDays<7){
+                	  tipo =3;
+                      nomeLabel="Dias"
+                }
+                else{
                     tipo =5;
                     nomeLabel="Meses"
                 }
-                
+                console.log(diffDays);
+
                 var de = c.toISOString().substring(0, 19).replace('T', ' ')
                 var ate = d.toISOString().substring(0, 19).replace('T', ' ')
 
@@ -2269,7 +2272,6 @@ if (typeof NProgress != 'undefined') {
 
             				}
             			}
-
             			var chartdata = {
             				labels:  label,
             				datasets : [
@@ -2347,7 +2349,6 @@ if (typeof NProgress != 'undefined') {
             			method: "GET",
                         
             			success: function(data) {
-            				console.log(2);
             				var valores = [];
             				var pilaretes = [];
 
@@ -2358,25 +2359,29 @@ if (typeof NProgress != 'undefined') {
             				}
 
             			var chartdata = {
+
             				labels:  pilaretes,
             				datasets : [
             					{
             						label: "Total de Acessos",
             						backgroundColor: "rgba(38, 185, 154, 0.31)",
             						data: valores,
+            						 
             						options: {
+
             						  scales: {
             							yAxes: [{
             							  ticks: {
-            								beginAtZero: true
+            								beginAtZero: false
             							  }
             							}]
+
             						  }
             						}
             					}
             				]
             			};
-
+            			
             			var ctx = $('#acessosPorPilareteBarras');
 
             			var barGraph = new Chart(ctx, {
@@ -2390,6 +2395,8 @@ if (typeof NProgress != 'undefined') {
 	           });
 			  
 			} 
+
+			
 			if($('#tabelaMotivos').length){
 
 
@@ -5408,8 +5415,9 @@ if (typeof NProgress != 'undefined') {
 	   
 	$(document).ready(function() {
 	   var today = new Date();
-	   init_ano();
-	   init_graficoAnos($('#selecaoano option:selected').val());
+	  
+	    init_ano();
+	    init_graficoAnos($('#selecaoano option:selected').val());
 		init_sparklines();
 		init_flot_chart();
 		init_sidebar();

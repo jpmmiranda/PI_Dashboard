@@ -22,7 +22,7 @@ $fim = $_POST["ate"];
 if($tipo == 1)
 	$query = sprintf("SELECT count(*) as AcessosConcedidos, hour(DataHora) as lab ,EstadoEspiraE as ee, EstadoEspiraS as es FROM RegistoAcessos where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída') group by hour(DataHora), EstadoEspiraE, EstadoEspiraS;");
 else if($tipo == 2)
-		$query = sprintf("SELECT count(*) as AcessosConcedidos, hour(DataHora) as lab,EstadoEspiraE as ee, EstadoEspiraS as es FROM RegistoAcessos where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída') group by hour(DataHora), EstadoEspiraE, EstadoEspiraS;");
+		$query = sprintf("SELECT count(*) as AcessosConcedidos, day(DataHora) as lab,EstadoEspiraE as ee, EstadoEspiraS as es FROM RegistoAcessos where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída') group by day(DataHora), EstadoEspiraE, EstadoEspiraS;");
 else if($tipo == 3)
 		$query = sprintf("SELECT count(*) as AcessosConcedidos, day(DataHora) as lab ,EstadoEspiraE as ee, EstadoEspiraS as es FROM RegistoAcessos where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída') group by day(DataHora), EstadoEspiraE, EstadoEspiraS;");
 else if($tipo == 4)
