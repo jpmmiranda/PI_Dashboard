@@ -2211,7 +2211,6 @@ if (typeof NProgress != 'undefined') {
                     tipo =5;
                     nomeLabel="Meses"
                 }
-                console.log(diffDays);
 
                 var de = c.toISOString().substring(0, 19).replace('T', ' ')
                 var ate = d.toISOString().substring(0, 19).replace('T', ' ')
@@ -2687,11 +2686,13 @@ if (typeof NProgress != 'undefined') {
 
 
 		function init_ano() {
-		    var year = 2016;
-		    for(i = 0; i < 15; i++){        
-		    $("#selecaoano").get(0).options[$("#selecaoano").get(0).options.length] = new Option(year, year);
-		        year=year+1;
-		    }
+			if(document.getElementById('selecaoano')!=null){
+			    var year = 2016;
+			    for(i = 0; i < 15; i++){        
+			    $('#selecaoano').get(0).options[ $('#selecaoano').get(0).options.length] = new Option(year, year);
+			        year=year+1;
+			    }
+		}
 
 		}
 		
