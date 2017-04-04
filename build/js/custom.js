@@ -2226,27 +2226,37 @@ if (typeof NProgress != 'undefined') {
             			var valoresE = new Array();
             			var valoresS = new Array();
                         var label =new Array();
+                        var posvaloresE=0;
+                        var posvaloresS=0;
                         var x;
             			for(var i in data) {
+            				if(data[i].lab==x){
+	            				
+								if (data[i].ee=="Entrada"){
 
-            				if(data[i].lab!=x){
-	            				x = data[i].lab;
-	            				if (data[i].ee=="Entrada"){
-	            					valoresE.push(data[i].AcessosConcedidos);
+	            					if(valoresE.length == label.length) valoresE[posvaloresE] = parseInt(valoresE[posvaloresE]) + parseInt((data[i].AcessosConcedidos));
+	            					else {
+	            						valoresE.push(data[i].AcessosConcedidos);
+	            						posvaloresE = valoresE.indexOf(data[i].AcessosConcedidos);
+	            					}
 	            				} 
+	            				if (data[i].es=="Saída"){
+	            					valoresS[posvaloresS] = parseInt(valoresS[posvaloresS]) + parseInt((data[i].AcessosConcedidos));
+	            				}
+	            			}else{
+	            				
+	            			    x = data[i].lab;
+
 	            				if (data[i].es=="Saída"){
 	            					valoresS.push(data[i].AcessosConcedidos);
-	            				}
+	            				    posvaloresS= valoresS.indexOf(data[i].AcessosConcedidos);
 
-	            				label.push(data[i].lab);
-	            			}else{
-	            				if (data[i].ee=="Entrada"){
-	            					valoresE[x] = valoresE[x] + (data[i].AcessosConcedidos);
-	            				} 
-	            				if (data[i].es=="Saída"){
-	            					valoresS[x] = valoresS[x] + (data[i].AcessosConcedidos);
 	            				}
-	            			    label.push(data[i].lab);
+	            				if (data[i].ee=="Entrada"){
+	            					valoresE.push(data[i].AcessosConcedidos);
+	            					posvaloresE= valoresE.indexOf(data[i].AcessosConcedidos);
+	            				} 
+	            				label.push(data[i].lab);
 
 	            			}
 
@@ -2689,10 +2699,8 @@ if (typeof NProgress != 'undefined') {
 					url: "http://localhost:8888/acessosAnos.php",
                     data: {ano: ano},
 				success: function(data) {
-					console.log(data);
 					var score = [];
 					var anoY = [];
-
 					for(var i in data) {
 						if (data[i].year==ano)
 							{score.push(data[i].AcessosConcedidos);}

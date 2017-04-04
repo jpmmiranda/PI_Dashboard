@@ -19,7 +19,7 @@ $ano = $_POST["ano"];
 
 //query to get data from the table
 $query = sprintf("SELECT count(*) as AcessosConcedidos, month(DataHora), year(DataHora) as year FROM RegistoAcessos 
-where year(DataHora) = '$ano' or year(DataHora) = ('$ano'-1) and ValidacaoAcesso like 'Acesso Concedido' 
+where (year(DataHora) = '$ano' or year(DataHora) = ('$ano'-1)) and ValidacaoAcesso like 'Acesso Concedido' 
 group by month(DataHora), year(DataHora);");
 
 //execute query
