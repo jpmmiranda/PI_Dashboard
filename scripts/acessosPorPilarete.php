@@ -14,9 +14,10 @@ if(!$connection->conn){
 
 mysqli_set_charset($connection->conn, "utf8");
 
-
+$inicio = $_POST["de"];
+$fim = $_POST["ate"];
 //query to get data from the table
-$query = sprintf("SELECT count(*) as AcessosConcedidos, Pilarete FROM RegistoAcessos where year(DataHora)=2016 and ValidacaoAcesso regexp '^Acesso Concedido'   group by Pilarete order by AcessosConcedidos desc ;");
+$query = sprintf("SELECT count(*) as AcessosConcedidos, Pilarete, EstadoEspiraE as ee, EstadoEspiraS as es  FROM RegistoAcessos where (DataHora between '$inicio' and '$fim')  and ValidacaoAcesso regexp '^Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída')   group by Pilarete,EstadoEspiraE, EstadoEspiraS order by AcessosConcedidos desc ;");
 
 //execute query
 $result = $connection->conn->query($query);

@@ -12,8 +12,11 @@ if(!$connection->conn){
 	die("Connection failed: " . $connection->conn->error);
 }
 
+$inicio = $_POST["de"];
+$fim = $_POST["ate"];
+
 //query to get data from the table
-$query = sprintf("SELECT count(*) as AcessosConcedidos, nContribuinte FROM RegistoAcessos where year(DataHora)=2016 and ValidacaoAcesso like 'Acesso Concedido' group by Telefone order by AcessosConcedidos desc limit 10;");
+$query = sprintf("SELECT count(*) as AcessosConcedidos, nContribuinte FROM RegistoAcessos where (DataHora between '$inicio' and '$fim') and ValidacaoAcesso like 'Acesso Concedido' group by Telefone order by AcessosConcedidos desc limit 10;");
 
 //execute query
 $result = $connection->conn->query($query);

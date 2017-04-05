@@ -51,7 +51,8 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
 
 	var barGraph;
 	var compAnos;
-
+	var barGraphPilaretes;
+	var barGraphUtilizador;
 	
 // Sidebar
 function init_sidebar() {
@@ -1581,11 +1582,11 @@ if (typeof NProgress != 'undefined') {
 			  $('#reportrange span').html(start.format('DD-MM-YYYY') + ' Até ' + end.format('DD-MM-YYYY'));
 			};
 
+			var max = new Date().getFullYear();
+			   
 			var optionSet1 = {
-			  startDate: moment().subtract(29, 'days'),
-			  endDate: moment(),
 			  minDate: '01/01/2016',
-			  maxDate: '12/31/2030',
+			  maxDate: '12/31/'+max,
 			  dateLimit: {
 				days: 366
 			  },
@@ -1633,7 +1634,8 @@ if (typeof NProgress != 'undefined') {
 			$('#reportrange').on('apply.daterangepicker', function(ev, picker) {
 			  console.log("apply event fired, start/end dates are " + picker.startDate.format('YYYY/MM/DD HH:mm') + " to " + picker.endDate.format('YYYY/MM/DD HH:mm'));
               barGraph.destroy();
-
+		      barGraphPilaretes.destroy();
+		      barGraphUtilizador.destroy();
               init_charts(picker.startDate.format('YYYY/MM/DD HH:mm'),picker.endDate.format('YYYY/MM/DD HH:mm'));
 
 			});
@@ -2230,36 +2232,45 @@ if (typeof NProgress != 'undefined') {
                         var label =new Array();
                         var posvaloresE=0;
                         var posvaloresS=0;
-                        var x;
-            			for(var i in data) {
-            				if(data[i].lab==x){
-	            				
-								if (data[i].ee=="Entrada"){
 
-	            					if(valoresE.length == label.length) valoresE[posvaloresE] = parseInt(valoresE[posvaloresE]) + parseInt((data[i].AcessosConcedidos));
-	            					else {
-	            						valoresE.push(data[i].AcessosConcedidos);
-	            						posvaloresE = valoresE.indexOf(data[i].AcessosConcedidos);
-	            					}
-	            				} 
+            			for(var i in data) {
+            				if($.inArray(data[i].lab, label)!=-1){
+
+	            				if (data[i].ee=="Entrada"){
+
+	            					 posvaloresE=label.indexOf(data[i].lab);
+
+	            					 if (valoresE[posvaloresE] === undefined) valoresE[posvaloresE]=parseInt((data[i].AcessosConcedidos));
+	            					 else valoresE[posvaloresE] = parseInt(valoresE[posvaloresE]) + parseInt((data[i].AcessosConcedidos));
+	            					
+	            					
+	            				}
+
 	            				if (data[i].es=="Saída"){
-	            					valoresS[posvaloresS] = parseInt(valoresS[posvaloresS]) + parseInt((data[i].AcessosConcedidos));
+
+
+	            					 posvaloresS=label.indexOf(data[i].lab);
+
+	            					 if (valoresS[posvaloresS] === undefined) valoresS[posvaloresS]=parseInt((data[i].AcessosConcedidos));
+	            					 else valoresS[posvaloresS] = parseInt(valoresS[posvaloresS]) + parseInt((data[i].AcessosConcedidos));
+	            					
+	            					
 	            				}
 	            			}else{
 	            				
-	            			    x = data[i].lab;
+	            			   label.push(data[i].lab);
 
 	            				if (data[i].es=="Saída"){
-	            					valoresS.push(data[i].AcessosConcedidos);
-	            				    posvaloresS= valoresS.indexOf(data[i].AcessosConcedidos);
 
+	            						posvaloresS=label.indexOf(data[i].lab);
+	            						valoresS.splice(posvaloresS, 0, data[i].AcessosConcedidos);
 	            				}
 	            				if (data[i].ee=="Entrada"){
-	            					valoresE.push(data[i].AcessosConcedidos);
-	            					posvaloresE= valoresE.indexOf(data[i].AcessosConcedidos);
-	            				} 
-	            				label.push(data[i].lab);
 
+	            					posvaloresE=label.indexOf(data[i].lab);
+	            					valoresE.splice(posvaloresE, 0, data[i].AcessosConcedidos);
+
+	            				} 
 	            			}
 
             				
@@ -2337,55 +2348,135 @@ if (typeof NProgress != 'undefined') {
 			
 			}
 				
-			  // Bar chart
+			 /* Gráfico de barras dos pilaretes */
 			  
 			if ($('#acessosPorPilareteBarras').length ){ 
             			  
             	
+                var c = new Date(de)
+                var d = new Date(ate)
+                var de = c.toISOString().substring(0, 19).replace('T', ' ')
+                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
 
             		$.ajax({
+            			method: "POST",
             			url: "http://localhost:8888/acessosPorPilarete.php",
-            			method: "GET",
-                        
+
+                        data: {de : de, ate : ate},
+
             			success: function(data) {
-            				var valores = [];
-            				var pilaretes = [];
+            				var valoresE = new Array();
+            			var valoresS = new Array();
+                        var label =new Array();
+                        var posvaloresE;
+                        var posvaloresS;
+                        var x;
+            			for(var i in data) {
 
-            				for(var i in data) {
-            					valores.push(data[i].AcessosConcedidos);
-            					pilaretes.push(data[i].Pilarete);
+            				if($.inArray(data[i].Pilarete, label)!=-1){
 
-            				}
+								if (data[i].ee=="Entrada"){
+
+	            					 posvaloresE=label.indexOf(data[i].Pilarete);
+
+	            					 if (valoresE[posvaloresE] === undefined) valoresE[posvaloresE]=parseInt((data[i].AcessosConcedidos));
+	            					 else valoresE[posvaloresE] = parseInt(valoresE[posvaloresE]) + parseInt((data[i].AcessosConcedidos));
+	            					
+	            					
+	            				}
+
+	            				if (data[i].es=="Saída"){
+
+
+	            					 posvaloresS=label.indexOf(data[i].Pilarete);
+
+	            					 if (valoresS[posvaloresS] === undefined) valoresS[posvaloresS]=parseInt((data[i].AcessosConcedidos));
+	            					 else valoresS[posvaloresS] = parseInt(valoresS[posvaloresS]) + parseInt((data[i].AcessosConcedidos));
+	            					
+	            					
+	            				}
+	            			}else{
+	            				label.push(data[i].Pilarete);
+
+	            				if (data[i].es=="Saída"){
+
+	            						posvaloresS=label.indexOf(data[i].Pilarete);
+	            						valoresS.splice(posvaloresS, 0, data[i].AcessosConcedidos);
+	            				}
+	            				if (data[i].ee=="Entrada"){
+
+	            					posvaloresE=label.indexOf(data[i].Pilarete);
+	            					valoresE.splice(posvaloresE, 0, data[i].AcessosConcedidos);
+
+	            				} 
+
+	            			}
+
+            				
+            			}
+
+            			  var numberWithCommas = function(x) {
+							    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+							  };
 
             			var chartdata = {
 
-            				labels:  pilaretes,
+            				labels:  label,
+
             				datasets : [
             					{
-            						label: "Total de Acessos",
-            						backgroundColor: "rgba(38, 185, 154, 0.31)",
-            						data: valores,
-            						 
-            						options: {
+            						label: "Total de Entradas",
+            						backgroundColor: "rgba(38, 185, 154, 0.7)",
+            						backgroundColor: "rgba(38, 185, 154, 0.7)",
+									hoverBorderWidth: 2,
+									hoverBorderColor: 'lightgrey',
+            						data: valoresE
+            					},{
+									label: "Total de Saídas",
+									backgroundColor: "rgba(3, 88, 106, 0.7)",
+									backgroundColor: "rgba(3, 88, 106, 0.7)",
+									hoverBorderWidth: 2,
+									hoverBorderColor: 'lightgrey',
+									data: valoresS
 
-            						  scales: {
-            							yAxes: [{
-            							  ticks: {
-            								beginAtZero: false
-            							  }
-            							}]
+								}	
+            				]	
 
-            						  }
-            						}
-            					}
-            				]
             			};
             			
             			var ctx = $('#acessosPorPilareteBarras');
 
-            			var barGraph = new Chart(ctx, {
+            			 barGraphPilaretes = new Chart(ctx, {
             				type: 'bar',
-            				data: chartdata
+            				data: chartdata,
+            				options: {
+
+            					tooltips: {
+										mode: 'label',
+								          callbacks: {
+								          label: function(tooltipItem, data) { 
+								          	return data.datasets[tooltipItem.datasetIndex].label + ": " + numberWithCommas(tooltipItem.yLabel);
+								          }
+								          }
+         						},
+            					scales:{
+            						  xAxes: [{ 
+								          	stacked: true,
+								          	gridLines: { display: false },
+ 
+								            }],
+            						   yAxes: [{
+            						   		stacked: true, 
+            							  ticks: {
+            								beginAtZero: true,
+     				 
+            							  },
+            							}],
+
+            						  }
+
+            						}
+
             			});
             		},
             		error: function(data) {
@@ -2434,7 +2525,8 @@ if (typeof NProgress != 'undefined') {
 
 		$.ajax({
 				url: "http://localhost:8888/acessosPorUtilizador.php",
-				method: "GET",
+				method: "POST",
+				data: {de : de, ate : ate},
 				success: function(data) {
 					console.log(data);
 					var valores = [];
@@ -2468,7 +2560,7 @@ if (typeof NProgress != 'undefined') {
 
 					var ctx = $('#acessosPorUtilizadorBarras');
 
-					var barGraph = new Chart(ctx, {
+					 barGraphUtilizador = new Chart(ctx, {
 						type: 'bar',
 						data: chartdata
 					});
@@ -2687,12 +2779,13 @@ if (typeof NProgress != 'undefined') {
 
 		function init_ano() {
 			if(document.getElementById('selecaoano')!=null){
-			    var year = 2016;
-			    for(i = 0; i < 15; i++){        
-			    $('#selecaoano').get(0).options[ $('#selecaoano').get(0).options.length] = new Option(year, year);
-			        year=year+1;
+				var min = 2016;
+				var max = new Date().getFullYear()+1;
+			    for(i = min; i <=max; i++){        
+
+			    	$('#selecaoano').get(0).options[ $('#selecaoano').get(0).options.length] = new Option(i, i);
 			    }
-		}
+			}
 
 		}
 		
@@ -5415,8 +5508,10 @@ if (typeof NProgress != 'undefined') {
 
 	   
 	$(document).ready(function() {
-	   var today = new Date();
-	  
+	   var de = moment().subtract(1, 'year').startOf('year');
+	   var ate= moment().subtract(1, 'year').endOf('year');
+ 	   
+
 	    init_ano();
 	    init_graficoAnos($('#selecaoano option:selected').val());
 		init_sparklines();
@@ -5437,7 +5532,7 @@ if (typeof NProgress != 'undefined') {
 		init_daterangepicker_reservation();
 		init_SmartWizard();
 		init_EasyPieChart();
-		init_charts(today,today);
+		init_charts(de,ate);
 		init_echarts();
 		init_morris_charts();
 		init_skycons();
