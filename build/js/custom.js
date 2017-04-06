@@ -2886,7 +2886,6 @@ if (typeof NProgress != 'undefined') {
 					
 				if( typeof ($.fn.fullCalendar) === 'undefined'){ return; }
 				console.log('init_calendar');
-					
 				var date = new Date(),
 					d = date.getDate(),
 					m = date.getMonth(),
@@ -2895,6 +2894,8 @@ if (typeof NProgress != 'undefined') {
 					categoryClass;
 
 				var calendar = $('#calendar').fullCalendar({
+				 lang: 'en',
+
 				  header: {
 					left: 'prev,next today',
 					center: 'title',

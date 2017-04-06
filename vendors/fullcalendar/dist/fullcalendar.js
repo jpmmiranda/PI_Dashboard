@@ -11144,11 +11144,11 @@ Calendar.defaults = {
 		next: "next",
 		prevYear: "prev year",
 		nextYear: "next year",
-		year: 'year', // TODO: locale files need to specify this
-		today: 'today',
-		month: 'month',
-		week: 'week',
-		day: 'day'
+		year: 'ano', // TODO: locale files need to specify this
+		today: 'hoje',
+		month: 'mês',
+		week: 'semana',
+		day: 'hoje'
 	},
 
 	buttonIcons: {
