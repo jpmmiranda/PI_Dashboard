@@ -2781,7 +2781,7 @@ if (typeof NProgress != 'undefined') {
 			if(document.getElementById('selecaoano')!=null){
 				var min = 2016;
 				var max = new Date().getFullYear()+1;
-			    for(i = min; i <=max; i++){        
+			    for(i = min; i <max; i++){        
 
 			    	$('#selecaoano').get(0).options[ $('#selecaoano').get(0).options.length] = new Option(i, i);
 			    }
