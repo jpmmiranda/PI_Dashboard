@@ -2339,6 +2339,8 @@ if (typeof NProgress != 'undefined') {
                             }
 
             			});
+            	document.getElementById('js-legend1').innerHTML = barGraph.generateLegend();
+
             		},
             		error: function(data) {
             			console.log(data);
@@ -2430,11 +2432,13 @@ if (typeof NProgress != 'undefined') {
             						backgroundColor: "rgba(38, 185, 154, 0.7)",
 									hoverBorderWidth: 2,
 									hoverBorderColor: 'lightgrey',
+
             						data: valoresE
             					},{
 									label: "Total de Saídas",
 									backgroundColor: "rgba(3, 88, 106, 0.7)",
 									backgroundColor: "rgba(3, 88, 106, 0.7)",
+
 									hoverBorderWidth: 2,
 									hoverBorderColor: 'lightgrey',
 									data: valoresS
@@ -2450,6 +2454,7 @@ if (typeof NProgress != 'undefined') {
             				type: 'bar',
             				data: chartdata,
             				options: {
+
 
             					tooltips: {
 										mode: 'label',
@@ -2477,7 +2482,13 @@ if (typeof NProgress != 'undefined') {
 
             						}
 
+
+
+
+
             			});
+            	    document.getElementById('js-legend2').innerHTML = barGraphPilaretes.generateLegend();
+
             		},
             		error: function(data) {
             			console.log(data);
@@ -2861,6 +2872,8 @@ if (typeof NProgress != 'undefined') {
                                 }
                             }
 					});
+				 document.getElementById('js-legend3').innerHTML = compAnos.generateLegend();
+
 				},
 				error: function(data) {
 					console.log(data);
@@ -2894,7 +2907,7 @@ if (typeof NProgress != 'undefined') {
 					categoryClass;
 
 				var calendar = $('#calendar').fullCalendar({
-				 lang: 'en',
+				 lang: 'pt',
 
 				  header: {
 					left: 'prev,next today',

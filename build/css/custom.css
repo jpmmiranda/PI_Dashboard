@@ -15,6 +15,87 @@ html , body{
  height:100%;
  }
 
+#js-legend1 ul {
+  list-style: none;
+}
+
+#js-legend1 ul li {
+  display: block;
+  padding-left: 30px;
+  position: relative;
+  margin-bottom: 4px;
+  border-radius: 5px;
+  padding: 2px 8px 2px 28px;
+  font-size: 10px;
+  cursor: default;
+  -webkit-transition: background-color 200ms ease-in-out;
+  -moz-transition: background-color 200ms ease-in-out;
+  -o-transition: background-color 200ms ease-in-out;
+  transition: background-color 200ms ease-in-out;
+}
+
+#js-legend1 li span {
+  display: inline-block;
+  border-radius: 5px;
+  width: 12px;
+  height: 12px;
+  margin-right: 5px;
+}
+
+#js-legend2 ul {
+  list-style: none;
+}
+
+#js-legend2 ul li {
+  display: block;
+  padding-left: 30px;
+  position: relative;
+  margin-bottom: 4px;
+  border-radius: 5px;
+  padding: 2px 8px 2px 28px;
+  font-size: 14px;
+  cursor: default;
+  -webkit-transition: background-color 200ms ease-in-out;
+  -moz-transition: background-color 200ms ease-in-out;
+  -o-transition: background-color 200ms ease-in-out;
+  transition: background-color 200ms ease-in-out;
+}
+
+#js-legend2 li span {
+  display: inline-block;
+  border-radius: 5px;
+  width: 12px;
+  height: 12px;
+  margin-right: 5px;
+}
+
+#js-legend3 ul {
+  list-style: none;
+}
+
+#js-legend3 ul li {
+  display: block;
+  padding-left: 30px;
+  position: relative;
+  margin-bottom: 4px;
+  border-radius: 5px;
+  padding: 2px 8px 2px 28px;
+  font-size: 10px;
+  cursor: default;
+  -webkit-transition: background-color 200ms ease-in-out;
+  -moz-transition: background-color 200ms ease-in-out;
+  -o-transition: background-color 200ms ease-in-out;
+  transition: background-color 200ms ease-in-out;
+}
+
+#js-legend3 li span {
+  display: inline-block;
+  border-radius: 5px;
+  width: 12px;
+  height: 12px;
+  margin-right: 5px;
+}
+
 .daterangepicker .ranges li {
     color: #73879C
 }
