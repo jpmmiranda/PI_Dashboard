@@ -2907,7 +2907,7 @@ if (typeof NProgress != 'undefined') {
 					categoryClass;
 
 				var calendar = $('#calendar').fullCalendar({
-				 lang: 'pt',
+				 locale: 'pt',
 
 				  header: {
 					left: 'prev,next today',
