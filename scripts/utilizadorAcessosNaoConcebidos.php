@@ -14,8 +14,10 @@ if(!$connection->conn){
 	die("Connection failed: " . $connection->conn->error);
 }
 
+$utilizador = $_POST["utilizador"];
+
 //query to get data from the table
-$query = sprintf("SELECT count(*) as AcessosNaoConcedidos, ValidacaoAcesso FROM RegistoAcessos where Telefone=910180551 and (ValidacaoAcesso regexp '^Acesso Nao Concedido' or ValidacaoAcesso regexp '^Acesso Recusado') group by ValidacaoAcesso order by AcessosNaoConcedidos asc;");
+$query = sprintf("SELECT count(*) as AcessosNaoConcedidos, ValidacaoAcesso FROM RegistoAcessos where Telefone='$utilizador' and (ValidacaoAcesso regexp '^Acesso Nao Concedido' or ValidacaoAcesso regexp '^Acesso Recusado') group by ValidacaoAcesso order by AcessosNaoConcedidos asc;");
 
 //execute query
 $result = $connection->conn->query($query);

@@ -2179,6 +2179,8 @@ if (typeof NProgress != 'undefined') {
 			  if ($('#pieChartAcessos').length ){
 				  
 				  $.ajax({
+
+
 						url: "http://localhost:8888/utilizadorAcessosNaoConcebidos.php",
 						method: "GET",
 						success: function(data) {
@@ -2856,6 +2858,71 @@ if (typeof NProgress != 'undefined') {
 			    }
 			}
 
+		}
+
+		// Função para a  criação dos gráficos da utilizadores
+
+		function init_utilizador(utilizador){
+			console.log(utilizador);
+
+			if (utilizador == '') console.log('vazio');
+
+			if ($('#pieChartAcessos2').length ){
+				  
+				  $.ajax({
+
+
+						url: "http://localhost:8888/utilizadorAcessosNaoConcebidos.php",
+						method: "POST",
+						data: {utilizador : utilizador},
+						success: function(data) {
+							console.log(data);
+							var valores = [];
+							var razao = []
+
+							for(var i in data) {
+								valores.push(data[i].AcessosNaoConcedidos);
+								razao.push(data[i].ValidacaoAcesso);
+							}
+
+							for (var raz in razao){
+								razao[raz]=razao[raz].replace('Acesso Nao Concedido - ','');
+								razao[raz]=razao[raz].replace('Acesso Recusado - ','');
+							};
+
+							var chartdata = {
+								labels:  razao,
+								datasets : [
+									{
+										label: "Total de Acessos Negados",
+										backgroundColor: [
+											"#455C73",
+											"#9B59B6",
+											"#BDC2C7",
+											"#26B99A",
+											"#26B99A",
+											"#3498DB"
+										],
+										data: valores,
+									}
+								]
+							};
+
+							var ctx = $('#pieChartAcessos2');
+
+							var pieChart = new Chart(ctx, {
+								data: chartdata,
+								type: 'pie'
+								
+							});
+							document.getElementById('js-legend1').innerHTML = pieChart.generateLegend();
+						},
+						error: function(data) {
+							console.log(data);
+						}
+					});
+				  
+			  }
 		}
 		
 		//Gráfico que compara 2 anos seguidos
