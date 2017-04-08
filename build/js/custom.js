@@ -2175,6 +2175,64 @@ if (typeof NProgress != 'undefined') {
 				
 			}
 
+			// PIECHART Acessos não concebidos
+			  if ($('#pieChartAcessos').length ){
+				  
+				  $.ajax({
+						url: "http://localhost:8888/utilizadorAcessosNaoConcebidos.php",
+						method: "GET",
+						success: function(data) {
+							console.log(data);
+							var valores = [];
+							var razao = []
+
+							for(var i in data) {
+								valores.push(data[i].AcessosNaoConcedidos);
+								razao.push(data[i].ValidacaoAcesso);
+							}
+
+							for (var raz in razao){
+								razao[raz]=razao[raz].replace('Acesso Nao Concedido - ','');
+								razao[raz]=razao[raz].replace('Acesso Recusado - ','');
+							};
+
+							var x = document.getElementById("Tel");
+							console.log(x);
+							
+							var chartdata = {
+								labels:  razao,
+								datasets : [
+									{
+										label: "Total de Acessos Negados",
+										backgroundColor: [
+											"#455C73",
+											"#9B59B6",
+											"#BDC2C7",
+											"#26B99A",
+											"#26B99A",
+											"#3498DB"
+										],
+										data: valores,
+									}
+								]
+							};
+
+							var ctx = $('#pieChartAcessos');
+
+							var pieChart = new Chart(ctx, {
+								data: chartdata,
+								type: 'pie'
+								
+							});
+							document.getElementById('js-legend1').innerHTML = pieChart.generateLegend();
+						},
+						error: function(data) {
+							console.log(data);
+						}
+					});
+				  
+			  }
+
 
 			
 			  /* Grafico de linhas da pagina Acessos Concedidos*/
