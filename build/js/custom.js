@@ -2176,7 +2176,7 @@ if (typeof NProgress != 'undefined') {
 			}
 
 			// PIECHART Acessos não concebidos
-			  if ($('#pieChartAcessos').length ){
+			  /*if ($('#pieChartAcessos').length ){
 				  
 				  $.ajax({
 
@@ -2233,7 +2233,7 @@ if (typeof NProgress != 'undefined') {
 						}
 					});
 				  
-			  }
+			  }*/
 
 
 			
@@ -2889,20 +2889,23 @@ if (typeof NProgress != 'undefined') {
 								razao[raz]=razao[raz].replace('Acesso Nao Concedido - ','');
 								razao[raz]=razao[raz].replace('Acesso Recusado - ','');
 							};
-
+							var colors = [
+											"#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
+									        "#FFDBE5", "#7A4900", "#0000A6", "#63FFAC", "#B79762", "#004D43", "#8FB0FF", "#997D87",
+									        "#5A0007", "#809693", "#FEFFE6", "#1B4400", "#4FC601", "#3B5DFF", "#4A3B53", "#FF2F80",
+									        "#61615A", "#BA0900", "#6B7900", "#00C2A0", "#FFAA92", "#FF90C9", "#B903AA", "#D16100",
+									        "#DDEFFF", "#000035", "#7B4F4B", "#A1C299", "#300018", "#0AA6D8", "#013349", "#00846F",
+									        "#372101", "#FFB500", "#C2FFED", "#A079BF", "#CC0744", "#C0B9B2", "#C2FF99", "#001E09",
+									        "#00489C", "#6F0062", "#0CBD66", "#EEC3FF", "#456D75", "#B77B68", "#7A87A1", "#788D66",
+									        "#885578", "#FAD09F", "#FF8A9A", "#D157A0", "#BEC459", "#456648", "#0086ED", "#886F4C"
+										];
+							
 							var chartdata = {
 								labels:  razao,
 								datasets : [
 									{
 										label: "Total de Acessos Negados",
-										backgroundColor: [
-											"#455C73",
-											"#9B59B6",
-											"#BDC2C7",
-											"#26B99A",
-											"#26B99A",
-											"#3498DB"
-										],
+										backgroundColor: colors,
 										data: valores,
 									}
 								]
@@ -2923,6 +2926,32 @@ if (typeof NProgress != 'undefined') {
 					});
 				  
 			  }
+
+			  if ($('#totalacesso').length ){
+
+			  	 $.ajax({
+
+					url: "http://localhost:8888/totalAcessos.php",
+					method: "POST",
+					data: {utilizador : utilizador},
+					success: function(data) {
+						var total = 0;
+						var saidas = 0;
+						var entradas = 0;
+							
+						for(var i in data) {
+							total = data[i].total;
+							saidas = data[i].saidas;
+							entradas = data[i].entradas;
+						}
+		  				document.getElementById('totalacesso2').innerHTML = total;
+		  				document.getElementById('totalentradas').innerHTML = entradas;
+		  				document.getElementById('totalsaidas').innerHTML = saidas;
+			  		}
+			  	})
+
+			   }
+
 		}
 		
 		//Gráfico que compara 2 anos seguidos
