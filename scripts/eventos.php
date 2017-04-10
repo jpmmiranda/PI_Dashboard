@@ -9,11 +9,15 @@ require_once(dirname(__FILE__).'/connectionEventos.php');
 
 $connection = new connection();
 $connection->GetConnectionPDO();
-// List of events
- $json = array();
+
+if(!$connection->bdd){
+
+	die("Connection failed: " . $connection->bdd->error);
+}
+
 
  // Query that retrieves events
- $requete = "SELECT * FROM Eventos ORDER BY idEvento";
+ $requete = "SELECT id,title,start,end FROM Eventos ORDER BY id";
 
  
  // Execute the query

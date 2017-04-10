@@ -3072,7 +3072,15 @@ if (typeof NProgress != 'undefined') {
 
 				   
 				events: 'http://localhost:8888/eventos.php',
-				
+
+				 eventRender: function(event, element, view) {
+					    if (event.allDay === 'true') {
+					     event.allDay = true;
+					    } else {
+					     event.allDay = false;
+					    }
+					   },
+
 				  selectable: true,
 				  selectHelper: true,
 				  select: function(start, end, allDay) {
@@ -3091,19 +3099,20 @@ if (typeof NProgress != 'undefined') {
 					  categoryClass = $("#event_type").val();
 
 					  if (title) {
-						   var start = $.fullCalendar.moment(started, 'YYYY/MM/dd HH:mm').format('YYYY-MM-DD HH:mm');
-						   var end =  $.fullCalendar.moment(ended, 'YYYY/MM/dd HH:mm').format('YYYY-MM-DD HH:mm');
+						   var start = $.fullCalendar.moment(started, 'YYYY-MM-DD HH:MM:ss').toISOString();
+						   var end =  $.fullCalendar.moment(ended, 'YYYY-MM-DD HH:MM:ss').toISOString();
+						   var desc = $("#descr").val();
 						   $.ajax({
 						   url: 'http://localhost:8888/addEventos.php',
-						   data: 'title='+ title+'&start='+ start +'&end='+ end ,
+						   data: 'title='+ title+'&start='+ start +'&end='+ end +'&description=' + desc,
 						   type: "POST",
 						   });
 						 calendar.fullCalendar('renderEvent',
 						   {
 						   title: title,
-						   start: started,
-						   end: ended,
-						   allDay: false
+						   start: start,
+						   end: end,
+						   allDay: event.allDay
 						   },
 						   true // make the event "stick"
    					);

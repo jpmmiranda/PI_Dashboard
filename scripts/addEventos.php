@@ -18,11 +18,16 @@ if(!$connection->conn){
 $inicio = $_POST['start'];
 $fim =$_POST['end'];
 $nome=$_POST['title'];
+$descricao=$_POST['description'];
+
 //query to get data from the table
-$query = sprintf("INSERT INTO `Eventos`(`nome`, `inicio`,`fim`) VALUES('$nome','$inicio','$fim');"); 
+if($descricao!="")
+$query = sprintf("INSERT INTO `Eventos`(`title`, `start`,`end`,`description`) VALUES('$nome','$inicio','$fim','$descricao');"); 
+else $query = sprintf("INSERT INTO `Eventos`(`title`, `start`,`end`) VALUES('$nome','$inicio','$fim');"); 
+
 //execute query
 
-$connection->conn->query($query);
+$connection->conn->query($query) or die(print_r($connection->bdd->errorInfo()));
 
 //close connection
 $connection->conn->close();

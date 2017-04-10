@@ -22,7 +22,7 @@ class connection
 
 	public function GetConnectionPDO(){
 		 try {
-			 $this->bdd = new PDO("mysql:host=$DB_HOST;dbname=$DB_NAME", $DB_USERNAME, $DB_PASSWORD);
+			 $this->bdd = new PDO('mysql:host=127.0.0.1;dbname=dashboardEventos', 'root','ruiborges');
 		} catch(Exception $e) {
 			  exit('Unable to connect to database.');
 			 }
