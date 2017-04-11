@@ -17,7 +17,7 @@ if(!$connection->bdd){
 
 
  // Query that retrieves events
- $requete = "SELECT id,title,start,end FROM Eventos ORDER BY id";
+ $requete = "SELECT id,title,start,end,description FROM Eventos ORDER BY id";
 
  
  // Execute the query

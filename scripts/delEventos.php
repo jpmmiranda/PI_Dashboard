@@ -16,9 +16,8 @@ if(!$connection->bdd){
 }
 
 $id = $_POST['id'];
-
 $sql = "DELETE from Eventos WHERE id=".$id;
-$q = $bdd->prepare($sql);
+$q = $connection->bdd->prepare($sql);
 $q->execute();
 
 ?>

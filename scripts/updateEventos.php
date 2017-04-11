@@ -22,10 +22,17 @@ $id = $_POST['id'];
 $title = $_POST['title'];
 $start = $_POST['start'];
 $end = $_POST['end'];
+$desc = $_POST['desc'];
 
- // update the records
-$sql = "UPDATE Eventos SET title=?, start=?, end=? WHERE id=?";
-$q = $connection->bdd->prepare($sql);
-$q->execute(array($title,$start,$end,$id));
+if(!$start && !$end){
 
+	$sql = "UPDATE Eventos SET title=?, description=? WHERE id=?";
+	$q = $connection->bdd->prepare($sql);
+	$q->execute(array($title,$desc,$id));
+}else{
+ 	// update the records
+	$sql = "UPDATE Eventos SET title=?, start=?, end=?, description=? WHERE id=?";
+	$q = $connection->bdd->prepare($sql);
+	$q->execute(array($title,$start,$end,$desc,$id));
+}
 ?>

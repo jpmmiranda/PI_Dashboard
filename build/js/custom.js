@@ -3079,7 +3079,10 @@ if (typeof NProgress != 'undefined') {
 					    } else {
 					     event.allDay = false;
 					    }
-					    
+					     var start = moment(event.start, 'YYYY-MM-DD HH:MM:ss').format('HH:mm');
+					     element.html( start +' ' + event.title + '<span class="removeEvent glyphicon glyphicon-trash pull-right" id="Delete"></span>');
+
+
 					   },
 
 				  selectable: true,
@@ -3113,7 +3116,8 @@ if (typeof NProgress != 'undefined') {
 						   title: title,
 						   start: start,
 						   end: end,
-						   allDay: event.allDay
+						   allDay: event.allDay,
+						   description: desc
 						   },
 						   true // make the event "stick"
    					);
@@ -3131,29 +3135,15 @@ if (typeof NProgress != 'undefined') {
 
 					
 				  },
-				  eventClick: function(calEvent, jsEvent, view) {
-					$('#fc_edit').click();
-					$('#title2').val(calEvent.title);
-
-					categoryClass = $("#event_type").val();
-
-					$(".antosubmit2").on("click", function() {
-					  calEvent.title = $("#title2").val();
-
-					  calendar.fullCalendar('updateEvent', calEvent);
-					  $('.antoclose2').click();
-					});
-
-					calendar.fullCalendar('unselect');
-				  },
 
 				  editable: true,
+
 				  eventDrop: function(event, delta) {
 					   var start = $.fullCalendar.moment(event.start, 'YYYY-MM-DD HH:MM:ss').toISOString();
 					   var end = $.fullCalendar.moment(event.end, 'YYYY-MM-DD HH:MM:ss').toISOString();
 					   $.ajax({
 						   url: 'http://localhost:8888/updateEventos.php',
-						   data: 'title='+ event.title+'&start='+ start +'&end='+ end +'&id='+ event.id ,
+						   data: 'title='+ event.title+'&start='+ start +'&end='+ end +'&id='+ event.id + '&desc='+event.description ,
 						   type: "POST",
 						 
 					   });
@@ -3164,25 +3154,49 @@ if (typeof NProgress != 'undefined') {
 					   var end = $.fullCalendar.moment(event.end, 'YYYY-MM-DD HH:MM:ss').toISOString();
 					   $.ajax({
 					    url: 'http://localhost:8888/updateEventos.php',
-					    data: 'title='+ event.title+'&start='+ start +'&end='+ end +'&id='+ event.id ,
+					    data: 'title='+ event.title+'&start='+ start +'&end='+ end +'&id='+ event.id + '&desc='+event.description,
 					    type: "POST",
 				
 					   });
 					},
-				  eventClick: function(event) {
-						var decision = confirm("Do you really want to do that?"); 
+					eventClick: function(calEvent, jsEvent, view) {
+						  if (jsEvent.target.id === 'Delete') {
+						  	var decision = confirm("Deseja eliminar o evento?"); 
 						if (decision) {
+
 							$.ajax({
 								type: "POST",
 								url: 'http://localhost:8888/delEventos.php',
-
-								data: "&id=" + event.id
+								data: "&id=" + calEvent.id
 							});
-							$('#calendar').fullCalendar('removeEvents', event.id);
+
+							$('#calendar').fullCalendar('removeEvents', calEvent.id);
 
 							}
-						}
-				 
+						  }else {
+
+						  	$('#fc_edit').click();
+							$('#title2').val(calEvent.title);
+							$('#descr2').val(calEvent.description)
+							categoryClass = $("#event_type").val();
+
+							$(".antosubmit2").on("click", function() {
+							  calEvent.title = $("#title2").val();
+							  calEvent.description = $("#descr2").val();
+							   $.ajax({
+							    url: 'http://localhost:8888/updateEventos.php',
+							    data: 'title='+ calEvent.title+'&id='+ calEvent.id + '&desc='+calEvent.description,
+							    type: "POST",
+						
+							   });
+							   console.log(calEvent.description);
+							  calendar.fullCalendar('updateEvent', calEvent);
+							  $('.antoclose2').click();
+							});
+
+							calendar.fullCalendar('unselect');
+						  }
+					}
 				});
 				
 			};
