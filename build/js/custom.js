@@ -3079,6 +3079,7 @@ if (typeof NProgress != 'undefined') {
 					    } else {
 					     event.allDay = false;
 					    }
+					    
 					   },
 
 				  selectable: true,
@@ -3147,7 +3148,40 @@ if (typeof NProgress != 'undefined') {
 				  },
 
 				  editable: true,
+				  eventDrop: function(event, delta) {
+					   var start = $.fullCalendar.moment(event.start, 'YYYY-MM-DD HH:MM:ss').toISOString();
+					   var end = $.fullCalendar.moment(event.end, 'YYYY-MM-DD HH:MM:ss').toISOString();
+					   $.ajax({
+						   url: 'http://localhost:8888/updateEventos.php',
+						   data: 'title='+ event.title+'&start='+ start +'&end='+ end +'&id='+ event.id ,
+						   type: "POST",
+						 
+					   });
+					},
 
+				  eventResize: function(event) {
+					   var start = $.fullCalendar.moment(event.start, 'YYYY-MM-DD HH:MM:ss').toISOString();
+					   var end = $.fullCalendar.moment(event.end, 'YYYY-MM-DD HH:MM:ss').toISOString();
+					   $.ajax({
+					    url: 'http://localhost:8888/updateEventos.php',
+					    data: 'title='+ event.title+'&start='+ start +'&end='+ end +'&id='+ event.id ,
+					    type: "POST",
+				
+					   });
+					},
+				  eventClick: function(event) {
+						var decision = confirm("Do you really want to do that?"); 
+						if (decision) {
+							$.ajax({
+								type: "POST",
+								url: 'http://localhost:8888/delEventos.php',
+
+								data: "&id=" + event.id
+							});
+							$('#calendar').fullCalendar('removeEvents', event.id);
+
+							}
+						}
 				 
 				});
 				
