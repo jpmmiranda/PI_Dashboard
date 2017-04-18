@@ -21,7 +21,7 @@ $query = sprintf("SELECT count(*) total,
     sum(case when EstadoEspiraE = 1 then 1 else 0 end) entradas,
     sum(case when EstadoEspiraS = 1 then 1 else 0 end) saidas
 from RegistoAcessos
-where Telefone = 934716402 and ValidacaoAcesso like 'Acesso Concedido';");
+where Telefone = '$utilizador' and ValidacaoAcesso like 'Acesso Concedido';");
 
 //execute query
 $result = $connection->conn->query($query);
