@@ -14,12 +14,14 @@ if(!$connection->conn){
 	die("Connection failed: " . $connection->conn->error);
 }
 
+mysqli_set_charset($connection->conn, "utf8");
+
 $utilizador = $_POST["utilizador"];
 
 //query to get data from the table
 $query = sprintf("SELECT count(*) total,
-    sum(case when EstadoEspiraE = 1 then 1 else 0 end) entradas,
-    sum(case when EstadoEspiraS = 1 then 1 else 0 end) saidas
+    sum(case when EstadoEspiraE = 'Entrada' then 1 else 0 end) entradas,
+    sum(case when EstadoEspiraS = 'Saída' then 1 else 0 end) saidas
 from RegistoAcessos
 where Telefone = '$utilizador' and ValidacaoAcesso like 'Acesso Concedido';");
 
@@ -39,5 +41,5 @@ $result->close();
 $connection->conn->close();
 
 //now print the data
-print json_encode($data);
+print json_encode($data,JSON_UNESCAPED_UNICODE);
 ?>

@@ -3082,7 +3082,7 @@ if (typeof NProgress != 'undefined') {
 					     var start = moment(event.start, 'YYYY-MM-DD HH:MM:ss').format('HH:mm');
 					     element.html( start +' ' + event.title + '<span class="removeEvent glyphicon glyphicon-trash pull-right" id="Delete"></span>');
 
-
+					     
 					   },
 
 				  selectable: true,
@@ -3159,44 +3159,52 @@ if (typeof NProgress != 'undefined') {
 				
 					   });
 					},
-					eventClick: function(calEvent, jsEvent, view) {
+					eventClick: function(event, jsEvent,view) {
 						  if (jsEvent.target.id === 'Delete') {
 						  	var decision = confirm("Deseja eliminar o evento?"); 
-						if (decision) {
+							if (decision) {
 
-							$.ajax({
-								type: "POST",
-								url: 'http://localhost:8888/delEventos.php',
-								data: "&id=" + calEvent.id
-							});
+								$.ajax({
+									type: "POST",
+									url: 'http://localhost:8888/delEventos.php',
+									data: "&id=" + event.id,
+								});
 
-							$('#calendar').fullCalendar('removeEvents', calEvent.id);
+								$('#calendar').fullCalendar('removeEvents', event.id);
 
-							}
+								}
 						  }else {
 
-						  	$('#fc_edit').click();
-							$('#title2').val(calEvent.title);
-							$('#descr2').val(calEvent.description)
-							categoryClass = $("#event_type").val();
+							  	$('#fc_edit').click();
+								$('#title2').val(event.title);
+								$('#descr2').val(event.description)
+								var events = new Object();
+								events=event;
 
-							$(".antosubmit2").on("click", function() {
-							  calEvent.title = $("#title2").val();
-							  calEvent.description = $("#descr2").val();
-							   $.ajax({
-							    url: 'http://localhost:8888/updateEventos.php',
-							    data: 'title='+ calEvent.title+'&id='+ calEvent.id + '&desc='+calEvent.description,
-							    type: "POST",
-						
-							   });
-							   console.log(calEvent.description);
-							  calendar.fullCalendar('updateEvent', calEvent);
-							  $('.antoclose2').click();
-							});
+								$(".antosubmit2").on("click", function() {
 
-							calendar.fullCalendar('unselect');
-						  }
+								  events.title = $("#title2").val();
+								  events.description = $("#descr2").val();
+								   $.ajax({
+								   	type: "POST",
+								    url: 'http://localhost:8888/updateEventos.php',
+								    data: '&title='+ events.title+'&id='+ events.id + '&desc='+events.description,
+								   
+
+								   });
+
+								   $('#calendar').fullCalendar('rerenderEvents',$(this));
+								   console.log(event.id);
+
+								  $('.antoclose2').click();
+											
 					}
+
+							);
+							
+						
+						  }
+					},
 				});
 				
 			};
