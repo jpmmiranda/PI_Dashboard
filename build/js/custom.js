@@ -2954,11 +2954,33 @@ if (typeof NProgress != 'undefined') {
 
 		}
 		
+
+
+		// Checkbox de horários
+
+		// Pass the checkbox name to the function
+		function getCheckedBoxes(chkboxName) {
+			  var checkboxes = document.getElementsByName(chkboxName);
+			  var checkboxesChecked = [];
+			  // loop over them all
+			  for (var i=0; i<checkboxes.length; i++) {
+			     // And stick the checked ones onto an array...
+			     if (checkboxes[i].checked) {
+			        checkboxesChecked.push(checkboxes[i]);
+			     }
+			  }
+			  // Return the array if it is non-empty, or null
+			  return checkboxesChecked.length > 0 ? checkboxesChecked : null;
+			}
+
+
+
+
 		//Gráfico que compara 2 anos seguidos
 
-		function init_graficoAnos(ano){
+		function init_graficoAnos(ano, horarios){
 			  var ctx = document.getElementById("compAnos");
-
+			  console.log(horarios);
 			  $.ajax({
 	
                     type: 'POST',
@@ -5738,10 +5760,10 @@ if (typeof NProgress != 'undefined') {
 	$(document).ready(function() {
 	   var de = moment().subtract(1, 'year').startOf('year');
 	   var ate= moment().subtract(1, 'year').endOf('year');
- 	   
+ 	   var checkedBoxes = getCheckedBoxes("1");
 
 	    init_ano();
-	    init_graficoAnos($('#selecaoano option:selected').val());
+	    init_graficoAnos($('#selecaoano option:selected').val(),checkedBoxes);
 		init_sparklines();
 		init_flot_chart();
 		init_sidebar();
@@ -5777,8 +5799,10 @@ if (typeof NProgress != 'undefined') {
 		init_autosize();
 		init_autocomplete();
 		$('#selecaoano').change(function(){
+			 	   var checkedBoxes = getCheckedBoxes("1");
+
 			 compAnos.destroy();
-	  		 init_graficoAnos($('#selecaoano option:selected').val());
+	  		 init_graficoAnos($('#selecaoano option:selected').val(),checkedBoxes);
         });
 				
 	});	
