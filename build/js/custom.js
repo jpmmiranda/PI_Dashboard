@@ -49,6 +49,9 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
     $NAV_MENU = $('.nav_menu'),
     $FOOTER = $('footer');
 
+
+	   var de = moment().subtract(1, 'year').startOf('year');
+	   var ate= moment().subtract(1, 'year').endOf('year');
 	var barGraph;
 	var compAnos;
 	var barGraphPilaretes;
@@ -1571,7 +1574,7 @@ if (typeof NProgress != 'undefined') {
 	   
 	   /* DATERANGEPICKER */ /*Calendario da pagina principal*/
 	   
-		function init_daterangepicker() {
+		function init_daterangepicker(checkedBoxes) {
 
 
 			if( typeof ($.fn.daterangepicker) === 'undefined'){ return; }
@@ -1633,10 +1636,12 @@ if (typeof NProgress != 'undefined') {
 			});
 			$('#reportrange').on('apply.daterangepicker', function(ev, picker) {
 			  console.log("apply event fired, start/end dates are " + picker.startDate.format('YYYY/MM/DD HH:mm') + " to " + picker.endDate.format('YYYY/MM/DD HH:mm'));
-              barGraph.destroy();
+          de = picker.startDate.format('YYYY/MM/DD HH:mm');
+					ate = picker.endDate.format('YYYY/MM/DD HH:mm');
+					barGraph.destroy();
 		      barGraphPilaretes.destroy();
 		      barGraphUtilizador.destroy();
-              init_charts(picker.startDate.format('YYYY/MM/DD HH:mm'),picker.endDate.format('YYYY/MM/DD HH:mm'));
+          init_charts(picker.startDate.format('YYYY/MM/DD HH:mm'),picker.endDate.format('YYYY/MM/DD HH:mm'),getCheckedBoxes('1'));
 
 			});
 			$('#reportrange').on('cancel.daterangepicker', function(ev, picker) {
@@ -1996,8 +2001,7 @@ if (typeof NProgress != 'undefined') {
 
 		/* Função que inicializa os graficos */
 
-		function init_charts(de, ate) {
-			
+		function init_charts(de, ate,checkedBoxes) {
 				console.log('run_charts  typeof [' + typeof (Chart) + ']');
 			
 				if( typeof (Chart) === 'undefined'){ return; }
@@ -2246,8 +2250,8 @@ if (typeof NProgress != 'undefined') {
                 var c = new Date(de)
                 var d = new Date(ate)
                 var prim = moment(de,'YYYY/MM/DD');
-				var ult = moment(ate,'YYYY/MM/DD');
-				var diffDays = ult.diff(prim, 'days');
+							  var ult = moment(ate,'YYYY/MM/DD');
+								var diffDays = ult.diff(prim, 'days');
 
                 if(diffDays==0){
                     tipo=1;
@@ -2282,8 +2286,7 @@ if (typeof NProgress != 'undefined') {
                  $.ajax({
 
                     type: 'POST',
-
-            		url: "http://localhost:8888/teste.php",
+            				url: "http://localhost:8888/teste.php",
                     data: {de : de, ate : ate, tipo : tipo}, 
             		success: function(data) {
 
@@ -2956,7 +2959,14 @@ if (typeof NProgress != 'undefined') {
 		
 
 
-		// Checkbox de horários
+		/* Checkbox de horários */
+
+		var myEl = document.getElementById('botaoGerar');
+
+		myEl.addEventListener('click', function() {
+				var array = getCheckedBoxes("1");
+          init_charts(de,ate,array);
+			}, false);
 
 		// Pass the checkbox name to the function
 		function getCheckedBoxes(chkboxName) {
@@ -2966,7 +2976,7 @@ if (typeof NProgress != 'undefined') {
 			  for (var i=0; i<checkboxes.length; i++) {
 			     // And stick the checked ones onto an array...
 			     if (checkboxes[i].checked) {
-			        checkboxesChecked.push(checkboxes[i]);
+			        checkboxesChecked.push(checkboxes[i].className);
 			     }
 			  }
 			  // Return the array if it is non-empty, or null
@@ -2978,9 +2988,8 @@ if (typeof NProgress != 'undefined') {
 
 		//Gráfico que compara 2 anos seguidos
 
-		function init_graficoAnos(ano, horarios){
+		function init_graficoAnos(ano){
 			  var ctx = document.getElementById("compAnos");
-			  console.log(horarios);
 			  $.ajax({
 	
                     type: 'POST',
@@ -5758,12 +5767,10 @@ if (typeof NProgress != 'undefined') {
 
 	   
 	$(document).ready(function() {
-	   var de = moment().subtract(1, 'year').startOf('year');
-	   var ate= moment().subtract(1, 'year').endOf('year');
  	   var checkedBoxes = getCheckedBoxes("1");
 
 	    init_ano();
-	    init_graficoAnos($('#selecaoano option:selected').val(),checkedBoxes);
+	    init_graficoAnos($('#selecaoano option:selected').val());
 		init_sparklines();
 		init_flot_chart();
 		init_sidebar();
@@ -5776,13 +5783,13 @@ if (typeof NProgress != 'undefined') {
 		init_ColorPicker();
 		init_TagsInput();
 		init_parsley();
-		init_daterangepicker();
+		init_daterangepicker(checkedBoxes);
 		init_daterangepicker_right();
 		init_daterangepicker_single_call();
 		init_daterangepicker_reservation();
 		init_SmartWizard();
 		init_EasyPieChart();
-		init_charts(de,ate);
+		init_charts(de,ate,checkedBoxes);
 		init_echarts();
 		init_morris_charts();
 		init_skycons();
@@ -5799,10 +5806,9 @@ if (typeof NProgress != 'undefined') {
 		init_autosize();
 		init_autocomplete();
 		$('#selecaoano').change(function(){
-			 	   var checkedBoxes = getCheckedBoxes("1");
 
 			 compAnos.destroy();
-	  		 init_graficoAnos($('#selecaoano option:selected').val(),checkedBoxes);
+	  		 init_graficoAnos($('#selecaoano option:selected').val());
         });
 				
 	});	
