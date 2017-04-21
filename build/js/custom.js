@@ -2280,23 +2280,26 @@ if (typeof NProgress != 'undefined') {
 
                 var de = c.toISOString().substring(0, 19).replace('T', ' ')
                 var ate = d.toISOString().substring(0, 19).replace('T', ' ')
-
+								var listados;
+								if(checkedBoxes!=null) listados = checkboxSelecionados(checkedBoxes);
 
 
                  $.ajax({
 
                     type: 'POST',
             				url: "http://localhost:8888/teste.php",
-                    data: {de : de, ate : ate, tipo : tipo}, 
+                    data: {de : de, ate : ate, tipo : tipo, listados : listados}, 
             		success: function(data) {
 
             			var valoresE = new Array();
             			var valoresS = new Array();
-                        var label =new Array();
-                        var posvaloresE=0;
-                        var posvaloresS=0;
+                  var label =new Array();
+                  var posvaloresE=0;
+                  var posvaloresS=0;
 
             			for(var i in data) {
+																					 console.log(data[i].lab);
+
             				if($.inArray(data[i].lab, label)!=-1){
 
 	            				if (data[i].ee=="Entrada"){
@@ -2322,7 +2325,6 @@ if (typeof NProgress != 'undefined') {
 	            			}else{
 	            				
 	            			   label.push(data[i].lab);
-
 	            				if (data[i].es=="Saída"){
 
 	            						posvaloresS=label.indexOf(data[i].lab);
@@ -2965,7 +2967,10 @@ if (typeof NProgress != 'undefined') {
 
 		myEl.addEventListener('click', function() {
 				var array = getCheckedBoxes("1");
-          init_charts(de,ate,array);
+					barGraph.destroy();	
+		      barGraphPilaretes.destroy();
+		      barGraphUtilizador.destroy(); 
+				init_charts(de,ate,array);
 			}, false);
 
 		// Pass the checkbox name to the function
@@ -2983,7 +2988,21 @@ if (typeof NProgress != 'undefined') {
 			  return checkboxesChecked.length > 0 ? checkboxesChecked : null;
 			}
 
-
+		//Calcula string com os seleccionados da checkbox
+		function checkboxSelecionados(selecionados) {
+			var i,string="",contador=0;
+			var tamanho=selecionados.length;
+			for(i=0;i<tamanho;i++){
+				if(contador<tamanho-1){
+					string = string + selecionados[i] + "|";
+					contador++;		
+				}
+				else 
+					string = string + selecionados[i]; 
+			}
+			console.log(string);
+			return string;
+		}
 
 
 		//Gráfico que compara 2 anos seguidos
@@ -2992,9 +3011,9 @@ if (typeof NProgress != 'undefined') {
 			  var ctx = document.getElementById("compAnos");
 			  $.ajax({
 	
-                    type: 'POST',
+          type: 'POST',
 					url: "http://localhost:8888/acessosAnos.php",
-                    data: {ano: ano},
+          data: {ano: ano},
 				success: function(data) {
 					var score = [];
 					var anoY = [];
