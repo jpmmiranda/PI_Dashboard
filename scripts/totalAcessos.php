@@ -20,10 +20,12 @@ $utilizador = $_POST["utilizador"];
 
 //query to get data from the table
 $query = sprintf("SELECT count(*) total,
-    sum(case when EstadoEspiraE = 'Entrada' then 1 else 0 end) entradas,
-    sum(case when EstadoEspiraS = 'Saída' then 1 else 0 end) saidas
+	sum(case when ValidacaoAcesso like 'Acesso Concedido' then 1 else 0 end) aceites,
+    sum(case when EstadoEspiraE = 'Entrada' and ValidacaoAcesso like 'Acesso Concedido' then 1 else 0 end) entradas,
+    sum(case when EstadoEspiraS = 'Saída' and ValidacaoAcesso like 'Acesso Concedido' then 1 else 0 end) saidas,
+    sum(case when (ValidacaoAcesso regexp '^Acesso Nao Concedido' or ValidacaoAcesso regexp '^Acesso Recusado') then 1 else 0 end) recusados
 from RegistoAcessos
-where Telefone = '$utilizador' and ValidacaoAcesso like 'Acesso Concedido';");
+where Telefone = '$utilizador' and year(DataHora) > 2015;");
 
 //execute query
 $result = $connection->conn->query($query);

@@ -17,9 +17,9 @@ if(!$connection->conn){
 $utilizador = $_POST["utilizador"];
 
 //query to get data from the table
-$query = sprintf("SELECT count(*) as AcessosNaoConcedidos, ValidacaoAcesso FROM RegistoAcessos 
-	where year(DataHora) > 2015 and Telefone='$utilizador' and (ValidacaoAcesso regexp '^Acesso Nao Concedido' or ValidacaoAcesso regexp '^Acesso Recusado') 
-	group by ValidacaoAcesso order by AcessosNaoConcedidos asc;");
+$query = sprintf("SELECT TipoUtente as tipo FROM utentes
+		INNER JOIN acessos ON utentes.nContribuinte = acessos.Contribuinte
+		where acessos.numTelf = '$utilizador';");
 
 //execute query
 $result = $connection->conn->query($query);

@@ -94,12 +94,45 @@
 
             <div class="clearfix"></div>
 
-            <div class="row tile_count">
+            <div class="col-md-14 col-sm-14 col-xs-18 tile_stats_count">
+                <div class="x_content">
+                  <span class="count" ></span>
+                   <b><font size="6" id = "numTel">Número de Telefone</font></b>
+                </div>
+            </div>
+
+              <div class="clearfix"></div>
+
+            <div class="col-md-14 col-sm-14 col-xs-18 tile_stats_count">
+                <div class="x_content">
+                  <span class="count" ></span>
+                   <b><font size="6" id = "tipoUtil">Tipo de Utilizador</font></b>
+                </div>
+            </div> 
+
+              <div class="clearfix"></div>
+
+            <div class="col-md-14 col-sm-14 col-xs-18 tile_stats_count">
+                <div class="x_content">
+                  <span class="count" ></span>
+                   <b><font size="6" id = "intData">Intervalo de Datas</font></b>
+                </div>
+            </div>
+
+              <div class="clearfix"></div>
+
+            <div class="row tile_count"> 
               <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
                 <span class="count_top"><i class="fa fa-user"></i> Acessos Totais</span>
                 <div class="x_content">
                   <div id="totalacesso"></div>
                   <div id = "totalacesso2" class="count">0</div>
+                </div>
+              </div>
+              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                <span class="count_top"><i class="fa fa-user"></i> Total de Acessos Concedidos</span>
+                <div class="x_content">
+                  <div id = "totalConcedidos" class="count">0</div>
                 </div>
               </div>
               <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
@@ -114,24 +147,21 @@
                   <div id = "totalsaidas" class="count">0</div>
                 </div>
               </div>
+              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                <span class="count_top"><i class="fa fa-user"></i> Total de Acessos Recusados</span>
+                <div class="x_content">
+                  <div id = "totalRecusadas" class="count">0</div>
+                </div>
+              </div>
             </div>
 
             <div class="row">
               <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Pie Graph Chart <small>Sessions</small></h2>
+                    <h2>Razões de Acesso Recusado </h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
                       </li>
                       <li><a class="close-link"><i class="fa fa-close"></i></a>
                       </li>
@@ -149,61 +179,6 @@
             </div>
             <div class="clearfix"></div>
             <div class="row">
-               <div class="col-md-6 col-sm-6 col-xs-12">
-                <div class="x_panel">
-                  <div class="x_title">
-                    <h2>Total de acessos por utilizador</h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                    </ul>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
-                    <canvas id='acessosPorUtilizadorBarras'></canvas>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-sm-6 col-xs-12">
-                <div class="x_panel">
-                  <div class="x_title">
-
-                    <h2>Comparação de anos</h2>
-
-                    <ul class="nav navbar-right panel_toolbox">
-                                        <select id="selecaoano" > </select>
-
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                    </ul>
-                    <div class="clearfix"></div>
-
-                  </div>
-                  <div class="x_content">
-                    <canvas id="compAnos"></canvas>
-                    <div id="js-legend3" class="chart-legend"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-12 col-sm-6 col-xs-6">
-                <div class="x_panel">
-                  <div class="x_title">
-                    <h2>Total de acessos por pilarete </h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                    </ul>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
-
-                    <canvas id="acessosPorPilareteBarras"></canvas>
-                    <div id="js-legend2" class="chart-legend"></div>
-
-                  </div>
-
-                </div>
-              </div>
             </div>
             </div>
           </div>

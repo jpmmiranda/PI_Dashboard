@@ -2179,66 +2179,6 @@ if (typeof NProgress != 'undefined') {
 				
 			}
 
-			// PIECHART Acessos não concebidos
-			  /*if ($('#pieChartAcessos').length ){
-				  
-				  $.ajax({
-
-
-						url: "http://localhost:8888/utilizadorAcessosNaoConcebidos.php",
-						method: "GET",
-						success: function(data) {
-							console.log(data);
-							var valores = [];
-							var razao = []
-
-							for(var i in data) {
-								valores.push(data[i].AcessosNaoConcedidos);
-								razao.push(data[i].ValidacaoAcesso);
-							}
-
-							for (var raz in razao){
-								razao[raz]=razao[raz].replace('Acesso Nao Concedido - ','');
-								razao[raz]=razao[raz].replace('Acesso Recusado - ','');
-							};
-
-							var x = document.getElementById("Tel");
-							console.log(x);
-							
-							var chartdata = {
-								labels:  razao,
-								datasets : [
-									{
-										label: "Total de Acessos Negados",
-										backgroundColor: [
-											"#455C73",
-											"#9B59B6",
-											"#BDC2C7",
-											"#26B99A",
-											"#26B99A",
-											"#3498DB"
-										],
-										data: valores,
-									}
-								]
-							};
-
-							var ctx = $('#pieChartAcessos');
-
-							var pieChart = new Chart(ctx, {
-								data: chartdata,
-								type: 'pie'
-								
-							});
-							document.getElementById('js-legend1').innerHTML = pieChart.generateLegend();
-						},
-						error: function(data) {
-							console.log(data);
-						}
-					});
-				  
-			  }*/
-
 
 			
 			  /* Grafico de linhas da pagina Acessos Concedidos*/
@@ -2870,13 +2810,28 @@ if (typeof NProgress != 'undefined') {
 		function init_utilizador(utilizador){
 			console.log(utilizador);
 
-			if (utilizador == '') console.log('vazio');
+			if (utilizador.length < 9 || utilizador.length > 9) {document.getElementById('numTel').innerHTML = 'Número Inválido';}
+				else {document.getElementById('numTel').innerHTML = utilizador;}
+
+			if ($('#tipoUtil').length ){
+				$.ajax({
+						url: "http://localhost:8888/getTipoUtil.php",
+						method: "POST",
+						data: {utilizador : utilizador},
+						success: function(data) {
+							var tipo = '';
+							for(var i in data){
+								tipo = data[i].tipo;
+							}
+							document.getElementById('tipoUtil').innerHTML = tipo;
+						}
+					})
+
+			}
 
 			if ($('#pieChartAcessos2').length ){
 				  
 				  $.ajax({
-
-
 						url: "http://localhost:8888/utilizadorAcessosNaoConcebidos.php",
 						method: "POST",
 						data: {utilizador : utilizador},
@@ -2943,19 +2898,25 @@ if (typeof NProgress != 'undefined') {
 						var total = 0;
 						var saidas = 0;
 						var entradas = 0;
+						var recusados = 0;
+						var aceites = 0;
 							
 						for(var i in data) {
 							total = data[i].total;
 							saidas = data[i].saidas;
 							entradas = data[i].entradas;
+							recusados = data[i].recusados;
+							aceites = data[i].aceites;
 						}
 		  				document.getElementById('totalacesso2').innerHTML = total;
 		  				document.getElementById('totalentradas').innerHTML = entradas;
 		  				document.getElementById('totalsaidas').innerHTML = saidas;
+		  				document.getElementById('totalRecusadas').innerHTML = recusados;
+		  				document.getElementById('totalConcedidos').innerHTML = aceites;
 			  		}
 			  	})
 
-			   }
+			   }	
 
 		}
 		
