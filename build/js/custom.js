@@ -2925,7 +2925,7 @@ if (typeof NProgress != 'undefined') {
 		/* Checkbox de horários */
 
 		var myEl = document.getElementById('botaoGerar');
-
+		if(myEl!==null){
 		myEl.addEventListener('click', function() {
 				var array = getCheckedBoxes("1");
 					barGraph.destroy();	
@@ -2933,6 +2933,7 @@ if (typeof NProgress != 'undefined') {
 		      barGraphUtilizador.destroy(); 
 				init_charts(de,ate,array);
 			}, false);
+		}
 
 		// Pass the checkbox name to the function
 		function getCheckedBoxes(chkboxName) {
