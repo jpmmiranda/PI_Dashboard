@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Acessos Por Utilizador</title>
-
+    <title>Acessos Por Pilarete</title>
+<link rel="stylesheet" href="../vendors/leaflet/leaflet.css" />
     <!-- Bootstrap -->
     <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -60,7 +60,6 @@
           </div>
         </div>
 
-
         <!-- top navigation -->
         <div class="top_nav">
           <div class="nav_menu">
@@ -76,112 +75,35 @@
         <!-- page content -->
         <div class="right_col" role="main">
           <div class="">
-
             <div class="page-title">
               <div class="title_left">
-                <h3>Acessos Por Utilizador</h3>
+                <h3>Acessos Por Pilarete </h3>
               </div>
+              <div class="col-md-6">
+                    <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+                      <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                      <span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>
+                    </div>
+              </div>
+
 
               <div class="title_right">
                 <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                   <div class="input-group">
-                    <input id="Tel" type="text" class="form-control" placeholder="Search for...">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default" type="button" onClick="init_utilizador(document.getElementById('Tel').value)">Go!</button>
-                    </span>
                   </div>
                 </div>
               </div>
             </div>
-
-            <div class="clearfix"></div>
-
-            <div class="col-md-14 col-sm-14 col-xs-18 tile_stats_count">
-                <div class="x_content">
-                  <span class="count" ></span>
-                   <b><font size="6" id = "numTel">Número de Telefone</font></b>
-                </div>
-            </div>
-
-              <div class="clearfix"></div>
-
-            <div class="col-md-14 col-sm-14 col-xs-18 tile_stats_count">
-                <div class="x_content">
-                  <span class="count" ></span>
-                   <b><font size="6" id = "tipoUtil">Tipo de Utilizador</font></b>
-                </div>
-            </div> 
-
-              <div class="clearfix"></div>
-
-            <div class="col-md-14 col-sm-14 col-xs-18 tile_stats_count">
-                <div class="x_content">
-                  <span class="count" ></span>
-                   <b><font size="6" id = "intData">Intervalo de Datas</font></b>
-                </div>
-            </div>
-
-              <div class="clearfix"></div>
-
-            <div class="row tile_count"> 
-              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                <span class="count_top"><i class="fa fa-user"></i> Acessos Totais</span>
-                <div class="x_content">
-                  <div id="totalacesso"></div>
-                  <div id = "totalacesso2" class="count">0</div>
-                </div>
-              </div>
-              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                <span class="count_top"><i class="fa fa-user"></i> Total de Acessos Concedidos</span>
-                <div class="x_content">
-                  <div id = "totalConcedidos" class="count">0</div>
-                </div>
-              </div>
-              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                <span class="count_top"><i class="fa fa-user"></i> Total de Entradas</span>
-                <div class="x_content">
-                  <div id = "totalentradas" class="count">0</div>
-                </div>
-              </div>
-              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                <span class="count_top"><i class="fa fa-user"></i> Total de Saidas</span>
-                <div class="x_content">
-                  <div id = "totalsaidas" class="count">0</div>
-                </div>
-              </div>
-              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                <span class="count_top"><i class="fa fa-user"></i> Total de Acessos Recusados</span>
-                <div class="x_content">
-                  <div id = "totalRecusadas" class="count">0</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6 col-sm-6 col-xs-12">
+            
+             
+              <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
-                  <div class="x_title">
-                    <h2>Razões de Acesso Recusado </h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
-                    </ul>
-                    <div class="clearfix"></div>
+                  <div id="mapid">
+
                   </div>
-                  <div class="x_content">
-                    <canvas id="pieChartAcessos2"></canvas>
-                    <div id="js-legend1" class="chart-legend" ></div>
-                  </div>
+
                 </div>
               </div>
-
-              
-            </div>
-            <div class="clearfix"></div>
-            <div class="row">
-            </div>
             </div>
           </div>
         </div>
@@ -197,6 +119,9 @@
         <!-- footer content -->
       </div>
     </div>
+
+
+    <script src="../vendors/leaflet/leaflet.js"></script>
 
     <!-- jQuery -->
     <script src="../vendors/jquery/dist/jquery.min.js"></script>
@@ -215,7 +140,7 @@
     <script src="../vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
     <!-- Custom Theme Scripts -->
     <script src="../build/js/custom.js"></script>
-    
-  
+
+	
   </body>
 </html>

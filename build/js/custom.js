@@ -2920,8 +2920,48 @@ if (typeof NProgress != 'undefined') {
 
 		}
 		
+/* Mapa de pilaretes */
+window.onload = function() {
+var point = L.point(362, 417);
+var point2 = L.point(217,455); // x+20 Gonçalo pereira
+var point3 = L.point(263,438); // Rua do forno
+var point4 = L.point(150,423);
 
+        var tileLayer = L.tileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}.png", {maxZoom: 20});
 
+        var map = new L.map('mapid', {
+            layers: tileLayer
+        }).setView([41.552398, -8.422144], 16);
+
+				//Exemplo de um pilarete
+				var circle = L.circle(map.layerPointToLatLng(point), {
+						color: 'red',
+						fillColor: '#f03',
+						fillOpacity: 0.5,
+						radius: 5
+				}).addTo(map);
+				
+				var circle2 = L.circle(map.layerPointToLatLng(point2), {
+						color: 'red',
+						fillColor: '#f03',
+						fillOpacity: 0.5,
+						radius: 5
+				}).addTo(map);
+
+				var circle3 = L.circle(map.layerPointToLatLng(point3), {
+						color: 'red',
+						fillColor: '#f03',
+						fillOpacity: 0.5,
+						radius: 5
+				}).addTo(map);
+
+				var circle4 = L.circle(map.layerPointToLatLng(point4), {
+						color: 'red',
+						fillColor: '#f03',
+						fillOpacity: 0.5,
+						radius: 5
+				}).addTo(map);
+    };
 		/* Checkbox de horários */
 
 		var myEl = document.getElementById('botaoGerar');
