@@ -2922,10 +2922,7 @@ if (typeof NProgress != 'undefined') {
 		
 /* Mapa de pilaretes */
 window.onload = function() {
-var point = L.point(362, 417);
-var point2 = L.point(217,455); // x+20 Gonçalo pereira
-var point3 = L.point(263,438); // Rua do forno
-var point4 = L.point(150,423);
+	var contador=0;
 
         var tileLayer = L.tileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}.png", {maxZoom: 20});
 
@@ -2933,34 +2930,49 @@ var point4 = L.point(150,423);
             layers: tileLayer
         }).setView([41.552398, -8.422144], 16);
 
-				//Exemplo de um pilarete
-				var circle = L.circle(map.layerPointToLatLng(point), {
-						color: 'red',
-						fillColor: '#f03',
-						fillOpacity: 0.5,
-						radius: 5
-				}).addTo(map);
-				
-				var circle2 = L.circle(map.layerPointToLatLng(point2), {
-						color: 'red',
-						fillColor: '#f03',
-						fillOpacity: 0.5,
-						radius: 5
-				}).addTo(map);
+	 $.ajax({
 
-				var circle3 = L.circle(map.layerPointToLatLng(point3), {
-						color: 'red',
-						fillColor: '#f03',
-						fillOpacity: 0.5,
-						radius: 5
-				}).addTo(map);
+					url: "http://localhost:8888/pilareteMapa.php",
+					method: "POST",
+					success: function(data) {
+						for(var i in data) {
+							if(contador==0){
+								var point = L.point(parseInt(data[i].px)-20,parseInt(data[i].py));
+								var circle = L.circle(map.layerPointToLatLng(point), {
+														color: 'red',
+														fillColor: '#f03',
+														fillOpacity: 0.5,
+														radius: 5
+												}).addTo(map);
+							circle.bindPopup(data[i].nome);
+							circle.on('mouseover', function (e) {
+									this.openPopup();
+							});
+							circle.on('mouseout', function (e) {
+									this.closePopup();
+							});
+								contador++;
+							}else{
 
-				var circle4 = L.circle(map.layerPointToLatLng(point4), {
-						color: 'red',
-						fillColor: '#f03',
-						fillOpacity: 0.5,
-						radius: 5
-				}).addTo(map);
+								var point = L.point(parseInt(data[i].px)+20,parseInt(data[i].py));
+								var circle = L.circle(map.layerPointToLatLng(point), {
+														color: 'red',
+														fillColor: '#f03',
+														fillOpacity: 0.5,
+														radius: 5
+								}).addTo(map);
+								circle.bindPopup(data[i].nome);
+								circle.on('mouseover', function (e) {
+										this.openPopup();
+								});
+								circle.on('mouseout', function (e) {
+										this.closePopup();
+								});
+							}
+							}
+			  		}
+			  	})
+
     };
 		/* Checkbox de horários */
 
