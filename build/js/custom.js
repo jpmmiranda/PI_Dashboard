@@ -52,7 +52,7 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
 
 	   var de = moment().subtract(1, 'year').startOf('year');
 	   var ate= moment().subtract(1, 'year').endOf('year');
-	var barGraph;
+	var barGraph, barGraph1;
 	var compAnos;
 	var barGraphPilaretes;
 	var barGraphUtilizador;
@@ -1999,6 +1999,191 @@ if (typeof NProgress != 'undefined') {
 			};
 		
 
+		/* Função inicializa charts da pagina dos Pilaretes */
+
+	function init_chartsPilaretes(de, ate,pilarete) {
+				console.log('run_charts  typeof [' + typeof (Chart) + ']');
+			
+				if( typeof (Chart) === 'undefined'){ return; }
+				
+				console.log('init_chartsPilaretes');
+			
+				
+				Chart.defaults.global.legend = {
+					enabled: false
+				};
+				
+			/*Grafico de linhas da pagina Pilaretes */
+			if ($('#lineChartPilaretes').length ){
+                var labels=["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+                var tipo=0;
+                var nomeLabel;
+                var c = new Date(de)
+                var d = new Date(ate)
+                var prim = moment(de,'YYYY/MM/DD');
+							  var ult = moment(ate,'YYYY/MM/DD');
+								var diffDays = ult.diff(prim, 'days');
+
+                if(diffDays==0){
+                    tipo=1;
+                    nomeLabel="Horas"
+                }
+
+                else if (diffDays==1){
+                     tipo =2;
+                     nomeLabel="Dias"
+
+                 }
+
+                else if (diffDays<=31){
+                     tipo =4;
+                     nomeLabel="Dias"
+                 }
+
+                else if(diffDays<7){
+                	  tipo =3;
+                      nomeLabel="Dias"
+                }
+                else{
+                    tipo =5;
+                    nomeLabel="Meses"
+                }
+
+                var de = c.toISOString().substring(0, 19).replace('T', ' ')
+                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+
+
+                 $.ajax({
+
+                    type: 'POST',
+            				url: "http://localhost:8888/acessosPilareteTab.php",
+                    data: {de : de, ate : ate, tipo : tipo, pilarete : pilarete}, 
+            		success: function(data) {
+
+            			var valoresE = new Array();
+            			var valoresS = new Array();
+                  var label =new Array();
+                  var posvaloresE=0;
+                  var posvaloresS=0;
+
+            			for(var i in data) {
+
+            				if($.inArray(data[i].lab, label)!=-1){
+
+	            				if (data[i].ee=="Entrada"){
+
+	            					 posvaloresE=label.indexOf(data[i].lab);
+
+	            					 if (valoresE[posvaloresE] === undefined) valoresE[posvaloresE]=parseInt((data[i].AcessosConcedidos));
+	            					 else valoresE[posvaloresE] = parseInt(valoresE[posvaloresE]) + parseInt((data[i].AcessosConcedidos));
+	            					
+	            					
+	            				}
+
+	            				if (data[i].es=="Saída"){
+
+
+	            					 posvaloresS=label.indexOf(data[i].lab);
+
+	            					 if (valoresS[posvaloresS] === undefined) valoresS[posvaloresS]=parseInt((data[i].AcessosConcedidos));
+	            					 else valoresS[posvaloresS] = parseInt(valoresS[posvaloresS]) + parseInt((data[i].AcessosConcedidos));
+	            					
+	            					
+	            				}
+	            			}else{
+	            				
+	            			   label.push(data[i].lab);
+	            				if (data[i].es=="Saída"){
+
+	            						posvaloresS=label.indexOf(data[i].lab);
+	            						valoresS.splice(posvaloresS, 0, data[i].AcessosConcedidos);
+	            				}
+	            				if (data[i].ee=="Entrada"){
+
+	            					posvaloresE=label.indexOf(data[i].lab);
+	            					valoresE.splice(posvaloresE, 0, data[i].AcessosConcedidos);
+
+	            				} 
+	            			}
+
+            				
+            			}
+            		/*	if(tipo==5){
+
+            				for(var i in label) {
+	                            label[i]=labels[i];
+
+            				}
+            			}*/
+            			var chartdata = {
+            				labels:  label,
+            				datasets : [
+            					{
+            						label: "Total de Entradas",
+            						backgroundColor: "rgba(38, 185, 154, 0.31)",
+            						borderColor: "rgba(38, 185, 154, 0.7)",
+            						pointBorderColor: "rgba(38, 185, 154, 0.7)",
+            						pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
+            						pointHoverBackgroundColor: "#fff",
+            						pointHoverBorderColor: "rgba(220,220,220,1)",
+            						pointBorderWidth: 1,
+            						data: valoresE
+            					},{
+									label: "Total de Saídas",
+									backgroundColor: "rgba(3, 88, 106, 0.3)",
+									borderColor: "rgba(3, 88, 106, 0.70)",
+									pointBorderColor: "rgba(3, 88, 106, 0.70)",
+									pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
+									pointHoverBackgroundColor: "#fff",
+									pointHoverBorderColor: "rgba(151,187,205,1)",
+									pointBorderWidth: 1,
+									data: valoresS
+								}	
+
+            				]
+            			};
+
+            			
+
+            			var ctx = $("#lineChartPilaretes");
+
+            			barGraph1 = new Chart(ctx, {
+            				type: 'line',
+            				data: chartdata,
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                    	scaleLabel: {
+									        display: true,
+									        labelString: 'Acessos'
+									    },
+                                        ticks: {
+                                            beginAtZero: true,
+
+                                        }
+                                    }],
+                                    xAxes: [{
+                                    	scaleLabel: {
+									        display: true,
+									        labelString: nomeLabel
+									    }
+                                    }]
+                                }
+                            }
+
+            			});
+            	document.getElementById('js-legend1').innerHTML = barGraph1.generateLegend();
+
+            		},
+            		error: function(data) {
+            			console.log(data);
+            		}
+
+	               });
+			
+			}
+
+	}
 		/* Função que inicializa os graficos */
 
 		function init_charts(de, ate,checkedBoxes) {
@@ -2179,7 +2364,6 @@ if (typeof NProgress != 'undefined') {
 				
 			}
 
-
 			
 			  /* Grafico de linhas da pagina Acessos Concedidos*/
 			 
@@ -2238,7 +2422,6 @@ if (typeof NProgress != 'undefined') {
                   var posvaloresS=0;
 
             			for(var i in data) {
-																					 console.log(data[i].lab);
 
             				if($.inArray(data[i].lab, label)!=-1){
 
@@ -2353,7 +2536,7 @@ if (typeof NProgress != 'undefined') {
 
 	               });
 			
-			}
+			} 
 				
 			 /* Gráfico de barras dos pilaretes */
 			  
@@ -2937,13 +3120,17 @@ window.onload = function() {
 					success: function(data) {
 						for(var i in data) {
 							if(contador==0){
+
 								var point = L.point(parseInt(data[i].px)-20,parseInt(data[i].py));
 								var circle = L.circle(map.layerPointToLatLng(point), {
 														color: 'red',
 														fillColor: '#f03',
 														fillOpacity: 0.5,
+														name: data[i].nome,
 														radius: 5
-												}).addTo(map);
+												}).addTo(map).on('click', function(){
+																inicializa_graficos(this.options.name) 
+									});
 							circle.bindPopup(data[i].nome);
 							circle.on('mouseover', function (e) {
 									this.openPopup();
@@ -2959,8 +3146,11 @@ window.onload = function() {
 														color: 'red',
 														fillColor: '#f03',
 														fillOpacity: 0.5,
+														name: data[i].nome,
 														radius: 5
-								}).addTo(map);
+								}).addTo(map).on('click', function(e){
+																inicializa_graficos(this.options.name) 
+												});
 								circle.bindPopup(data[i].nome);
 								circle.on('mouseover', function (e) {
 										this.openPopup();
@@ -2974,6 +3164,11 @@ window.onload = function() {
 			  	})
 
     };
+
+		function inicializa_graficos(e) {
+			barGraph1.destroy();
+				init_chartsPilaretes(de, ate,e);
+			}
 		/* Checkbox de horários */
 
 		var myEl = document.getElementById('botaoGerar');
@@ -5801,7 +5996,7 @@ window.onload = function() {
 	   
 	$(document).ready(function() {
  	   var checkedBoxes = getCheckedBoxes("1");
-
+			init_chartsPilaretes(de, ate,null);
 	    init_ano();
 	    init_graficoAnos($('#selecaoano option:selected').val());
 		init_sparklines();
