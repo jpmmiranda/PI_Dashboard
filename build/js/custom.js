@@ -49,9 +49,9 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
     $NAV_MENU = $('.nav_menu'),
     $FOOTER = $('footer');
 
-
-	   var de = moment().subtract(1, 'year').startOf('year');
-	   var ate= moment().subtract(1, 'year').endOf('year');
+	var url = "http://localhost:8888/"
+	var de = moment().subtract(1, 'year').startOf('year');
+	var ate= moment().subtract(1, 'year').endOf('year');
 	var barGraph, barGraph1;
 	var compAnos;
 	var barGraphPilaretes;
@@ -2056,7 +2056,7 @@ if (typeof NProgress != 'undefined') {
                  $.ajax({
 
                     type: 'POST',
-            				url: "http://localhost:8888/acessosPilareteTab.php",
+            				url: url + "acessosPilareteTab.php",
                     data: {de : de, ate : ate, tipo : tipo, pilarete : pilarete}, 
             		success: function(data) {
 
@@ -2411,7 +2411,7 @@ if (typeof NProgress != 'undefined') {
                  $.ajax({
 
                     type: 'POST',
-            				url: "http://localhost:8888/teste.php",
+            				url: url + "teste.php",
                     data: {de : de, ate : ate, tipo : tipo, listados : listados}, 
             		success: function(data) {
 
@@ -2550,7 +2550,7 @@ if (typeof NProgress != 'undefined') {
 
             		$.ajax({
             			method: "POST",
-            			url: "http://localhost:8888/acessosPorPilarete.php",
+            			url: url + "acessosPorPilarete.php",
 
                         data: {de : de, ate : ate},
 
@@ -2691,7 +2691,7 @@ if (typeof NProgress != 'undefined') {
 
 
 			$.ajax({
-					url: "http://localhost:8888/tabelaAcessosNaoConcedidos.php",
+					url: url + "tabelaAcessosNaoConcedidos.php",
 					method: "GET",
 					success: function(data) {
 						console.log(data);
@@ -2723,7 +2723,7 @@ if (typeof NProgress != 'undefined') {
 					  
 
 		$.ajax({
-				url: "http://localhost:8888/acessosPorUtilizador.php",
+				url: url + "acessosPorUtilizador.php",
 				method: "POST",
 				data: {de : de, ate : ate},
 				success: function(data) {
@@ -2774,7 +2774,7 @@ if (typeof NProgress != 'undefined') {
 			  
 
 				$.ajax({
-						url: "http://localhost:8888/acessosNegadosPorUtilizador.php",
+						url: url + "acessosNegadosPorUtilizador.php",
 
 						method: "GET",
 						success: function(data) {
@@ -2998,7 +2998,7 @@ if (typeof NProgress != 'undefined') {
 
 			if ($('#tipoUtil').length ){
 				$.ajax({
-						url: "http://localhost:8888/getTipoUtil.php",
+						url: url + "getTipoUtil.php",
 						method: "POST",
 						data: {utilizador : utilizador},
 						success: function(data) {
@@ -3015,7 +3015,7 @@ if (typeof NProgress != 'undefined') {
 			if ($('#pieChartAcessos2').length ){
 				  
 				  $.ajax({
-						url: "http://localhost:8888/utilizadorAcessosNaoConcebidos.php",
+						url: url + "utilizadorAcessosNaoConcebidos.php",
 						method: "POST",
 						data: {utilizador : utilizador},
 						success: function(data) {
@@ -3074,7 +3074,7 @@ if (typeof NProgress != 'undefined') {
 
 			  	 $.ajax({
 
-					url: "http://localhost:8888/totalAcessos.php",
+					url: url + "totalAcessos.php",
 					method: "POST",
 					data: {utilizador : utilizador},
 					success: function(data) {
@@ -3115,7 +3115,7 @@ window.onload = function() {
 
 	 $.ajax({
 
-					url: "http://localhost:8888/pilareteMapa.php",
+					url: url +"pilareteMapa.php",
 					method: "POST",
 					success: function(data) {
 						for(var i in data) {
@@ -3221,7 +3221,7 @@ window.onload = function() {
 			  $.ajax({
 	
           type: 'POST',
-					url: "http://localhost:8888/acessosAnos.php",
+					url: url +"acessosAnos.php",
           data: {ano: ano},
 				success: function(data) {
 					var score = [];
@@ -3330,7 +3330,7 @@ window.onload = function() {
 				  },
 
 				   
-				events: 'http://localhost:8888/eventos.php',
+				events: url + 'eventos.php',
 
 				 eventRender: function(event, element, view) {
 					    if (event.allDay === 'true') {
@@ -3366,7 +3366,7 @@ window.onload = function() {
 						   var end =  $.fullCalendar.moment(ended, 'YYYY-MM-DD HH:MM:ss').toISOString();
 						   var desc = $("#descr").val();
 						   $.ajax({
-						   url: 'http://localhost:8888/addEventos.php',
+						   url: url + 'addEventos.php',
 						   data: 'title='+ title+'&start='+ start +'&end='+ end +'&description=' + desc,
 						   type: "POST",
 						   });
@@ -3401,7 +3401,7 @@ window.onload = function() {
 					   var start = $.fullCalendar.moment(event.start, 'YYYY-MM-DD HH:MM:ss').toISOString();
 					   var end = $.fullCalendar.moment(event.end, 'YYYY-MM-DD HH:MM:ss').toISOString();
 					   $.ajax({
-						   url: 'http://localhost:8888/updateEventos.php',
+						   url: url + 'updateEventos.php',
 						   data: 'title='+ event.title+'&start='+ start +'&end='+ end +'&id='+ event.id + '&desc='+event.description ,
 						   type: "POST",
 						 
@@ -3412,7 +3412,7 @@ window.onload = function() {
 					   var start = $.fullCalendar.moment(event.start, 'YYYY-MM-DD HH:MM:ss').toISOString();
 					   var end = $.fullCalendar.moment(event.end, 'YYYY-MM-DD HH:MM:ss').toISOString();
 					   $.ajax({
-					    url: 'http://localhost:8888/updateEventos.php',
+					    url: url + 'updateEventos.php',
 					    data: 'title='+ event.title+'&start='+ start +'&end='+ end +'&id='+ event.id + '&desc='+event.description,
 					    type: "POST",
 				
@@ -3425,7 +3425,7 @@ window.onload = function() {
 
 								$.ajax({
 									type: "POST",
-									url: 'http://localhost:8888/delEventos.php',
+									url: url + 'delEventos.php',
 									data: "&id=" + event.id,
 								});
 
@@ -3446,7 +3446,7 @@ window.onload = function() {
 								  events.description = $("#descr2").val();
 								   $.ajax({
 								   	type: "POST",
-								    url: 'http://localhost:8888/updateEventos.php',
+								    url: url + 'updateEventos.php',
 								    data: '&title='+ events.title+'&id='+ events.id + '&desc='+events.description,
 								   
 
