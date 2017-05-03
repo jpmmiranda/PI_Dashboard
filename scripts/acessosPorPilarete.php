@@ -18,8 +18,15 @@ mysqli_set_charset($connection->conn, "utf8");
 
 $inicio = $_POST["de"];
 $fim = $_POST["ate"];
+$listados = $_POST["listados"];
+
+if($listados==null)$listados=".*";
+
 //query to get data from the table
-$query = sprintf("SELECT count(*) as AcessosConcedidos, Pilarete, EstadoEspiraE as ee, EstadoEspiraS as es  FROM RegistoAcessos where (DataHora between '$inicio' and '$fim')  and ValidacaoAcesso regexp '^Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída')   group by Pilarete,EstadoEspiraE, EstadoEspiraS order by AcessosConcedidos desc ;");
+$query = sprintf("SELECT count(*) as AcessosConcedidos, RA.Pilarete, EstadoEspiraE as ee, EstadoEspiraS as es, TipoUtente   
+			FROM RegistoAcessos as RA inner join Utentes as UT
+			on RA.nContribuinte = UT.nContribuinte 
+			where (DataHora between '$inicio' and '$fim') and UT.TipoUtente REGEXP '$listados' and ValidacaoAcesso regexp '^Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída')   group by Pilarete,EstadoEspiraE, EstadoEspiraS,TipoUtente order by AcessosConcedidos desc ;");
 
 //execute query
 $result = $connection->conn->query($query);

@@ -2187,6 +2187,13 @@ if (typeof NProgress != 'undefined') {
 		/* Função que inicializa os graficos */
 
 		function init_charts(de, ate,checkedBoxes) {
+
+				
+						 
+			 	var listados;
+				if(checkedBoxes!=null) listados = checkboxSelecionados(checkedBoxes);
+
+
 				console.log('run_charts  typeof [' + typeof (Chart) + ']');
 			
 				if( typeof (Chart) === 'undefined'){ return; }
@@ -2197,8 +2204,6 @@ if (typeof NProgress != 'undefined') {
 				Chart.defaults.global.legend = {
 					enabled: false
 				};
-				
-				
 
 			if ($('#canvas_line').length ){
 				
@@ -2366,7 +2371,7 @@ if (typeof NProgress != 'undefined') {
 
 			
 			  /* Grafico de linhas da pagina Acessos Concedidos*/
-			 
+	
 			if ($('#lineChart').length ){
                 var labels=["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
                 var tipo=0;
@@ -2404,10 +2409,7 @@ if (typeof NProgress != 'undefined') {
 
                 var de = c.toISOString().substring(0, 19).replace('T', ' ')
                 var ate = d.toISOString().substring(0, 19).replace('T', ' ')
-								var listados;
-								if(checkedBoxes!=null) listados = checkboxSelecionados(checkedBoxes);
-
-
+							
                  $.ajax({
 
                     type: 'POST',
@@ -2547,16 +2549,16 @@ if (typeof NProgress != 'undefined') {
                 var d = new Date(ate)
                 var de = c.toISOString().substring(0, 19).replace('T', ' ')
                 var ate = d.toISOString().substring(0, 19).replace('T', ' ')
-
+								
             		$.ajax({
             			method: "POST",
             			url: url + "acessosPorPilarete.php",
 
-                        data: {de : de, ate : ate},
+                  data: {de : de, ate : ate,listados : listados},
 
             			success: function(data) {
-            				var valoresE = new Array();
-            			var valoresS = new Array();
+            						var valoresE = new Array();
+            						var valoresS = new Array();
                         var label =new Array();
                         var posvaloresE;
                         var posvaloresS;
@@ -3216,13 +3218,17 @@ window.onload = function() {
 
 		//Gráfico que compara 2 anos seguidos
 
-		function init_graficoAnos(ano){
+		function init_graficoAnos(ano,checkedBoxes){
+
+			 	var listados;
+				if(checkedBoxes!=null) listados = checkboxSelecionados(checkedBoxes);
+
 			  var ctx = document.getElementById("compAnos");
 			  $.ajax({
 	
           type: 'POST',
 					url: url +"acessosAnos.php",
-          data: {ano: ano},
+          data: {ano: ano, listados: listados},
 				success: function(data) {
 					var score = [];
 					var anoY = [];
@@ -3265,19 +3271,18 @@ window.onload = function() {
 						type: 'line',
 						data: chartdata,
 						options: {
-                                scales: {
-                                    yAxes: [{
-                                    	scaleLabel: {
+                     scales: {
+                        yAxes: [{
+                         scaleLabel: {
 									        display: true,
 									        labelString: 'Acessos'
 									    },
-                                        ticks: {
-                                            beginAtZero: true,
-
-                                        }
-                                    }],
-                                    xAxes: [{
-                                    	scaleLabel: {
+                      ticks: {
+                        beginAtZero: true,
+                          }
+                          }],
+                        xAxes: [{
+										     	scaleLabel: {
 									        display: true,
 									        labelString: 'Meses'
 									    }
@@ -5998,7 +6003,7 @@ window.onload = function() {
  	   var checkedBoxes = getCheckedBoxes("1");
 			init_chartsPilaretes(de, ate,null);
 	    init_ano();
-	    init_graficoAnos($('#selecaoano option:selected').val());
+	    init_graficoAnos($('#selecaoano option:selected').val(),checkedBoxes);
 		init_sparklines();
 		init_flot_chart();
 		init_sidebar();
@@ -6036,7 +6041,7 @@ window.onload = function() {
 		$('#selecaoano').change(function(){
 
 			 compAnos.destroy();
-	  		 init_graficoAnos($('#selecaoano option:selected').val());
+	  		 init_graficoAnos($('#selecaoano option:selected').val(),checkedBoxes);
         });
 				
 	});	
