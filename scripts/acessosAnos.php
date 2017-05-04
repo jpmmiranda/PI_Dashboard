@@ -17,16 +17,15 @@ if(!$connection->conn){
 
 $ano = $_POST["ano"];
 $listados = $_POST["listados"];
-
-if($listados==null)$listados=".*";
+if($listados==null) $listados=".*";
 
 
 //query to get data from the table
-$query = sprintf("SELECT count(*) as AcessosConcedidos, month(DataHora), year(DataHora) as year, UT.TipoUtente 
+$query = sprintf("SELECT count(*) as AcessosConcedidos, month(DataHora), year(DataHora) as year, TipoUtente 
 	FROM RegistoAcessos as RA inner join Utentes as UT
 		on RA.nContribuinte = UT.nContribuinte 
 			where (year(DataHora) = '$ano' or year(DataHora) = ('$ano'-1)) and ValidacaoAcesso like 'Acesso Concedido' and UT.TipoUtente REGEXP '$listados'
-			group by month(DataHora), year(DataHora), UT.TipoUtente;");
+			group by month(DataHora), year(DataHora), TipoUtente;");
 
 //execute query
 $result = $connection->conn->query($query);

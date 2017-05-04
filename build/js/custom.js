@@ -56,7 +56,8 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
 	var compAnos;
 	var barGraphPilaretes;
 	var barGraphUtilizador;
-	
+	var barGraphUtilizadorTelefone;
+
 // Sidebar
 function init_sidebar() {
 // TODO: This is some kind of easy fix, maybe we can improve this
@@ -1641,6 +1642,8 @@ if (typeof NProgress != 'undefined') {
 					barGraph.destroy();
 		      barGraphPilaretes.destroy();
 		      barGraphUtilizador.destroy();
+					barGraphUtilizadorTelefone.destroy();
+
           init_charts(picker.startDate.format('YYYY/MM/DD HH:mm'),picker.endDate.format('YYYY/MM/DD HH:mm'),getCheckedBoxes('1'));
 
 			});
@@ -2718,18 +2721,16 @@ if (typeof NProgress != 'undefined') {
 					error: function(data) {
 						console.log(data);
 								}
-			    					});
+			  });
 	}
 					  
 		if ($('#acessosPorUtilizadorBarras').length ){ 
-					  
 
 		$.ajax({
 				url: url + "acessosPorUtilizador.php",
 				method: "POST",
-				data: {de : de, ate : ate},
+				data: {de : de, ate : ate, listados : listados},
 				success: function(data) {
-					console.log(data);
 					var valores = [];
 					var telefone = []
 
@@ -2762,6 +2763,55 @@ if (typeof NProgress != 'undefined') {
 					var ctx = $('#acessosPorUtilizadorBarras');
 
 					 barGraphUtilizador = new Chart(ctx, {
+						type: 'bar',
+						data: chartdata
+					});
+				},
+				error: function(data) {
+					console.log(data);
+				}
+			});
+			  
+		} 
+		if ($('#acessosPorUtilizadorBarrasTelefone').length ){ 
+
+		$.ajax({
+				url: url + "acessosPorUtilizadorTelefone.php",
+				method: "POST",
+				data: {de : de, ate : ate, listados : listados},
+				success: function(data) {
+					var valores = [];
+					var telefone = []
+
+					for(var i in data) {
+						valores.push(data[i].AcessosConcedidos);
+						telefone.push(data[i].nContribuinte);
+
+					}
+
+					var chartdata = {
+						labels:  telefone,
+						datasets : [
+							{
+								label: "Total de Acessos",
+								backgroundColor: "rgba(38, 185, 154, 0.31)",
+								data: valores,
+								options: {
+								  scales: {
+									yAxes: [{
+									  ticks: {
+										beginAtZero: true
+									  }
+									}]
+								  }
+								}
+							}
+						]
+					};
+
+					var ctx = $('#acessosPorUtilizadorBarrasTelefone');
+
+					 barGraphUtilizadorTelefone = new Chart(ctx, {
 						type: 'bar',
 						data: chartdata
 					});
@@ -2976,6 +3026,7 @@ if (typeof NProgress != 'undefined') {
 			
 			}
 		}
+
 
 
 		function init_ano() {
@@ -3211,7 +3262,6 @@ window.onload = function() {
 				else 
 					string = string + selecionados[i]; 
 			}
-			console.log(string);
 			return string;
 		}
 
@@ -3219,10 +3269,10 @@ window.onload = function() {
 		//Gráfico que compara 2 anos seguidos
 
 		function init_graficoAnos(ano,checkedBoxes){
-
-			 	var listados;
+			 	
+				var listados;
 				if(checkedBoxes!=null) listados = checkboxSelecionados(checkedBoxes);
-
+			
 			  var ctx = document.getElementById("compAnos");
 			  $.ajax({
 	

@@ -18,12 +18,12 @@ $inicio = $_POST["de"];
 $fim = $_POST["ate"];
 $listados = $_POST["listados"];
 
-if($listados==null) $listados=".*";
+if($listados==null) $listados="24h";
 //query to get data from the table
-$query = sprintf("SELECT count(*) as AcessosConcedidos, UT.nContribuinte, UT.TipoUtente 
+$query = sprintf("SELECT count(*) as AcessosConcedidos, UT.telemovel, UT.TipoUtente 
 	FROM RegistoAcessos as RA inner join Utentes as UT
-		on RA.nContribuinte = UT.nContribuinte 
-		where (DataHora between '$inicio' and '$fim') and UT.TipoUtente REGEXP '$listados' and ValidacaoAcesso like 'Acesso Concedido' group by UT.Telefone,TipoUtente order by AcessosConcedidos desc limit 10;");
+		on RA.telefone = UT.telemovel 
+		where (DataHora between '$inicio' and '$fim') and UT.TipoUtente REGEXP '$listados' and ValidacaoAcesso like 'Acesso Concedido' group by UT.telemovel,TipoUtente order by AcessosConcedidos desc limit 10;");
 
 //execute query
 $result = $connection->conn->query($query);
