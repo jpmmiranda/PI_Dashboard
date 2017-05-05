@@ -2785,7 +2785,7 @@ if (typeof NProgress != 'undefined') {
 
 					for(var i in data) {
 						valores.push(data[i].AcessosConcedidos);
-						telefone.push(data[i].nContribuinte);
+						telefone.push(data[i].telemovel);
 
 					}
 
@@ -3231,6 +3231,7 @@ window.onload = function() {
 					barGraph.destroy();	
 		      barGraphPilaretes.destroy();
 		      barGraphUtilizador.destroy(); 
+					barGraphUtilizadorTelefone.destroy();
 				init_charts(de,ate,array);
 			}, false);
 		}

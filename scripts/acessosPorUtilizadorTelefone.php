@@ -10,20 +10,27 @@ require_once(dirname(__FILE__).'/connection.php');
 $connection = new connection();
 $connection->GetConnection();
 
+
+
 if(!$connection->conn){
 	die("Connection failed: " . $connection->conn->error);
 }
+
+mysqli_set_charset($connection->conn, "utf8");
+
 
 $inicio = $_POST["de"];
 $fim = $_POST["ate"];
 $listados = $_POST["listados"];
 
-if($listados==null) $listados="24h";
+
+if($listados==null) $listados=".*";
+
 //query to get data from the table
-$query = sprintf("SELECT count(*) as AcessosConcedidos, UT.telemovel, UT.TipoUtente 
+$query = sprintf("SELECT count(*) as AcessosConcedidos, UT.telemovel as telemovel
 	FROM RegistoAcessos as RA inner join Utentes as UT
 		on RA.telefone = UT.telemovel 
-		where (DataHora between '$inicio' and '$fim') and UT.TipoUtente REGEXP '$listados' and ValidacaoAcesso like 'Acesso Concedido' group by UT.telemovel,TipoUtente order by AcessosConcedidos desc limit 10;");
+		where (DataHora between '$inicio' and '$fim') and UT.TipoUtente REGEXP '$listados' and ValidacaoAcesso like 'Acesso Concedido' group by UT.telemovel order by AcessosConcedidos desc limit 10;");
 
 //execute query
 $result = $connection->conn->query($query);
@@ -41,5 +48,5 @@ $result->close();
 $connection->conn->close();
 
 //now print the data
-print json_encode($data);
+print json_encode($data,JSON_UNESCAPED_UNICODE);
 ?>

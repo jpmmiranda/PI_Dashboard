@@ -7,12 +7,16 @@ header("Access-Control-Allow-Headers: X-Requested-With");
 //database
 require_once(dirname(__FILE__).'/connection.php');
 
+
 $connection = new connection();
 $connection->GetConnection();
 
 if(!$connection->conn){
 	die("Connection failed: " . $connection->conn->error);
 }
+
+mysqli_set_charset($connection->conn, "utf8");
+
 
 $inicio = $_POST["de"];
 $fim = $_POST["ate"];
@@ -41,5 +45,5 @@ $result->close();
 $connection->conn->close();
 
 //now print the data
-print json_encode($data);
+print json_encode($data,JSON_UNESCAPED_UNICODE);
 ?>
