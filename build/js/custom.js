@@ -54,9 +54,10 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
 	var ate= moment().subtract(1, 'year').endOf('year');
 	var barGraph, barGraph1;
 	var compAnos;
-	var barGraphPilaretes;
+	var barGraphPilaretes,barGraphContribuintePorPilarete,barGraphTelefonePorPilarete;
 	var barGraphUtilizador;
 	var barGraphUtilizadorTelefone;
+	var pilareteSelecionado;
 
 // Sidebar
 function init_sidebar() {
@@ -1643,7 +1644,7 @@ if (typeof NProgress != 'undefined') {
 		      barGraphPilaretes.destroy();
 		      barGraphUtilizador.destroy();
 					barGraphUtilizadorTelefone.destroy();
-
+					init_chartsPilaretes(de, ate,pilarete)
           init_charts(picker.startDate.format('YYYY/MM/DD HH:mm'),picker.endDate.format('YYYY/MM/DD HH:mm'),getCheckedBoxes('1'));
 
 			});
@@ -1658,6 +1659,92 @@ if (typeof NProgress != 'undefined') {
 			});
 			$('#destroy').click(function() {
 			  $('#reportrange').data('daterangepicker').remove();
+			});
+   
+		}
+
+		/* Calendario da pagina de pilaretes */
+		function init_daterangepickerPilaretes(pilaretes) {
+
+
+			if( typeof ($.fn.daterangepicker) === 'undefined'){ return; }
+			console.log('init_daterangepicker');
+		
+			var cb = function(start, end, label) {
+			  console.log(start.toISOString(), end.toISOString(), label);
+			  $('#reportrange1 span').html(start.format('DD-MM-YYYY') + ' Até ' + end.format('DD-MM-YYYY'));
+			};
+
+			var max = new Date().getFullYear();
+			   
+			var optionSet1 = {
+			  minDate: '01/01/2016',
+			  maxDate: '12/31/'+max,
+			  dateLimit: {
+				days: 366
+			  },
+			  showDropdowns: true,
+			  showWeekNumbers: true,
+			  timePicker: true,
+			  timePickerIncrement: 1,
+			  timePicker24Hour: true,
+			  ranges: {
+				'Hoje': [moment().startOf('day'), moment().endOf('day')],
+				'Ontem': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+				'Últimos 7 Dias': [moment().subtract(6, 'days').startOf('day'), moment()],
+				'Este Mês': [moment().startOf('month'), moment().endOf('month')],
+				'Último Mês': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                'Este Ano': [moment().startOf('year'), moment().endOf('year')],
+                'Último Ano': [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')]
+			  },
+			  opens: 'left',
+			  buttonClasses: ['btn btn-default'],
+			  applyClass: 'btn-small btn-primary',
+			  cancelClass: 'btn-small',
+			  format: 'DD/MM/YYYY',
+			  separator: ' de ',
+              locale: {
+                    applyLabel: 'Ok',
+                    cancelLabel: 'Cancelar',
+                    fromLabel: 'De',
+                    toLabel: 'Até',
+                    customRangeLabel: 'Personalizar',
+                    daysOfWeek: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+                    monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                    firstDay: 1
+                  }
+			 
+			};
+			
+			$('#reportrange1 span').html(moment().format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY'));
+			$('#reportrange1').daterangepicker(optionSet1, cb);
+			$('#reportrange1').on('show.daterangepicker', function() {
+			  console.log("show event fired");
+			});
+			$('#reportrange1').on('hide.daterangepicker', function() {
+			  console.log("hide event fired");
+			});
+			$('#reportrange1').on('apply.daterangepicker', function(ev, picker) {
+			  console.log("apply event fired, start/end dates are " + picker.startDate.format('YYYY/MM/DD HH:mm') + " to " + picker.endDate.format('YYYY/MM/DD HH:mm'));
+          de = picker.startDate.format('YYYY/MM/DD HH:mm');
+					ate = picker.endDate.format('YYYY/MM/DD HH:mm');		
+					barGraphContribuintePorPilarete.destroy();
+					barGraphTelefonePorPilarete.destroy();		
+					barGraph1.destroy();
+					init_chartsPilaretes(de,ate,pilareteSelecionado)
+
+			});
+			$('#reportrange1').on('cancel.daterangepicker', function(ev, picker) {
+			  console.log("cancel event fired");
+			});
+			$('#options1').click(function() {
+			  $('#reportrange').data('daterangepicker').setOptions(optionSet1, cb);
+			});
+			$('#options2').click(function() {
+			  $('#reportrange').data('daterangepicker').setOptions(optionSet2, cb);
+			});
+			$('#destroy').click(function() {
+			  $('#reportrange1').data('daterangepicker').remove();
 			});
    
 		}
@@ -2111,13 +2198,13 @@ if (typeof NProgress != 'undefined') {
 
             				
             			}
-            		/*	if(tipo==5){
+            			if(tipo==5){
 
             				for(var i in label) {
 	                            label[i]=labels[i];
 
             				}
-            			}*/
+            			}
             			var chartdata = {
             				labels:  label,
             				datasets : [
@@ -2185,6 +2272,106 @@ if (typeof NProgress != 'undefined') {
 	               });
 			
 			}
+
+		
+		if ($('#acessosContribuintePorPilarete').length ){ 
+
+		$.ajax({
+				url: url + "acessosContribuintePorPilarete.php",
+				method: "POST",
+				data: {de : de, ate : ate, pilarete : pilarete},
+				success: function(data) {
+					var valores = [];
+					var telefone = []
+
+					for(var i in data) {
+						valores.push(data[i].AcessosConcedidos);
+						telefone.push(data[i].nContribuinte);
+
+					}
+
+					var chartdata = {
+						labels:  telefone,
+						datasets : [
+							{
+								label: "Total de Acessos",
+								backgroundColor: "rgba(38, 185, 154, 0.31)",
+								data: valores,
+								options: {
+								  scales: {
+									yAxes: [{
+									  ticks: {
+										beginAtZero: true
+									  }
+									}]
+								  }
+								}
+							}
+						]
+					};
+
+					var ctx = $('#acessosContribuintePorPilarete');
+
+					 barGraphContribuintePorPilarete = new Chart(ctx, {
+						type: 'bar',
+						data: chartdata
+					});
+				},
+				error: function(data) {
+					console.log(data);
+				}
+			});
+			  
+		}
+		if ($('#acessosTelefonePorPilarete').length ){ 
+
+		$.ajax({
+				url: url + "acessosTelefonePorPilarete.php",
+				method: "POST",
+				data: {de : de, ate : ate, pilarete : pilarete},
+				success: function(data) {
+					var valores = [];
+					var telefone = []
+
+					for(var i in data) {
+						valores.push(data[i].AcessosConcedidos);
+						telefone.push(data[i].telemovel);
+
+					}
+
+					var chartdata = {
+						labels:  telefone,
+						datasets : [
+							{
+								label: "Total de Acessos",
+								backgroundColor: "rgba(38, 185, 154, 0.31)",
+								data: valores,
+								options: {
+								  scales: {
+									yAxes: [{
+									  ticks: {
+										beginAtZero: true
+									  }
+									}]
+								  }
+								}
+							}
+						]
+					};
+
+					var ctx = $('#acessosTelefonePorPilarete');
+
+					barGraphTelefonePorPilarete = new Chart(ctx, {
+						type: 'bar',
+						data: chartdata
+					});
+				},
+				error: function(data) {
+					console.log(data);
+				}
+			});
+			  
+		} 
 
 	}
 		/* Função que inicializa os graficos */
@@ -2821,7 +3008,7 @@ if (typeof NProgress != 'undefined') {
 				}
 			});
 			  
-			} 
+		} 
 			if ($('#acessosNegadosBarras').length ){ 
 			  
 
@@ -3160,10 +3347,11 @@ if (typeof NProgress != 'undefined') {
 window.onload = function() {
 	var contador=0;
 
-        var tileLayer = L.tileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}.png", {maxZoom: 20});
+        var tileLayer = L.tileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}.png", {maxZoom: 18, minZoom: 15});
 
         var map = new L.map('mapid', {
             layers: tileLayer
+
         }).setView([41.552398, -8.422144], 16);
 
 	 $.ajax({
@@ -3202,7 +3390,8 @@ window.onload = function() {
 														name: data[i].nome,
 														radius: 5
 								}).addTo(map).on('click', function(e){
-																inicializa_graficos(this.options.name) 
+																inicializa_graficos(this.options.name),
+																pilareteSelecionado=this.options.name; 
 												});
 								circle.bindPopup(data[i].nome);
 								circle.on('mouseover', function (e) {
@@ -3217,10 +3406,12 @@ window.onload = function() {
 			  	})
 
     };
-
 		function inicializa_graficos(e) {
 			barGraph1.destroy();
-				init_chartsPilaretes(de, ate,e);
+			barGraphContribuintePorPilarete.destroy();
+			barGraphTelefonePorPilarete.destroy();
+			init_chartsPilaretes(de, ate,e);
+			
 			}
 		/* Checkbox de horários */
 
@@ -6051,10 +6242,10 @@ window.onload = function() {
 
 	   
 	$(document).ready(function() {
- 	   var checkedBoxes = getCheckedBoxes("1");
-			init_chartsPilaretes(de, ate,null);
-	    init_ano();
-	    init_graficoAnos($('#selecaoano option:selected').val(),checkedBoxes);
+ 	  var checkedBoxes = getCheckedBoxes("1");
+		init_chartsPilaretes(de, ate,null);
+	  init_ano();
+	  init_graficoAnos($('#selecaoano option:selected').val(),checkedBoxes);
 		init_sparklines();
 		init_flot_chart();
 		init_sidebar();
@@ -6067,6 +6258,7 @@ window.onload = function() {
 		init_ColorPicker();
 		init_TagsInput();
 		init_parsley();
+		init_daterangepickerPilaretes(null);
 		init_daterangepicker(checkedBoxes);
 		init_daterangepicker_right();
 		init_daterangepicker_single_call();
