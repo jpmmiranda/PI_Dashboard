@@ -2381,6 +2381,7 @@ if (typeof NProgress != 'undefined') {
 				
 						 
 			 	var listados;
+			 	if(checkedBoxes == null) listados = '.*';
 				if(checkedBoxes!=null) listados = checkboxSelecionados(checkedBoxes);
 
 
@@ -2606,7 +2607,7 @@ if (typeof NProgress != 'undefined') {
             				url: url + "teste.php",
                     data: {de : de, ate : ate, tipo : tipo, listados : listados}, 
             		success: function(data) {
-
+            			console.log(data);
             					var valoresE = new Array();
             			var valoresS = new Array();
                   var label =new Array();
@@ -3231,7 +3232,6 @@ if (typeof NProgress != 'undefined') {
 		// Função para a  criação dos gráficos da utilizadores
 
 		function init_utilizador(utilizador){
-			console.log(utilizador);
 
 			if (utilizador.length < 9 || utilizador.length > 9) {document.getElementById('numTel').innerHTML = 'Número Inválido';}
 				else {document.getElementById('numTel').innerHTML = utilizador;}
@@ -3259,7 +3259,6 @@ if (typeof NProgress != 'undefined') {
 						method: "POST",
 						data: {utilizador : utilizador},
 						success: function(data) {
-							console.log(data);
 							var valores = [];
 							var razao = []
 
@@ -3345,7 +3344,7 @@ if (typeof NProgress != 'undefined') {
 		
 /* Mapa de pilaretes */
 window.onload = function() {
-	var contador=0;
+		var contador=0;
 
         var tileLayer = L.tileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}.png", {maxZoom: 18, minZoom: 15});
 
@@ -3361,7 +3360,6 @@ window.onload = function() {
 					success: function(data) {
 						for(var i in data) {
 							if(contador==0){
-
 								var point = L.point(parseInt(data[i].px)-20,parseInt(data[i].py));
 								var circle = L.circle(map.layerPointToLatLng(point), {
 														color: 'red',
@@ -3463,8 +3461,9 @@ window.onload = function() {
 		function init_graficoAnos(ano,checkedBoxes){
 			 	
 				var listados;
+				if(checkedBoxes == null) listados = '.*';
 				if(checkedBoxes!=null) listados = checkboxSelecionados(checkedBoxes);
-			
+				if(ano == null ) ano = 2016;
 			  var ctx = document.getElementById("compAnos");
 			  $.ajax({
 	
@@ -6243,7 +6242,7 @@ window.onload = function() {
 	   
 	$(document).ready(function() {
  	  var checkedBoxes = getCheckedBoxes("1");
-		init_chartsPilaretes(de, ate,null);
+		init_chartsPilaretes(de, ate,'.*');
 	  init_ano();
 	  init_graficoAnos($('#selecaoano option:selected').val(),checkedBoxes);
 		init_sparklines();

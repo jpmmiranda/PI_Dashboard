@@ -16,9 +16,7 @@ if(!$connection->conn){
 
 mysqli_set_charset($connection->conn, "utf8");
 
-$px = $_POST["px"];
-$py = $_POST["py"];
-$nome = $_POST["nome"];
+
 //query to get data from the table
 $query = sprintf("SELECT px,py,nome FROM Pilaretes;");
 
