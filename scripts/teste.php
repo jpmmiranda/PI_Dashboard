@@ -21,6 +21,7 @@ $fim = $_POST["ate"];
 $listados = $_POST["listados"];
 if($listados==null)$listados=".*";
 
+
 //query to get data from the table
 if($tipo == 1)
 	$query = sprintf("SELECT count(*) as AcessosConcedidos, hour(DataHora) as lab ,EstadoEspiraE as ee, EstadoEspiraS as es, TipoUtente
