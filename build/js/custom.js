@@ -2607,7 +2607,7 @@ if (typeof NProgress != 'undefined') {
                     data: {de : de, ate : ate, tipo : tipo, listados : listados}, 
             		success: function(data) {
 
-            			var valoresE = new Array();
+            					var valoresE = new Array();
             			var valoresS = new Array();
                   var label =new Array();
                   var posvaloresE=0;
