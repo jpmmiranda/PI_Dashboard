@@ -4048,6 +4048,18 @@ window.onload = function() {
 	   
 		
 		
+function demoFromHTML() {
+            var doc = new jsPDF('l', 'mm',[210, 297]);
+           html2canvas($("#linechart"), {
+                onrendered: function(canvas) {         
+                    var imgData = canvas.toDataURL('image/png',1.0);                  
+                    doc.text(130,15,title+" GT Log");
+                    doc.addImage(imgData, 'PNG',20,30,0,130); 
+                    doc.addHTML(canvas);
+                    doc.save('gt_log.pdf');             
+                    }       
+            });
+}
 		/* ECHRTS */
 	
 		
@@ -6324,7 +6336,6 @@ window.onload = function() {
 			}
 	   
 		}  
-
 	   
 	$(document).ready(function() {
  	  var checkedBoxes = getCheckedBoxes("1");
