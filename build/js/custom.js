@@ -3641,7 +3641,6 @@ window.onload = function() {
 	   	/* CALENDAR */
 		  
 		    function  init_calendar() {
-					
 				if( typeof ($.fn.fullCalendar) === 'undefined'){ return; }
 				console.log('init_calendar');
 				var date = new Date(),
@@ -3708,7 +3707,7 @@ window.onload = function() {
 						   start: start,
 						   end: end,
 						   allDay: event.allDay,
-						   description: desc
+						   description: desc,
 						   },
 						   true // make the event "stick"
    					);
@@ -3750,7 +3749,9 @@ window.onload = function() {
 				
 					   });
 					},
+
 					eventClick: function(event, jsEvent,view) {
+
 						  if (jsEvent.target.id === 'Delete') {
 						  	var decision = confirm("Deseja eliminar o evento?"); 
 							if (decision) {
@@ -3765,36 +3766,29 @@ window.onload = function() {
 
 								}
 						  }else {
-
-							  	$('#fc_edit').click();
+							  $('#fc_edit').click();
 								$('#title2').val(event.title);
 								$('#descr2').val(event.description)
-								var events = new Object();
-								events=event;
-
 								$(".antosubmit2").on("click", function() {
 
-								  events.title = $("#title2").val();
-								  events.description = $("#descr2").val();
+								  event.title = $("#title2").val();
+								  event.description = $("#descr2").val();
 								   $.ajax({
 								   	type: "POST",
 								    url: url + 'updateEventos.php',
-								    data: '&title='+ events.title+'&id='+ events.id + '&desc='+events.description,
-								   
-
+								    data: '&title='+ event.title+'&id='+ event.id + '&desc='+event.description,								   
 								   });
 
-								   $('#calendar').fullCalendar('rerenderEvents',$(this));
+								   $('#calendar').fullCalendar('rerenderEvents',event);
 								   console.log(event.id);
-
 								  $('.antoclose2').click();
-											
 					}
+				
 
 							);
 							
-						
-						  }
+						  
+						}
 					},
 				});
 				
@@ -4060,8 +4054,8 @@ window.onload = function() {
 
 
 function demoFromHTML(de,ate) {
+	var imgData;
 		  listados='.*';
-
                 var c = new Date(de)
                 var d = new Date(ate)
 
@@ -4112,30 +4106,19 @@ function demoFromHTML(de,ate) {
 						data: chartdata
 					});
 					
-					var imgData = canvas.toDataURL();
-				/*	var pdf = new jsPDF();
-
-					pdf.addImage(imgData, 'JPEG', 0, 0);
-
-					pdf.save("download.pdf");
-*/
-
-					var doc = new jsPDF();
-					doc.setFontSize(33);
-					doc.setFillColor(135, 124,45,0);
-					doc.addImage(imgData, 'png', 10, 10, 150, 100);
-					doc.save('sample.pdf');
-						},
+					 imgData = canvas.toDataURL();
+					},
 					
 					error: function(data) {
 						console.log(data);
 				}
 			});
-
-		
-
-
-	
+					
+					var doc = new jsPDF();
+					doc.setFontSize(33);
+					doc.setFillColor(135, 124,45,0);
+					doc.addImage(imgData, 'png', 10, 10, 150, 100);
+					doc.save('sample.pdf');
 
             
 }
