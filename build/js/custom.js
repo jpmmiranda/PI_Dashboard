@@ -4046,19 +4046,98 @@ window.onload = function() {
 			
 		};
 	   
+
+
+		/*TESTE PARA GERAR O PDF */
+
+		var pdf = document.getElementById('pdf');
+		if(pdf!==null){
+		pdf.addEventListener('click', function() {
+				
+				demoFromHTML(de,ate);
+			}, false);
+		}
+
+
+function demoFromHTML(de,ate) {
+		  listados='.*';
+
+                var c = new Date(de)
+                var d = new Date(ate)
+
+
+                var de = c.toISOString().substring(0, 19).replace('T', ' ')
+                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+	$.ajax({
+				url: url+"acessosPorUtilizador.php",
+				method: "POST",
+				data: {de:de,ate:ate, listados : listados},
+				success: function(data) {
+					var valores = [];
+					var telefone = []
+					for(var i in data) {
+						valores.push(data[i].AcessosConcedidos);
+						telefone.push(data[i].nContribuinte);
+
+					}
+
+					var chartdata = {
+						labels:  telefone,
+						datasets : [
+							{
+								label: "Total de Acessos",
+								backgroundColor: "rgba(38, 185, 154, 0.31)",
+								data: valores,
+								options: {
+
+										responsive: false,
+										animation: false,
+								  scales: {
+									yAxes: [{
+									  ticks: {
+										beginAtZero: true
+									  }
+									}]
+								  }
+								}
+							}
+						]
+					};
+
+					var canvas= document.getElementById('acessosPorUtilizadorBarras');
+					var ctx = canvas.getContext('2d');
+
+					var barGraphUtilizador1 = new Chart(ctx, {
+						type: 'bar',
+						data: chartdata
+					});
+					
+					var imgData = canvas.toDataURL();
+				/*	var pdf = new jsPDF();
+
+					pdf.addImage(imgData, 'JPEG', 0, 0);
+
+					pdf.save("download.pdf");
+*/
+
+					var doc = new jsPDF();
+					doc.setFontSize(33);
+					doc.setFillColor(135, 124,45,0);
+					doc.addImage(imgData, 'png', 10, 10, 150, 100);
+					doc.save('sample.pdf');
+						},
+					
+					error: function(data) {
+						console.log(data);
+				}
+			});
+
 		
-		
-function demoFromHTML() {
-            var doc = new jsPDF('l', 'mm',[210, 297]);
-           html2canvas($("#linechart"), {
-                onrendered: function(canvas) {         
-                    var imgData = canvas.toDataURL('image/png',1.0);                  
-                    doc.text(130,15,title+" GT Log");
-                    doc.addImage(imgData, 'PNG',20,30,0,130); 
-                    doc.addHTML(canvas);
-                    doc.save('gt_log.pdf');             
-                    }       
-            });
+
+
+	
+
+            
 }
 		/* ECHRTS */
 	
