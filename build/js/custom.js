@@ -1644,7 +1644,7 @@ if (typeof NProgress != 'undefined') {
 		      barGraphPilaretes.destroy();
 		      barGraphUtilizador.destroy();
 					barGraphUtilizadorTelefone.destroy();
-					init_chartsPilaretes(de, ate,pilarete)
+					//init_chartsPilaretes(de, ate,pilarete)
           init_charts(picker.startDate.format('YYYY/MM/DD HH:mm'),picker.endDate.format('YYYY/MM/DD HH:mm'),getCheckedBoxes('1'));
 
 			});
