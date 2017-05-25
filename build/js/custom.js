@@ -4054,6 +4054,7 @@ window.onload = function() {
 
 
 function demoFromHTML(de,ate) {
+	
 	var imgData;
 		  listados='.*';
                 var c = new Date(de)
@@ -4097,16 +4098,27 @@ function demoFromHTML(de,ate) {
 							}
 						]
 					};
+						var canvas = document.getElementById('demo');
 
-					var canvas= document.getElementById('acessosPorUtilizadorBarras');
-					var ctx = canvas.getContext('2d');
-
+            			var ctx = $("#demo");
+									canvas.style.display='none';
+					
 					var barGraphUtilizador1 = new Chart(ctx, {
 						type: 'bar',
-						data: chartdata
+						data: chartdata,
+						 options: {
+    responsive: false,
+    animation: false
+  }
 					});
-					
-					 imgData = canvas.toDataURL();
+					console.log("chegou2");
+var imgData = canvas.toDataURL();
+console.log("chegou");
+					var doc = new jsPDF();
+					doc.setFontSize(33);
+					doc.setFillColor(135, 124,45,0);
+					doc.addImage(imgData, 'png', 10, 10, 150, 100);
+					doc.save('sample.pdf');
 					},
 					
 					error: function(data) {
@@ -4114,11 +4126,6 @@ function demoFromHTML(de,ate) {
 				}
 			});
 					
-					var doc = new jsPDF();
-					doc.setFontSize(33);
-					doc.setFillColor(135, 124,45,0);
-					doc.addImage(imgData, 'png', 10, 10, 150, 100);
-					doc.save('sample.pdf');
 
             
 }
