@@ -4111,23 +4111,53 @@ function demoFromHTML(de,ate) {
     animation: false
   }
 					});
-					console.log("chegou2");
 var imgData = canvas.toDataURL();
-console.log("chegou");
-					var doc = new jsPDF();
-					doc.setFontSize(33);
-					doc.setFillColor(135, 124,45,0);
-					doc.addImage(imgData, 'png', 10, 10, 150, 100);
-					doc.save('sample.pdf');
+
+
+
+
+
+templatePDF(imgData);
+			
 					},
 					
 					error: function(data) {
 						console.log(data);
 				}
-			});
-					
+			});  
 
-            
+			
+}
+
+function templatePDF(imgData){
+					var doc = new jsPDF("p", "pt", "a4");
+
+					var width = doc.internal.pageSize.width/2;    
+					var height = doc.internal.pageSize.height/2;
+					xOffset = (doc.internal.pageSize.width / 2) - (doc.getStringUnitWidth("Report Mensal") * doc.internal.getFontSize() / 2);  //Tentar por ao centro
+	
+					doc.setFontType("bold");
+					doc.setFontSize(20);
+
+					doc.text("Report Mensal", xOffset, 100);
+					doc.addPage();
+						
+            var options = {
+                 pagesplit: true
+            };
+
+            doc.text(10, 20, 'Acessos Concedidos');
+             var h1=50;
+            var aspectwidth1= (doc.internal.pageSize.width-h1)*(9/16);
+            doc.addImage(imgData, 'png',10, h1, aspectwidth1, (height-h1));
+            doc.addPage();
+            doc.text(10, 20, 'Acessos Negados');
+           
+            doc.addImage(imgData, 'png',10, h1, aspectwidth1, (height-h1));
+
+
+					doc.save('sample.pdf');
+
 }
 		/* ECHRTS */
 	
