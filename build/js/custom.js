@@ -4052,21 +4052,23 @@ window.onload = function() {
 			}, false);
 		}
 
-
+var imgData='';
+	var	imgData1='';
 function demoFromHTML(de,ate) {
 	
-	var imgData;
-		  listados='.*';
-                var c = new Date(de)
-                var d = new Date(ate)
-
-
-                var de = c.toISOString().substring(0, 19).replace('T', ' ')
-                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+	
+	listados='.*';
+	var tipo=4;
+  var c = new Date(de)
+  var d = new Date(ate)
+  var de = c.toISOString().substring(0, 19).replace('T', ' ')
+  var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+	
 	$.ajax({
 				url: url+"acessosPorUtilizador.php",
 				method: "POST",
 				data: {de:de,ate:ate, listados : listados},
+				
 				success: function(data) {
 					var valores = [];
 					var telefone = []
@@ -4098,38 +4100,163 @@ function demoFromHTML(de,ate) {
 							}
 						]
 					};
-						var canvas = document.getElementById('demo');
-
-            			var ctx = $("#demo");
-									canvas.style.display='none';
+					
+					var canvas = document.getElementById('demo');
+					var ctx = $("#demo");
+					canvas.style.display='none';
 					
 					var barGraphUtilizador1 = new Chart(ctx, {
 						type: 'bar',
 						data: chartdata,
 						 options: {
-    responsive: false,
-    animation: false
-  }
+							responsive: false,
+							animation: false
+					}
 					});
-var imgData = canvas.toDataURL();
 
+					imgData = canvas.toDataURL('image/png');
 
-
-
-
-templatePDF(imgData);
-			
 					},
 					
 					error: function(data) {
 						console.log(data);
 				}
 			});  
+/*--------------------------------------------------------------------------------------------------------------------------------------------*/
+					$.ajax({
+
+                    type: 'POST',
+            				url: url + "teste.php",
+                    data: {de : de, ate : ate, tipo : tipo, listados : listados}, 
+            		success: function(data) {
+            			
+									var valoresE = new Array();
+            			var valoresS = new Array();
+                  var label =new Array();
+                  var posvaloresE=0;
+                  var posvaloresS=0;
+
+            			for(var i in data) {
+
+            				if($.inArray(data[i].lab, label)!=-1){
+
+	            				if (data[i].ee=="Entrada"){
+
+	            					 posvaloresE=label.indexOf(data[i].lab);
+
+	            					 if (valoresE[posvaloresE] === undefined) valoresE[posvaloresE]=parseInt((data[i].AcessosConcedidos));
+	            					 else valoresE[posvaloresE] = parseInt(valoresE[posvaloresE]) + parseInt((data[i].AcessosConcedidos));
+	            					
+	            					
+	            				}
+
+	            				if (data[i].es=="Saída"){
+
+
+	            					 posvaloresS=label.indexOf(data[i].lab);
+
+	            					 if (valoresS[posvaloresS] === undefined) valoresS[posvaloresS]=parseInt((data[i].AcessosConcedidos));
+	            					 else valoresS[posvaloresS] = parseInt(valoresS[posvaloresS]) + parseInt((data[i].AcessosConcedidos));
+	            					
+	            					
+	            				}
+	            			}else{
+	            				
+	            			   label.push(data[i].lab);
+	            				if (data[i].es=="Saída"){
+
+	            						posvaloresS=label.indexOf(data[i].lab);
+	            						valoresS.splice(posvaloresS, 0, data[i].AcessosConcedidos);
+	            				}
+	            				if (data[i].ee=="Entrada"){
+
+	            					posvaloresE=label.indexOf(data[i].lab);
+	            					valoresE.splice(posvaloresE, 0, data[i].AcessosConcedidos);
+
+	            				} 
+	            			}
+
+            				
+            			}
+            			
+            			var chartdata = {
+            				labels:  label,
+            				datasets : [
+            					{
+            						label: "Total de Entradas",
+            						backgroundColor: "rgba(38, 185, 154, 0.31)",
+            						borderColor: "rgba(38, 185, 154, 0.7)",
+            						pointBorderColor: "rgba(38, 185, 154, 0.7)",
+            						pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
+            						pointHoverBackgroundColor: "#fff",
+            						pointHoverBorderColor: "rgba(220,220,220,1)",
+            						pointBorderWidth: 1,
+            						data: valoresE
+            					},{
+												label: "Total de Saídas",
+												backgroundColor: "rgba(3, 88, 106, 0.3)",
+												borderColor: "rgba(3, 88, 106, 0.70)",
+												pointBorderColor: "rgba(3, 88, 106, 0.70)",
+												pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
+												pointHoverBackgroundColor: "#fff",
+												pointHoverBorderColor: "rgba(151,187,205,1)",
+												pointBorderWidth: 1,
+												data: valoresS
+											}	
+
+            				]
+            			};
+
+            			
+
+									var canvas = document.getElementById('demo2');
+									var ctx = $("#demo2");
+									canvas.style.display='none';
+
+            			barGraph = new Chart(ctx, {
+            				type: 'line',
+            				data: chartdata,
+                    options: {
+                         scales: {
+                            yAxes: [{
+                              	scaleLabel: {
+																		display: true,
+																		labelString: 'Acessos'
+																},
+                                ticks: {
+                                    beginAtZero: true,
+																	
+                                  },
+																	
+                              }],
+														xAxes: [{
+                              	scaleLabel: {
+																		display: true,
+																		labelString: 'Dias'
+																}
+															 
+														}]
+                          },
+													responsive: false,
+													animation: false
+					
+                    }
+            			});
+													imgData1 = canvas.toDataURL('image/png');
+
+            		},
+            		error: function(data) {
+            			console.log(data);
+            		}
+
+	               });
+			
+templatePDF();
 
 			
 }
 
-function templatePDF(imgData){
+function templatePDF(){
 					var doc = new jsPDF("p", "pt", "a4");
 
 					var width = doc.internal.pageSize.width/2;    
@@ -4141,19 +4268,15 @@ function templatePDF(imgData){
 
 					doc.text("Report Mensal", xOffset, 100);
 					doc.addPage();
-						
-            var options = {
-                 pagesplit: true
-            };
-
-            doc.text(10, 20, 'Acessos Concedidos');
-             var h1=50;
-            var aspectwidth1= (doc.internal.pageSize.width-h1)*(9/16);
-            doc.addImage(imgData, 'png',10, h1, aspectwidth1, (height-h1));
-            doc.addPage();
-            doc.text(10, 20, 'Acessos Negados');
-           
-            doc.addImage(imgData, 'png',10, h1, aspectwidth1, (height-h1));
+					
+          doc.text('Acessos Concedidos',xOffset,10);
+					doc.text('Totais',3,10);
+          var h1=50;
+        	var aspectwidth1= ((doc.internal.pageSize.width-h1)*(9/16));
+					doc.addImage(imgData1, 'png',10, h1, aspectwidth1, (height-h1));
+          doc.addPage();
+          doc.text(10, 20, 'Acessos Negados');  
+          doc.addImage(imgData, 'png',10, h1, aspectwidth1, (height-h1));
 
 
 					doc.save('sample.pdf');
