@@ -14,12 +14,16 @@ if(!$connection->conn){
 	die("Connection failed: " . $connection->conn->error);
 }
 
+mysqli_set_charset($connection->conn, "utf8");
+
 $utilizador = $_POST["utilizador"];
 
 //query to get data from the table
-$query = sprintf("SELECT TipoUtente as tipo, utentes.nContribuinte as contribuinte FROM utentes
-		INNER JOIN acessos ON utentes.nContribuinte = acessos.Contribuinte
-		where acessos.numTelf = '$utilizador';");
+$query = sprintf("SELECT month(DataHora) as month,
+    sum(case when EstadoEspiraE = 'Entrada' and ValidacaoAcesso like 'Acesso Concedido' then 1 else 0 end) entradas,
+    sum(case when EstadoEspiraS = 'Saída' and ValidacaoAcesso like 'Acesso Concedido' then 1 else 0 end) saidas
+		from RegistoAcessos
+		where Telefone = '$utilizador' and year(DataHora) = 2016 group by(month(DataHora));");
 
 //execute query
 $result = $connection->conn->query($query);
@@ -37,6 +41,5 @@ $result->close();
 $connection->conn->close();
 
 //now print the data
-print json_encode($data);
+print json_encode($data,JSON_UNESCAPED_UNICODE);
 ?>
-

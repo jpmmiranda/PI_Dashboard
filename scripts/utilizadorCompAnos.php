@@ -14,12 +14,15 @@ if(!$connection->conn){
 	die("Connection failed: " . $connection->conn->error);
 }
 
+mysqli_set_charset($connection->conn, "utf8");
+
 $utilizador = $_POST["utilizador"];
+$ano = $_POST["ano"];
 
 //query to get data from the table
-$query = sprintf("SELECT TipoUtente as tipo, utentes.nContribuinte as contribuinte FROM utentes
-		INNER JOIN acessos ON utentes.nContribuinte = acessos.Contribuinte
-		where acessos.numTelf = '$utilizador';");
+	$query = sprintf("SELECT month(Datahora) as month , year(DataHora) as year, count(*) as AcessosConcedidos
+		from RegistoAcessos
+		where Telefone = '$utilizador' and (year(DataHora) = '$ano' or year(DataHora) = ('$ano'-1)) and ValidacaoAcesso like 'Acesso Concedido' group by month(DataHora), year(DataHora);");
 
 //execute query
 $result = $connection->conn->query($query);
@@ -37,6 +40,5 @@ $result->close();
 $connection->conn->close();
 
 //now print the data
-print json_encode($data);
+print json_encode($data,JSON_UNESCAPED_UNICODE);
 ?>
-

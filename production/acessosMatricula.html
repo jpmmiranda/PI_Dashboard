@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Acessos Por Utilizador</title>
+    <title>Acessos Por Matricula</title>
 
     <!-- Bootstrap -->
     <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -85,89 +85,17 @@
 
             <div class="page-title">
               <div class="title_left">
-                <h3>Acessos Por Utilizador</h3>
+                <h3>Acessos Por Pilarete</h3>
               </div>
 
               <div class="title_right">
                 <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                   <div class="input-group">
-                    <input id="Tel" type="text" class="form-control" placeholder="Número de telemóvel">
+                    <input id="Tel" type="text" class="form-control" placeholder="Matricula">
                     <span class="input-group-btn">
                       <button class="btn btn-default" type="button" onClick="init_destroyer(document.getElementById('numTel').textContent); init_utilizador(document.getElementById('Tel').value); init_utilizdorComp_anos(document.getElementById('Tel').value , $('#selecaoanoUtilizador option:selected').val())">Go!</button>
                     </span>
                   </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="clearfix"></div>
-
-            <div class="col-md-14 col-sm-14 col-xs-18 tile_stats_count ">
-                <div class="x_content">
-                  <span class="count" ></span>
-                   <b><font size="6" id = "numTel">Número de Telemóvel</font></b>
-                </div>
-            </div>
-
-             <div class="clearfix"></div>
-
-            <div class="col-md-14 col-sm-14 col-xs-18 tile_stats_count">
-                <div class="x_content">
-                  <span class="count" ></span>
-                   <b><font size="6" id = "numContri">Número de Contribuinte</font></b>
-                </div>
-            </div> 
-
-              <div class="clearfix"></div>
-
-            <div class="col-md-14 col-sm-14 col-xs-18 tile_stats_count">
-                <div class="x_content">
-                  <span class="count" ></span>
-                   <b><font size="6" id = "tipoUtil">Tipo de Utilizador</font></b>
-                </div>
-            </div> 
-
-              <div class="clearfix"></div>
-
-            <div class="col-md-14 col-sm-14 col-xs-18 tile_stats_count">
-                <div class="x_content">
-                  <span class="count" ></span>
-                   <b><font size="6" id = "intData">Intervalo de Datas</font></b>
-                </div>
-            </div>
-
-              <div class="clearfix"></div>
-
-            <div class="row tile_stats_count"> 
-              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                <span class="count_top"><i class="fa fa-user"></i> Acessos Totais</span>
-                <div class="x_content">
-                  <div id="totalacesso"></div>
-                  <div id = "totalacesso2" class="count">0</div>
-                </div>
-              </div>
-              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                <span class="count_top"><i class="fa fa-user"></i> Concedidos</span>
-                <div class="x_content">
-                  <div id = "totalConcedidos" class="count">0</div>
-                </div>
-              </div>
-              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                <span class="count_top"><i class="fa fa-user"></i> Entradas</span>
-                <div class="x_content">
-                  <div id = "totalentradas" class="count">0</div>
-                </div>
-              </div>
-              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                <span class="count_top"><i class="fa fa-user"></i> Saidas</span>
-                <div class="x_content">
-                  <div id = "totalsaidas" class="count">0</div>
-                </div>
-              </div>
-              <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                <span class="count_top"><i class="fa fa-user"></i> Recusados</span>
-                <div class="x_content">
-                  <div id = "totalRecusadas" class="count">0</div>
                 </div>
               </div>
             </div>

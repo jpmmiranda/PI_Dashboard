@@ -55,6 +55,7 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
 	var barGraph, barGraph1;
 	var compAnos;
 	var barGraphPilaretes,barGraphContribuintePorPilarete,barGraphTelefonePorPilarete;
+	var pieChart;
 	var barGraphUtilizador;
 	var barGraphUtilizadorTelefone;
 	var pilareteSelecionado;
@@ -3315,7 +3316,105 @@ if (typeof NProgress != 'undefined') {
 
 		}
 
+		function init_Utilizadorano() {
+			if(document.getElementById('selecaoanoUtilizador')!=null){
+				var min = 2016;
+				var max = new Date().getFullYear()+1;
+			    for(i = min; i <max; i++){        
+
+			    	$('#selecaoanoUtilizador').get(0).options[ $('#selecaoanoUtilizador').get(0).options.length] = new Option(i, i);
+			    }
+			}
+
+		}
+
 		// Função para a  criação dos gráficos da utilizadores
+		function init_utilizdorComp_anos(utilizador, ano){
+			var ctx = document.getElementById("compAnosUtilizador");
+			  $.ajax({
+	
+          type: 'POST',
+					url: url +"utilizadorCompAnos.php",
+          data: {utilizador : utilizador , ano: ano},
+				success: function(data) {
+					var score = [];
+					var anoY = [];
+					for(var i in data) {
+						if (data[i].year==ano)
+							{score.push(data[i].AcessosConcedidos);}
+						else {anoY.push(data[i].AcessosConcedidos);}
+					}
+
+					var chartdata = {
+						labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+						datasets : [
+							{
+								label: ano,
+								backgroundColor: "rgba(38, 185, 154, 0.31)",
+								borderColor: "rgba(38, 185, 154, 0.7)",
+								pointBorderColor: "rgba(38, 185, 154, 0.7)",
+								pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
+								pointHoverBackgroundColor: "#fff",
+								pointHoverBorderColor: "rgba(220,220,220,1)",
+								pointBorderWidth: 1,
+								data: score
+							},  {
+								label: ano-1,
+								backgroundColor: "rgba(3, 88, 106, 0.3)",
+								borderColor: "rgba(3, 88, 106, 0.70)",
+								pointBorderColor: "rgba(3, 88, 106, 0.70)",
+								pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
+								pointHoverBackgroundColor: "#fff",
+								pointHoverBorderColor: "rgba(151,187,205,1)",
+								pointBorderWidth: 1,
+								data: anoY
+								}	
+						]
+					};
+
+					var ctx = $("#compAnosUtilizador");
+
+					   compAnosUtilizador = new Chart(ctx, {
+						type: 'line',
+						data: chartdata,
+						options: {
+                     scales: {
+                        yAxes: [{
+                         scaleLabel: {
+									        display: true,
+									        labelString: 'Acessos'
+									    },
+                      ticks: {
+                        beginAtZero: true,
+                          }
+                          }],
+                        xAxes: [{
+										     	scaleLabel: {
+									        display: true,
+									        labelString: 'Meses'
+									    }
+                                    }]
+                                }
+                            }
+					});
+				 document.getElementById('js-legend4').innerHTML = compAnosUtilizador.generateLegend();
+
+				},
+				error: function(data) {
+					console.log(data);
+				}
+			});
+		}
+
+		function init_destroyer(numtel){
+			if (numtel == "Número de Telefone" || numtel == "Número Inválido"){}
+			else {
+				pieChart.destroy();
+				barGraph.destroy();
+				barGraphUtiPilaretes.destroy();
+				compAnosUtilizador.destroy();
+			}
+		}
 
 		function init_utilizador(utilizador){
 
@@ -3329,10 +3428,20 @@ if (typeof NProgress != 'undefined') {
 						data: {utilizador : utilizador},
 						success: function(data) {
 							var tipo = '';
+							var contri = '';
 							for(var i in data){
 								tipo = data[i].tipo;
+								contri = data[i].contribuinte
 							}
-							document.getElementById('tipoUtil').innerHTML = tipo;
+
+							if (contri == "") {
+								document.getElementById('numContri').innerHTML = "Número de Telefone não existe";
+								document.getElementById('tipoUtil').innerHTML = "Tipo de Utilizador";
+							}
+							else{
+								document.getElementById('tipoUtil').innerHTML = tipo;
+								document.getElementById('numContri').innerHTML = contri;
+							}
 						}
 					})
 
@@ -3346,7 +3455,8 @@ if (typeof NProgress != 'undefined') {
 						data: {utilizador : utilizador},
 						success: function(data) {
 							var valores = [];
-							var razao = []
+							var razao = [];
+							var r = "Viatura fora do local"
 
 							for(var i in data) {
 								valores.push(data[i].AcessosNaoConcedidos);
@@ -3354,9 +3464,11 @@ if (typeof NProgress != 'undefined') {
 							}
 
 							for (var raz in razao){
+								if (razao[raz] == "Acesso Nao Concedido - Loops nao ativo") razao[raz] = r;
 								razao[raz]=razao[raz].replace('Acesso Nao Concedido - ','');
 								razao[raz]=razao[raz].replace('Acesso Recusado - ','');
 							};
+
 							var colors = [
 											"#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
 									        "#FFDBE5", "#7A4900", "#0000A6", "#63FFAC", "#B79762", "#004D43", "#8FB0FF", "#997D87",
@@ -3381,7 +3493,7 @@ if (typeof NProgress != 'undefined') {
 
 							var ctx = $('#pieChartAcessos2');
 
-							var pieChart = new Chart(ctx, {
+							pieChart = new Chart(ctx, {
 								data: chartdata,
 								type: 'pie'
 								
@@ -3424,7 +3536,176 @@ if (typeof NProgress != 'undefined') {
 			  		}
 			  	})
 
-			   }	
+			   }
+
+				if ($('#linhasTotalAcessos').length) {
+					var labels=["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+				   	$.ajax({
+
+                    type: 'POST',
+            		url: url + "utilizadorAcessosTotais.php",
+                    data: {utilizador : utilizador}, 
+            		success: function(data) {
+            			var valoresE = new Array();
+            			var valoresS = new Array();
+
+            			for(var i in data){
+            				valoresE.push(data[i].entradas);
+            				valoresS.push(data[i].saidas);
+            			}
+
+
+
+            			
+            			var chartdata = {
+            				labels:  labels,
+            				datasets : [
+            					{
+            						label: "Total de Entradas",
+            						backgroundColor: "rgba(38, 185, 154, 0.31)",
+            						borderColor: "rgba(38, 185, 154, 0.7)",
+            						pointBorderColor: "rgba(38, 185, 154, 0.7)",
+            						pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
+            						pointHoverBackgroundColor: "#fff",
+            						pointHoverBorderColor: "rgba(220,220,220,1)",
+            						pointBorderWidth: 1,
+            						data: valoresE
+            					},{
+									label: "Total de Saídas",
+									backgroundColor: "rgba(3, 88, 106, 0.3)",
+									borderColor: "rgba(3, 88, 106, 0.70)",
+									pointBorderColor: "rgba(3, 88, 106, 0.70)",
+									pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
+									pointHoverBackgroundColor: "#fff",
+									pointHoverBorderColor: "rgba(151,187,205,1)",
+									pointBorderWidth: 1,
+									data: valoresS
+								}	
+
+            				]
+            			};
+
+            			
+
+            			var ctx = $("#linhasTotalAcessos");
+
+            			barGraph = new Chart(ctx, {
+            				type: 'line',
+            				data: chartdata,
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                    	scaleLabel: {
+									        display: true,
+									        labelString: 'Acessos'
+									    },
+                                        ticks: {
+                                            beginAtZero: true,
+
+                                        }
+                                    }],
+                                    xAxes: [{
+                                    	scaleLabel: {
+									        display: true,
+									        labelString: "Meses"
+									    }
+                                    }]
+                                }
+                            }
+
+            			});
+            		document.getElementById('js-legend3').innerHTML = barGraph.generateLegend();
+
+            		},
+            		error: function(data) {
+            			console.log(data);
+            		}
+
+	               });	
+			}
+
+			if ($('#utilizadorAcessosPorPilareteBarras').length) {
+				$.ajax({
+            			method: "POST",
+            			url: url + "utilizadorAcessosPorPilareteBarras.php",
+
+                  data: {utilizador : utilizador},
+
+            			success: function(data) {
+            				var valoresE = new Array();
+            				var valoresS = new Array();
+                        	var label =new Array();
+
+                        for (var i in data){
+                        	valoresE.push(data[i].entradas);
+            				valoresS.push(data[i].saidas);
+            				label.push(data[i].pilarete);
+                        }
+
+            			var chartdata = {
+
+            				labels:  label,
+
+            				datasets : [
+            					{
+            						label: "Total de Entradas",
+            						backgroundColor: "rgba(38, 185, 154, 0.7)",
+            						backgroundColor: "rgba(38, 185, 154, 0.7)",
+									hoverBorderWidth: 2,
+									hoverBorderColor: 'lightgrey',
+            						data: valoresE
+            					},{
+									label: "Total de Saídas",
+									backgroundColor: "rgba(3, 88, 106, 0.7)",
+									backgroundColor: "rgba(3, 88, 106, 0.7)",
+
+									hoverBorderWidth: 2,
+									hoverBorderColor: 'lightgrey',
+									data: valoresS
+
+								}	
+            				]	
+
+            			};
+
+            			
+            			var ctx = $('#utilizadorAcessosPorPilareteBarras');
+
+            			 barGraphUtiPilaretes = new Chart(ctx, {
+            				type: 'bar',
+            				data: chartdata,
+            				options: {
+            					scales:{
+            						  xAxes: [{ 
+								          	stacked: true,
+								          	gridLines: { display: false },
+ 
+								            }],
+            						   yAxes: [{
+            						   		stacked: true, 
+            							  ticks: {
+            								beginAtZero: true,
+     				 
+            							  },
+            							}],
+
+            						  }
+
+            						}
+
+
+
+
+
+            			});
+            	    document.getElementById('js-legend2').innerHTML = barGraphUtiPilaretes.generateLegend();
+
+            		},
+            		error: function(data) {
+            			console.log(data);
+            		}
+	           });
+			}
 
 		}
 		
@@ -6563,6 +6844,7 @@ function templatePDF(){
  	  var checkedBoxes = getCheckedBoxes("1");
 		init_chartsPilaretes(de, ate,'.*');
 	  init_ano();
+	  init_Utilizadorano();
 	  init_graficoAnos($('#selecaoano option:selected').val(),checkedBoxes);
 		init_sparklines();
 		init_flot_chart();
@@ -6603,6 +6885,11 @@ function templatePDF(){
 
 			 compAnos.destroy();
 	  		 init_graficoAnos($('#selecaoano option:selected').val(),checkedBoxes);
+        });
+        $('#selecaoanoUtilizador').change(function(){
+
+			 compAnosUtilizador.destroy();
+	  		 init_utilizdorComp_anos(document.getElementById('numTel').textContent, $('#selecaoanoUtilizador option:selected').val());
         });
 				
 	});	

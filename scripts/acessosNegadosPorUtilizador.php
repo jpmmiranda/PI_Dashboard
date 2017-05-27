@@ -14,12 +14,8 @@ if(!$connection->conn){
 	die("Connection failed: " . $connection->conn->error);
 }
 
-$utilizador = $_POST["utilizador"];
-
 //query to get data from the table
-$query = sprintf("SELECT TipoUtente as tipo, utentes.nContribuinte as contribuinte FROM utentes
-		INNER JOIN acessos ON utentes.nContribuinte = acessos.Contribuinte
-		where acessos.numTelf = '$utilizador';");
+$query = sprintf("SELECT count(*) as AcessosNaoConcedidos, Telefone FROM RegistoAcessos where year(DataHora)=2016 and (ValidacaoAcesso regexp '^Acesso Nao Concedido' or ValidacaoAcesso regexp '^Acesso Recusado') group by Telefone order by AcessosNaoConcedidos desc limit 10;");
 
 //execute query
 $result = $connection->conn->query($query);
@@ -39,4 +35,3 @@ $connection->conn->close();
 //now print the data
 print json_encode($data);
 ?>
-

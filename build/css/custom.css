@@ -104,6 +104,33 @@ html , body{
   margin-right: 5px;
 }
 
+#js-legend4 ul {
+  list-style: none;
+}
+
+#js-legend4 ul li {
+  display: block;
+  padding-left: 30px;
+  position: relative;
+  margin-bottom: 4px;
+  border-radius: 5px;
+  padding: 2px 8px 2px 28px;
+  font-size: 14px;
+  cursor: default;
+  -webkit-transition: background-color 200ms ease-in-out;
+  -moz-transition: background-color 200ms ease-in-out;
+  -o-transition: background-color 200ms ease-in-out;
+  transition: background-color 200ms ease-in-out;
+}
+
+#js-legend4 li span {
+  display: inline-block;
+  border-radius: 5px;
+  width: 12px;
+  height: 12px;
+  margin-right: 5px;
+}
+
 .daterangepicker .ranges li {
     color: #73879C
 }
