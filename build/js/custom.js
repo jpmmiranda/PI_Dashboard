@@ -4329,12 +4329,20 @@ window.onload = function() {
 		if(pdf!==null){
 		pdf.addEventListener('click', function() {
 				
-				demoFromHTML(de,ate);
+				demoFromHTML(moment( 2017+'-'+02+'-'+01 + ' 00:00:00' ),moment( 2017+'-'+02+'-'+31 + ' 00:00:00' ));
 			}, false);
 		}
 
-var imgData='';
-	var	imgData1='';
+		
+
+var imagemTotaisAcessos='';
+var	imagemTotaisContribuinte='';
+var imagemTotaisTelefone='';
+var imagemTotaisPilarete='';
+var imagemTotaisTelefoneNegados='';
+var imagemTotaisContribuinteNegados='';
+
+
 function demoFromHTML(de,ate) {
 	
 	
@@ -4385,7 +4393,8 @@ function demoFromHTML(de,ate) {
 					var canvas = document.getElementById('demo');
 					var ctx = $("#demo");
 					canvas.style.display='none';
-					
+					canvas.width=600;
+					canvas.height=400;
 					var barGraphUtilizador1 = new Chart(ctx, {
 						type: 'bar',
 						data: chartdata,
@@ -4395,8 +4404,8 @@ function demoFromHTML(de,ate) {
 					}
 					});
 
-					imgData = canvas.toDataURL('image/png');
-
+					imagemTotaisContribuinte = canvas.toDataURL();
+					
 					},
 					
 					error: function(data) {
@@ -4493,7 +4502,8 @@ function demoFromHTML(de,ate) {
 									var canvas = document.getElementById('demo2');
 									var ctx = $("#demo2");
 									canvas.style.display='none';
-
+									canvas.width=600;
+									canvas.height=400;
             			barGraph = new Chart(ctx, {
             				type: 'line',
             				data: chartdata,
@@ -4523,7 +4533,7 @@ function demoFromHTML(de,ate) {
 					
                     }
             			});
-													imgData1 = canvas.toDataURL('image/png');
+													imagemTotaisAcessos = canvas.toDataURL();
 
             		},
             		error: function(data) {
@@ -4531,11 +4541,308 @@ function demoFromHTML(de,ate) {
             		}
 
 	               });
+/*--------------------------------------------------------------------------------------------------------------------------------------------*/
+
+$.ajax({
+            			method: "POST",
+            			url: url + "acessosPorPilarete.php",
+
+                  data: {de : de, ate : ate,listados : listados},
+
+            			success: function(data) {
+            						var valoresE = new Array();
+            						var valoresS = new Array();
+                        var label =new Array();
+                        var posvaloresE;
+                        var posvaloresS;
+                        var x;
+            			for(var i in data) {
+
+            				if($.inArray(data[i].Pilarete, label)!=-1){
+
+								if (data[i].ee=="Entrada"){
+
+	            					 posvaloresE=label.indexOf(data[i].Pilarete);
+
+	            					 if (valoresE[posvaloresE] === undefined) valoresE[posvaloresE]=parseInt((data[i].AcessosConcedidos));
+	            					 else valoresE[posvaloresE] = parseInt(valoresE[posvaloresE]) + parseInt((data[i].AcessosConcedidos));
+	            					
+	            					
+	            				}
+
+	            				if (data[i].es=="Saída"){
+
+
+	            					 posvaloresS=label.indexOf(data[i].Pilarete);
+
+	            					 if (valoresS[posvaloresS] === undefined) valoresS[posvaloresS]=parseInt((data[i].AcessosConcedidos));
+	            					 else valoresS[posvaloresS] = parseInt(valoresS[posvaloresS]) + parseInt((data[i].AcessosConcedidos));
+	            					
+	            					
+	            				}
+	            			}else{
+	            				label.push(data[i].Pilarete);
+
+	            				if (data[i].es=="Saída"){
+
+	            						posvaloresS=label.indexOf(data[i].Pilarete);
+	            						valoresS.splice(posvaloresS, 0, data[i].AcessosConcedidos);
+	            				}
+	            				if (data[i].ee=="Entrada"){
+
+	            					posvaloresE=label.indexOf(data[i].Pilarete);
+	            					valoresE.splice(posvaloresE, 0, data[i].AcessosConcedidos);
+
+	            				} 
+
+	            			}
+
+            				
+            			}
+
+            			var chartdata = {
+
+            				labels:  label,
+
+            				datasets : [
+            					{
+            						label: "Total de Entradas",
+            						backgroundColor: "rgba(38, 185, 154, 0.7)",
+            						backgroundColor: "rgba(38, 185, 154, 0.7)",
+												hoverBorderWidth: 2,
+												hoverBorderColor: 'lightgrey',
+            						data: valoresE
+            					},{
+												label: "Total de Saídas",
+												backgroundColor: "rgba(3, 88, 106, 0.7)",
+												backgroundColor: "rgba(3, 88, 106, 0.7)",
+												hoverBorderWidth: 2,
+												hoverBorderColor: 'lightgrey',
+												data: valoresS
+											}	
+            				]	
+
+            			};
+											
+											var canvas = document.getElementById('pdfpilaretes');
+											var ctx = $("#pdfpilaretes");
+											canvas.style.display='none';
+											canvas.width=600;
+											canvas.height=400;
+            			 barGraphPilaretes = new Chart(ctx, {
+            				type: 'bar',
+            				data: chartdata,
+            				options: {
+
+            					scales:{
+            						  xAxes: [{ 
+								          	stacked: true,
+								          	gridLines: { display: false },
+ 
+								            }],
+            						   yAxes: [{
+            						   		stacked: true, 
+            							  ticks: {
+            								beginAtZero: true,
+     				 
+            							  },
+            							}],
+
+            						  }
+ 											},
+													responsive: false,
+													animation: false
+            			});
+									imagemTotaisPilarete = canvas.toDataURL();
+
+            		},
+            		error: function(data) {
+            			console.log(data);
+            		}
+	           });
+/*----------------------------------------------------------------------------------------------------------------------------------------*/
+
+$.ajax({
+				url: url + "acessosPorUtilizadorTelefone.php",
+				method: "POST",
+				data: {de : de, ate : ate, listados : listados},
+				success: function(data) {
+					var valores = [];
+					var telefone = []
+
+					for(var i in data) {
+						valores.push(data[i].AcessosConcedidos);
+						telefone.push(data[i].telemovel);
+
+					}
+
+					var chartdata = {
+						labels:  telefone,
+						datasets : [
+							{
+								label: "Total de Acessos",
+								backgroundColor: "rgba(38, 185, 154, 0.31)",
+								data: valores,
+								options: {
+								  scales: {
+									yAxes: [{
+									  ticks: {
+										beginAtZero: true
+									  }
+									}]
+								  }
+								}
+							}
+						]
+					};
+
+					var canvas = document.getElementById('pdfConcedidosTelefone');
+					var ctx = $("#pdfConcedidosTelefone");
+					canvas.style.display='none';
+					canvas.width=600;
+					canvas.height=400;
+					 barGraphUtilizadorTelefone = new Chart(ctx, {
+						type: 'bar',
+						data: chartdata,
+						options:{
+													responsive: false,
+													animation: false
+						}	
+				});
+
+					imagemTotaisTelefone = canvas.toDataURL();
+
+				},
+				error: function(data) {
+					console.log(data);
+				}
+			});
+
+/* ------------------------------------------------------------------------------------------------------------------------*/
+
+
+				$.ajax({
+						url: url + "acessosNegadosPorTelefone.php",
+
+						method: "GET",
+						success: function(data) {
+							console.log(data);
+							var valores = [];
+							var telefone = []
+
+							for(var i in data) {
+								valores.push(data[i].AcessosNaoConcedidos);
+								telefone.push(data[i].Telefone);
+
+							}
+
+							var chartdata = {
+								labels:  telefone,
+								datasets : [
+									{
+										label: "Total de Acessos Negados",
+										backgroundColor: "rgba(38, 185, 154, 0.31)",
+										data: valores,
+										options: {
+										  scales: {
+											yAxes: [{
+											  ticks: {
+												beginAtZero: true
+											  }
+											}]
+										  }
+										}
+									}
+								]
+							};
+
+					var canvas = document.getElementById('pdfNegadosTelefone');
+					var ctx = $("#pdfNegadosTelefone");
+					canvas.style.display='none';
+					canvas.width=600;
+					canvas.height=400;
+
+							var barGraph = new Chart(ctx, {
+								type: 'bar',
+								data: chartdata,
+									options:{
+													responsive: false,
+													animation: false
+						}	
+							});
+								imagemTotaisTelefoneNegados = canvas.toDataURL();
+
+						},
+						error: function(data) {
+							console.log(data);
+						}
+					});
+							  
 			
-templatePDF();
+
+/*-------------------------------------------------------------------------------------------------------------------*/			  
+
+				$.ajax({
+						url: url + "acessosNegadosPorContribuinte.php",
+
+						method: "GET",
+						success: function(data) {
+							console.log(data);
+							var valores = [];
+							var contribuinte = []
+
+							for(var i in data) {
+								valores.push(data[i].AcessosNaoConcedidos);
+								contribuinte.push(data[i].nContribuinte);
+
+							}
+
+							var chartdata = {
+								labels:  contribuinte,
+								datasets : [
+									{
+										label: "Total de Acessos Negados",
+										backgroundColor: "rgba(38, 185, 154, 0.31)",
+										data: valores,
+										options: {
+										  scales: {
+											yAxes: [{
+											  ticks: {
+												beginAtZero: true
+											  }
+											}]
+										  }
+										}
+									}
+								]
+							};
+
+					var canvas = document.getElementById('pdfNegadosContribuinte');
+					var ctx = $("#pdfNegadosContribuinte");
+					canvas.style.display='none';
+					canvas.width=600;
+					canvas.height=400;
+							var barGraph = new Chart(ctx, {
+								type: 'bar',
+								data: chartdata,
+									options:{
+													responsive: false,
+													animation: false
+						}	
+							});
+												imagemTotaisContribuinteNegados = canvas.toDataURL();
+
+						},
+						error: function(data) {
+							console.log(data);
+						}
+					});
+
+setTimeout(templatePDF,5000);
 
 			
 }
+
 
 function templatePDF(){
 					var doc = new jsPDF("p", "pt", "a4");
@@ -4550,18 +4857,36 @@ function templatePDF(){
 					doc.text("Report Mensal", xOffset, 100);
 					doc.addPage();
 					
-          doc.text('Acessos Concedidos',xOffset,10);
-					doc.text('Totais',3,10);
-          var h1=50;
-        	var aspectwidth1= ((doc.internal.pageSize.width-h1)*(9/16));
-					doc.addImage(imgData1, 'png',10, h1, aspectwidth1, (height-h1));
+          doc.text('Acessos Concedidos',xOffset,25);
+					doc.setFontSize(16);
+					doc.text('Total de Acessos',10,60);
+          
+					var h1=100;
+        	var aspectwidth1= ((doc.internal.pageSize.width)*(9/16));
+					doc.addImage(imagemTotaisAcessos, 'png',100, h1, aspectwidth1, (height-h1));
+					
+					doc.text('Total por Utilizador - Contribuinte',10,450);
+					doc.addImage(imagemTotaisContribuinte, 'png',100, 500, aspectwidth1, (height-h1));
+
+					doc.addPage();
+					doc.text('Total por Utilizador - Telefone',10,60);
+					doc.addImage(imagemTotaisTelefone, 'png',100, 100, aspectwidth1, (height-h1));
+					doc.addPage();
+
+					doc.text('Total por Pilarete',10,60);
+					doc.addImage(imagemTotaisPilarete, 'png',100, 100, aspectwidth1, (height-h1));
+				
           doc.addPage();
-          doc.text(10, 20, 'Acessos Negados');  
-          doc.addImage(imgData, 'png',10, h1, aspectwidth1, (height-h1));
+					doc.setFontSize(20);
+          doc.text('Acessos Negados',xOffset,25);
 
+					doc.setFontSize(16);
+					doc.text('Total por Utilizador - Telefone',10,60);
+					doc.addImage(imagemTotaisTelefoneNegados, 'png',100, 100, aspectwidth1, (height-h1));
+					doc.text('Total por Utilizador - Contribuinte',10,450);
+					doc.addImage(imagemTotaisContribuinteNegados, 'png',100, 500, aspectwidth1, (height-h1));
 
-					doc.save('sample.pdf');
-
+					doc.save("sample.pdf");
 }
 		/* ECHRTS */
 	

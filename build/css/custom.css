@@ -17,6 +17,9 @@ html , body{
 
 #mapid { height: 500px; width: 900px;}
 
+.can-hide {
+    display: none;
+}
 
 #js-legend1 ul {
   list-style: none;

@@ -66,18 +66,23 @@
         </div>
 
         <!-- top navigation -->
-        <div class="top_nav">
+         <div class="top_nav">
           <div class="nav_menu">
             <nav>
               <div class="nav toggle">
                 <a id="menu_toggle"><i class="fa fa-bars"></i></a>
               </div>
-              <ul class="nav navbar-nav navbar-right">  
-
-                <li role="presentation" class="dropdown">
-                    <a href="alertas.html"><i class="fa fa-bell-o"></i>
+                <ul class="nav navbar-nav navbar-right">
+              <li class="">
+                 <a id="pdf"><i class="glyphicon glyphicon-download-alt"></i>
                   </a>
                 </li>
+                   
+                <li role="presentation" class="dropdown">
+                    <a href="alertas.html"><i class="fa fa-bell-o"></i>
+                    </a>
+                </li>
+               
               </ul>
           </div>
         </div>
@@ -162,6 +167,12 @@
                   </div>
                   <div class="x_content">
                       <canvas id='acessosNegadosRazoesPie'></canvas>
+                      <canvas class="can-hide" id="demo2"></canvas>
+                  <canvas class="can-hide" id="demo"></canvas>
+                  <canvas  class="can-hide" id="pdfpilaretes"></canvas>
+                  <canvas  class="can-hide" id="pdfConcedidosTelefone"></canvas>
+                  <canvas  class="can-hide" id="pdfNegadosTelefone"></canvas>
+                  <canvas  class="can-hide" id="pdfNegadosContribuinte"></canvas>
                   </div>
                 </div>
               </div>
@@ -212,6 +223,7 @@
     <script src="../vendors/pdfmake/build/pdfmake.min.js"></script>
     <script src="../vendors/pdfmake/build/vfs_fonts.js"></script>
         <script src="../vendors/moment/min/moment.min.js"></script>
+    <script src="../vendors/jsPDF/dist/jspdf.min.js"></script>
 
 
     <!-- Custom Theme Scripts -->
