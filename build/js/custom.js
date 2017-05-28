@@ -3407,7 +3407,7 @@ if (typeof NProgress != 'undefined') {
 		}
 
 		function init_destroyer(numtel){
-			if (numtel == "Número de Telefone" || numtel == "Número Inválido"){}
+			if (numtel == "Número de Telemóvel" || numtel == "Número Inválido"){}
 			else {
 				pieChart.destroy();
 				barGraph.destroy();
