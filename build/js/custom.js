@@ -3017,6 +3017,7 @@ if (typeof NProgress != 'undefined') {
 
 
             					tooltips: {
+
 										mode: 'label',
 								          callbacks: {
 								          label: function(tooltipItem, data) { 
@@ -3903,6 +3904,11 @@ if (typeof NProgress != 'undefined') {
 			}
 
 			if ($('#utilizadorAcessosPorPilareteBarras').length) {
+
+                var c = new Date(de)
+                var d = new Date(ate)
+                var de = c.toISOString().substring(0, 19).replace('T', ' ')
+                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
 				$.ajax({
             			method: "POST",
             			url: url + "utilizadorAcessosPorPilareteBarras.php",
@@ -3911,15 +3917,20 @@ if (typeof NProgress != 'undefined') {
 
             			success: function(data) {
             				var valoresE = new Array();
-            				var valoresS = new Array();
-                        	var label =new Array();
-
-                        for (var i in data){
+            						var valoresS = new Array();
+                        var label =new Array();
+                        var posvaloresE= 0;
+                        var posvaloresS= 0;
+                        var x;
+												  for (var i in data){
                         	valoresE.push(data[i].entradas);
             				valoresS.push(data[i].saidas);
             				label.push(data[i].pilarete);
                         }
 
+            			  var numberWithCommas = function(x) {
+							    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+							  };
             			var chartdata = {
 
             				labels:  label,
@@ -3931,6 +3942,7 @@ if (typeof NProgress != 'undefined') {
             						backgroundColor: "rgba(38, 185, 154, 0.7)",
 									hoverBorderWidth: 2,
 									hoverBorderColor: 'lightgrey',
+
             						data: valoresE
             					},{
 									label: "Total de Saídas",
@@ -3945,7 +3957,6 @@ if (typeof NProgress != 'undefined') {
             				]	
 
             			};
-
             			
             			var ctx = $('#utilizadorAcessosPorPilareteBarras');
 
@@ -3953,6 +3964,17 @@ if (typeof NProgress != 'undefined') {
             				type: 'bar',
             				data: chartdata,
             				options: {
+
+
+            					tooltips: {
+
+										mode: 'label',
+								          callbacks: {
+								          label: function(tooltipItem, data) { 
+								          	return data.datasets[tooltipItem.datasetIndex].label + ": " + numberWithCommas(tooltipItem.yLabel);
+								          }
+								          }
+         						},
             					scales:{
             						  xAxes: [{ 
 								          	stacked: true,

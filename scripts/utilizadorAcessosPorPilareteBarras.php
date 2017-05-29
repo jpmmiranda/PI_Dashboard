@@ -28,6 +28,12 @@ $query = sprintf("SELECT Pilarete as pilarete,
 		from RegistoAcessos
 		where Telefone = '$utilizador' and (DataHora between '$inicio' and '$fim') and (EstadoEspiraE = 'Entrada' OR EstadoEspiraS = 'Saída') group by(pilarete);");
 
+
+//query to get data from the table
+/*$query = sprintf("SELECT count(*) as AcessosConcedidos, Pilarete, EstadoEspiraE as ee, EstadoEspiraS as es  
+			FROM RegistoAcessos 
+			where (DataHora between '$inicio' and '$fim') and Telefone = '$utilizador'and ValidacaoAcesso regexp '^Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída')   group by Pilarete,EstadoEspiraE, EstadoEspiraS ;");
+*/
 //execute query
 $result = $connection->conn->query($query);
 //loop through the returned data
