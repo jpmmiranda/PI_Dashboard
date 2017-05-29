@@ -59,6 +59,10 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
 	var barGraphUtilizador;
 	var barGraphUtilizadorTelefone;
 	var pilareteSelecionado;
+	var barGraphNegadosTelefoneBarras
+	var barGraphNegadosContribuinteBarras
+	var pieChartNegadosRazoes
+
 
 // Sidebar
 function init_sidebar() {
@@ -1645,7 +1649,6 @@ if (typeof NProgress != 'undefined') {
 		      barGraphPilaretes.destroy();
 		      barGraphUtilizador.destroy();
 					barGraphUtilizadorTelefone.destroy();
-					//init_chartsPilaretes(de, ate,pilarete)
           init_charts(picker.startDate.format('YYYY/MM/DD HH:mm'),picker.endDate.format('YYYY/MM/DD HH:mm'),getCheckedBoxes('1'));
 
 			});
@@ -1746,6 +1749,181 @@ if (typeof NProgress != 'undefined') {
 			});
 			$('#destroy').click(function() {
 			  $('#reportrange1').data('daterangepicker').remove();
+			});
+   
+		}
+
+		/* Calendario da pagina de acessos Negados */
+		function init_daterangepickerAcessosNegados() {
+
+
+			if( typeof ($.fn.daterangepicker) === 'undefined'){ return; }
+			console.log('init_daterangepicker');
+		
+			var cb = function(start, end, label) {
+			  console.log(start.toISOString(), end.toISOString(), label);
+			  $('#reportrange2 span').html(start.format('DD-MM-YYYY') + ' Até ' + end.format('DD-MM-YYYY'));
+			};
+
+			var max = new Date().getFullYear();
+			   
+			var optionSet1 = {
+			  minDate: '01/01/2016',
+			  maxDate: '12/31/'+max,
+			  dateLimit: {
+				days: 366
+			  },
+			  showDropdowns: true,
+			  showWeekNumbers: true,
+			  timePicker: true,
+			  timePickerIncrement: 1,
+			  timePicker24Hour: true,
+			  ranges: {
+				'Hoje': [moment().startOf('day'), moment().endOf('day')],
+				'Ontem': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+				'Últimos 7 Dias': [moment().subtract(6, 'days').startOf('day'), moment()],
+				'Este Mês': [moment().startOf('month'), moment().endOf('month')],
+				'Último Mês': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                'Este Ano': [moment().startOf('year'), moment().endOf('year')],
+                'Último Ano': [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')]
+			  },
+			  opens: 'left',
+			  buttonClasses: ['btn btn-default'],
+			  applyClass: 'btn-small btn-primary',
+			  cancelClass: 'btn-small',
+			  format: 'DD/MM/YYYY',
+			  separator: ' de ',
+              locale: {
+                    applyLabel: 'Ok',
+                    cancelLabel: 'Cancelar',
+                    fromLabel: 'De',
+                    toLabel: 'Até',
+                    customRangeLabel: 'Personalizar',
+                    daysOfWeek: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+                    monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                    firstDay: 1
+                  }
+			 
+			};
+			
+			$('#reportrange2 span').html(moment().format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY'));
+			$('#reportrange2').daterangepicker(optionSet1, cb);
+			$('#reportrange2').on('show.daterangepicker', function() {
+			  console.log("show event fired");
+			});
+			$('#reportrange2').on('hide.daterangepicker', function() {
+			  console.log("hide event fired");
+			});
+			$('#reportrange2').on('apply.daterangepicker', function(ev, picker) {
+			  console.log("apply event fired, start/end dates are " + picker.startDate.format('YYYY/MM/DD HH:mm') + " to " + picker.endDate.format('YYYY/MM/DD HH:mm'));
+          de = picker.startDate.format('YYYY/MM/DD HH:mm');
+					ate = picker.endDate.format('YYYY/MM/DD HH:mm');		
+				
+					barGraphNegadosTelefoneBarras.destroy();
+					barGraphNegadosContribuinteBarras.destroy();
+					pieChartNegadosRazoes.destroy();
+
+					init_charts(de,ate,null);
+
+			});
+			$('#reportrange2').on('cancel.daterangepicker', function(ev, picker) {
+			  console.log("cancel event fired");
+			});
+			$('#options1').click(function() {
+			  $('#reportrange').data('daterangepicker').setOptions(optionSet1, cb);
+			});
+			$('#options2').click(function() {
+			  $('#reportrange').data('daterangepicker').setOptions(optionSet2, cb);
+			});
+			$('#destroy').click(function() {
+			  $('#reportrange2').data('daterangepicker').remove();
+			});
+   
+		}
+
+			/* Calendario da pagina de acessos Utilizador */
+		function init_daterangepickerAcessosUtilizador() {
+
+
+			if( typeof ($.fn.daterangepicker) === 'undefined'){ return; }
+			console.log('init_daterangepicker');
+		
+			var cb = function(start, end, label) {
+			  console.log(start.toISOString(), end.toISOString(), label);
+			  $('#reportrange3 span').html(start.format('DD-MM-YYYY') + ' Até ' + end.format('DD-MM-YYYY'));
+			};
+
+			var max = new Date().getFullYear();
+			   
+			var optionSet1 = {
+			  minDate: '01/01/2016',
+			  maxDate: '12/31/'+max,
+			  dateLimit: {
+				days: 366
+			  },
+			  showDropdowns: true,
+			  showWeekNumbers: true,
+			  timePicker: true,
+			  timePickerIncrement: 1,
+			  timePicker24Hour: true,
+			  ranges: {
+				'Hoje': [moment().startOf('day'), moment().endOf('day')],
+				'Ontem': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+				'Últimos 7 Dias': [moment().subtract(6, 'days').startOf('day'), moment()],
+				'Este Mês': [moment().startOf('month'), moment().endOf('month')],
+				'Último Mês': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                'Este Ano': [moment().startOf('year'), moment().endOf('year')],
+                'Último Ano': [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')]
+			  },
+			  opens: 'left',
+			  buttonClasses: ['btn btn-default'],
+			  applyClass: 'btn-small btn-primary',
+			  cancelClass: 'btn-small',
+			  format: 'DD/MM/YYYY',
+			  separator: ' de ',
+              locale: {
+                    applyLabel: 'Ok',
+                    cancelLabel: 'Cancelar',
+                    fromLabel: 'De',
+                    toLabel: 'Até',
+                    customRangeLabel: 'Personalizar',
+                    daysOfWeek: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+                    monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                    firstDay: 1
+                  }
+			 
+			};
+			
+			$('#reportrange3 span').html(moment().format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY'));
+			$('#reportrange3').daterangepicker(optionSet1, cb);
+			$('#reportrange3').on('show.daterangepicker', function() {
+			  console.log("show event fired");
+			});
+			$('#reportrange3').on('hide.daterangepicker', function() {
+			  console.log("hide event fired");
+			});
+			$('#reportrange3').on('apply.daterangepicker', function(ev, picker) {
+			  console.log("apply event fired, start/end dates are " + picker.startDate.format('YYYY/MM/DD HH:mm') + " to " + picker.endDate.format('YYYY/MM/DD HH:mm'));
+          de = picker.startDate.format('YYYY/MM/DD HH:mm');
+					ate = picker.endDate.format('YYYY/MM/DD HH:mm');		
+					pieChart.destroy();
+					barGraph.destroy();
+					barGraphUtiPilaretes.destroy();
+					
+					init_utilizador(de,ate,document.getElementById('Tel').value);
+
+			});
+			$('#reportrange3').on('cancel.daterangepicker', function(ev, picker) {
+			  console.log("cancel event fired");
+			});
+			$('#options1').click(function() {
+			  $('#reportrange').data('daterangepicker').setOptions(optionSet1, cb);
+			});
+			$('#options2').click(function() {
+			  $('#reportrange').data('daterangepicker').setOptions(optionSet2, cb);
+			});
+			$('#destroy').click(function() {
+			  $('#reportrange3').data('daterangepicker').remove();
 			});
    
 		}
@@ -2982,10 +3160,17 @@ if (typeof NProgress != 'undefined') {
 			if ($('#acessosNegadosTelefoneBarras').length ){ 
 			  
 
-				$.ajax({
-						url: url + "acessosNegadosPorTelefone.php",
+				
+          var c = new Date(de)
+          var d = new Date(ate)
+          var de = c.toISOString().substring(0, 19).replace('T', ' ')
+          var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+								
+          $.ajax({
 
 						method: "GET",
+						url: url + "acessosNegadosPorTelefone.php",
+						data: {de : de, ate : ate},
 						success: function(data) {
 							console.log(data);
 							var valores = [];
@@ -3019,7 +3204,7 @@ if (typeof NProgress != 'undefined') {
 
 							var ctx = $('#acessosNegadosTelefoneBarras');
 
-							var barGraph = new Chart(ctx, {
+							 barGraphNegadosTelefoneBarras = new Chart(ctx, {
 								type: 'bar',
 								data: chartdata
 							});
@@ -3034,9 +3219,9 @@ if (typeof NProgress != 'undefined') {
 			  
 
 				$.ajax({
-						url: url + "acessosNegadosPorContribuinte.php",
-
 						method: "GET",
+						url: url + "acessosNegadosPorContribuinte.php",
+						data: {de : de, ate : ate},
 						success: function(data) {
 							console.log(data);
 							var valores = [];
@@ -3070,7 +3255,7 @@ if (typeof NProgress != 'undefined') {
 
 							var ctx = $('#acessosNegadosContribuinteBarras');
 
-							var barGraph = new Chart(ctx, {
+							 barGraphNegadosContribuinteBarras = new Chart(ctx, {
 								type: 'bar',
 								data: chartdata
 							});
@@ -3087,6 +3272,7 @@ if (typeof NProgress != 'undefined') {
 				  $.ajax({
 						url: url + "acessosNegadosRazoes.php",
 						method: "GET",
+						data: {de : de, ate : ate},
 						success: function(data) {
 							var valores = [];
 							var razao = []
@@ -3133,12 +3319,12 @@ if (typeof NProgress != 'undefined') {
 
 							var ctx = $('#acessosNegadosRazoesPie');
 
-							var pieChart = new Chart(ctx, {
+						 pieChartNegadosRazoes = new Chart(ctx, {
 								data: chartdata,
 								type: 'pie'
 								
 							});
-							document.getElementById('js-legend1').innerHTML = pieChart.generateLegend();
+							//document.getElementById('js-legend1').innerHTML = pieChartNegadosRazoes.generateLegend();
 						},
 						error: function(data) {
 							console.log(data);
@@ -3406,21 +3592,24 @@ if (typeof NProgress != 'undefined') {
 			});
 		}
 
-		function init_destroyer(numtel){
+		function init_destroyer(numtel,utilizador){
+
 			if (numtel == "Número de Telemóvel" || numtel == "Número Inválido"){}
 			else {
 				pieChart.destroy();
 				barGraph.destroy();
 				barGraphUtiPilaretes.destroy();
 				compAnosUtilizador.destroy();
+
 			}
+							init_utilizador(de,ate,utilizador);
+
 		}
 
-		function init_utilizador(utilizador){
+		function init_utilizador(de,ate,utilizador){
 
 			if (utilizador.length < 9 || utilizador.length > 9) {document.getElementById('numTel').innerHTML = 'Número Inválido';}
 				else {document.getElementById('numTel').innerHTML = utilizador;}
-
 			if ($('#tipoUtil').length ){
 				$.ajax({
 						url: url + "getTipoUtil.php",
@@ -3449,10 +3638,14 @@ if (typeof NProgress != 'undefined') {
 
 			if ($('#pieChartAcessos2').length ){
 				  
+                var c = new Date(de)
+                var d = new Date(ate)
+								var de = c.toISOString().substring(0, 19).replace('T', ' ')
+                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
 				  $.ajax({
 						url: url + "utilizadorAcessosNaoConcebidos.php",
 						method: "POST",
-						data: {utilizador : utilizador},
+						data: {de: de,ate:ate,utilizador : utilizador},
 						success: function(data) {
 							var valores = [];
 							var razao = [];
@@ -3540,25 +3733,110 @@ if (typeof NProgress != 'undefined') {
 
 				if ($('#linhasTotalAcessos').length) {
 					var labels=["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-				   	$.ajax({
+                var tipo=0;
+                var nomeLabel;
+                var c = new Date(de)
+                var d = new Date(ate)
+                var prim = moment(de,'YYYY/MM/DD');
+							  var ult = moment(ate,'YYYY/MM/DD');
+								var diffDays = ult.diff(prim, 'days');
+
+                if(diffDays==0){
+                    tipo=1;
+                    nomeLabel="Horas"
+                }
+
+                else if (diffDays==1){
+                     tipo =2;
+                     nomeLabel="Dias"
+
+                 }
+
+                else if (diffDays<=31){
+                     tipo =4;
+                     nomeLabel="Dias"
+                 }
+
+                else if(diffDays<7){
+                	  tipo =3;
+                      nomeLabel="Dias"
+                }
+                else{
+                    tipo =5;
+                    nomeLabel="Meses"
+                }
+
+                var de = c.toISOString().substring(0, 19).replace('T', ' ')
+                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+							
+                 $.ajax({
 
                     type: 'POST',
-            		url: url + "utilizadorAcessosTotais.php",
-                    data: {utilizador : utilizador}, 
+            				url: url + "utilizadorAcessosTotais.php",
+                    data: {de : de, ate : ate, utilizador:utilizador, tipo:tipo}, 
             		success: function(data) {
-            			var valoresE = new Array();
+            			console.log(data);
+            					var valoresE = new Array();
             			var valoresS = new Array();
+                  var label =new Array();
+                  var posvaloresE=0;
+                  var posvaloresS=0;
 
-            			for(var i in data){
-            				valoresE.push(data[i].entradas);
-            				valoresS.push(data[i].saidas);
+            			for(var i in data) {
+
+            				if($.inArray(data[i].lab, label)!=-1){
+
+	            				if (data[i].ee=="Entrada"){
+
+	            					 posvaloresE=label.indexOf(data[i].lab);
+
+	            					 if (valoresE[posvaloresE] === undefined) valoresE[posvaloresE]=parseInt((data[i].AcessosConcedidos));
+	            					 else valoresE[posvaloresE] = parseInt(valoresE[posvaloresE]) + parseInt((data[i].AcessosConcedidos));
+	            					
+	            					
+	            				}
+
+	            				if (data[i].es=="Saída"){
+
+
+	            					 posvaloresS=label.indexOf(data[i].lab);
+
+	            					 if (valoresS[posvaloresS] === undefined) valoresS[posvaloresS]=parseInt((data[i].AcessosConcedidos));
+	            					 else valoresS[posvaloresS] = parseInt(valoresS[posvaloresS]) + parseInt((data[i].AcessosConcedidos));
+	            					
+	            					
+	            				}
+	            			}else{
+	            				
+	            			   label.push(data[i].lab);
+	            				if (data[i].es=="Saída"){
+
+	            						posvaloresS=label.indexOf(data[i].lab);
+	            						valoresS.splice(posvaloresS, 0, data[i].AcessosConcedidos);
+	            				}
+	            				if (data[i].ee=="Entrada"){
+
+	            					posvaloresE=label.indexOf(data[i].lab);
+	            					valoresE.splice(posvaloresE, 0, data[i].AcessosConcedidos);
+
+	            				} 
+	            			}
+
+            				
+            			}
+            			if(tipo==5){
+
+            				for(var i in label) {
+	                            label[i]=labels[i];
+
+            				}
             			}
 
 
 
             			
             			var chartdata = {
-            				labels:  labels,
+            				labels:  label,
             				datasets : [
             					{
             						label: "Total de Entradas",
@@ -3571,16 +3849,16 @@ if (typeof NProgress != 'undefined') {
             						pointBorderWidth: 1,
             						data: valoresE
             					},{
-									label: "Total de Saídas",
-									backgroundColor: "rgba(3, 88, 106, 0.3)",
-									borderColor: "rgba(3, 88, 106, 0.70)",
-									pointBorderColor: "rgba(3, 88, 106, 0.70)",
-									pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
-									pointHoverBackgroundColor: "#fff",
-									pointHoverBorderColor: "rgba(151,187,205,1)",
-									pointBorderWidth: 1,
-									data: valoresS
-								}	
+												label: "Total de Saídas",
+												backgroundColor: "rgba(3, 88, 106, 0.3)",
+												borderColor: "rgba(3, 88, 106, 0.70)",
+												pointBorderColor: "rgba(3, 88, 106, 0.70)",
+												pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
+												pointHoverBackgroundColor: "#fff",
+												pointHoverBorderColor: "rgba(151,187,205,1)",
+												pointBorderWidth: 1,
+												data: valoresS
+											}	
 
             				]
             			};
@@ -3629,7 +3907,7 @@ if (typeof NProgress != 'undefined') {
             			method: "POST",
             			url: url + "utilizadorAcessosPorPilareteBarras.php",
 
-                  data: {utilizador : utilizador},
+                  data: {de:de,ate:ate,utilizador : utilizador},
 
             			success: function(data) {
             				var valoresE = new Array();
@@ -7184,6 +7462,8 @@ function templatePDF(){
 		init_TagsInput();
 		init_parsley();
 		init_daterangepickerPilaretes(null);
+		init_daterangepickerAcessosNegados();
+		init_daterangepickerAcessosUtilizador();
 		init_daterangepicker(checkedBoxes);
 		init_daterangepicker_right();
 		init_daterangepicker_single_call();
@@ -7206,6 +7486,7 @@ function templatePDF(){
 		init_CustomNotification();
 		init_autosize();
 		init_autocomplete();
+		
 		$('#selecaoano').change(function(){
 
 			 compAnos.destroy();

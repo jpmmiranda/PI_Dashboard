@@ -15,10 +15,11 @@ if(!$connection->conn){
 }
 
 $utilizador = $_POST["utilizador"];
-
+$inicio = $_POST["de"];
+$fim = $_POST["ate"];
 //query to get data from the table
 $query = sprintf("SELECT count(*) as AcessosNaoConcedidos, ValidacaoAcesso FROM RegistoAcessos 
-	where year(DataHora) > 2015 and Telefone='$utilizador' and (ValidacaoAcesso regexp '^Acesso Nao Concedido' or ValidacaoAcesso regexp '^Acesso Recusado') 
+	where (DataHora between '$inicio' and '$fim') and Telefone='$utilizador' and (ValidacaoAcesso regexp '^Acesso Nao Concedido' or ValidacaoAcesso regexp '^Acesso Recusado') 
 	group by ValidacaoAcesso order by AcessosNaoConcedidos asc;");
 
 //execute query

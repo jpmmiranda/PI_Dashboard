@@ -14,9 +14,13 @@ if(!$connection->conn){
 	die("Connection failed: " . $connection->conn->error);
 }
 
+
+$inicio = $_GET["de"];
+$fim = $_GET["ate"];
+
 //query to get data from the table
 $query = sprintf("SELECT count(*) as AcessosNaoConcedidos, ValidacaoAcesso FROM RegistoAcessos 
-	where year(DataHora) = 2016 and (ValidacaoAcesso regexp '^Acesso Nao Concedido' or ValidacaoAcesso regexp '^Acesso Recusado') 
+	where (DataHora between '$inicio' and '$fim') and (ValidacaoAcesso regexp '^Acesso Nao Concedido' or ValidacaoAcesso regexp '^Acesso Recusado') 
 	group by ValidacaoAcesso order by AcessosNaoConcedidos asc;");
 
 //execute query

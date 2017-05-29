@@ -15,15 +15,36 @@ if(!$connection->conn){
 }
 
 mysqli_set_charset($connection->conn, "utf8");
-
+$tipo = $_POST["tipo"];
 $utilizador = $_POST["utilizador"];
+$inicio = $_POST["de"];
+$fim = $_POST["ate"];
 
 //query to get data from the table
-$query = sprintf("SELECT month(DataHora) as month,
+/*$query = sprintf("SELECT month(DataHora) as month,
     sum(case when EstadoEspiraE = 'Entrada' and ValidacaoAcesso like 'Acesso Concedido' then 1 else 0 end) entradas,
     sum(case when EstadoEspiraS = 'Saída' and ValidacaoAcesso like 'Acesso Concedido' then 1 else 0 end) saidas
 		from RegistoAcessos
-		where Telefone = '$utilizador' and year(DataHora) = 2016 group by(month(DataHora));");
+		where Telefone = '$utilizador' and (DataHora between '$inicio' and '$fim') group by(month(DataHora));");
+*/
+
+//query to get data from the table
+if($tipo == 1)
+	$query = sprintf("SELECT count(*) as AcessosConcedidos, hour(DataHora) as lab ,EstadoEspiraE as ee, EstadoEspiraS as es
+		 FROM RegistoAcessos as RA 
+		 where Telefone = '$utilizador' and  DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída')  group by hour(DataHora), EstadoEspiraE, EstadoEspiraS;");
+else if($tipo == 2)
+		$query = sprintf("SELECT count(*) as AcessosConcedidos, day(DataHora) as lab,EstadoEspiraE as ee, EstadoEspiraS as es FROM RegistoAcessos as RA 
+		where Telefone = '$utilizador' and DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída') group by day(DataHora), EstadoEspiraE, EstadoEspiraS;");
+else if($tipo == 3)
+		$query = sprintf("SELECT count(*) as AcessosConcedidos, day(DataHora) as lab ,EstadoEspiraE as ee, EstadoEspiraS as es FROM RegistoAcessos as RA 
+		where Telefone = '$utilizador' and DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída') group by day(DataHora), EstadoEspiraE, EstadoEspiraS;");
+else if($tipo == 4)
+		$query = sprintf("SELECT count(*) as AcessosConcedidos, dayofmonth(DataHora) as lab,EstadoEspiraE as ee, EstadoEspiraS as es FROM RegistoAcessos as RA 
+		where Telefone = '$utilizador' and DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída') group by dayofmonth(DataHora), EstadoEspiraE, EstadoEspiraS;");
+else if($tipo == 5)
+		$query = sprintf("SELECT count(*) as AcessosConcedidos, month(DataHora) as lab,EstadoEspiraE as ee, EstadoEspiraS as es FROM RegistoAcessos as RA 
+		where Telefone = '$utilizador' and year(DataHora) =year('$inicio') and ValidacaoAcesso like 'Acesso Concedido'  and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída')  group by month(DataHora), EstadoEspiraE, EstadoEspiraS;");
 
 //execute query
 $result = $connection->conn->query($query);

@@ -17,6 +17,8 @@ if(!$connection->conn){
 mysqli_set_charset($connection->conn, "utf8");
 
 $utilizador = $_POST["utilizador"];
+$inicio = $_POST["de"];
+$fim = $_POST["ate"];
 
 //query to get data from the table
 
@@ -24,7 +26,7 @@ $query = sprintf("SELECT Pilarete as pilarete,
     sum(case when EstadoEspiraE = 'Entrada' and ValidacaoAcesso like 'Acesso Concedido' then 1 else 0 end) entradas,
     sum(case when EstadoEspiraS = 'Saída' and ValidacaoAcesso like 'Acesso Concedido' then 1 else 0 end) saidas
 		from RegistoAcessos
-		where Telefone = '$utilizador' and year(DataHora) = 2016 and (EstadoEspiraE = 'Entrada' OR EstadoEspiraS = 'Saída') group by(pilarete);");
+		where Telefone = '$utilizador' and (DataHora between '$inicio' and '$fim') and (EstadoEspiraE = 'Entrada' OR EstadoEspiraS = 'Saída') group by(pilarete);");
 
 //execute query
 $result = $connection->conn->query($query);

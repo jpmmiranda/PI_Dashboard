@@ -98,7 +98,7 @@
                   <div class="input-group">
                     <input id="Tel" type="text" class="form-control" placeholder="Número de telemóvel">
                     <span class="input-group-btn">
-                      <button class="btn btn-default" type="button" onClick="init_destroyer(document.getElementById('numTel').textContent); init_utilizador(document.getElementById('Tel').value); init_utilizdorComp_anos(document.getElementById('Tel').value , $('#selecaoanoUtilizador option:selected').val())">Go!</button>
+                      <button class="btn btn-default" type="button" onClick="init_destroyer(document.getElementById('numTel').textContent, document.getElementById('Tel').value); init_utilizdorComp_anos(document.getElementById('Tel').value , $('#selecaoanoUtilizador option:selected').val())">Go!</button>
                     </span>
                   </div>
                 </div>
@@ -134,12 +134,12 @@
 
               <div class="clearfix"></div>
 
-            <div class="col-md-14 col-sm-14 col-xs-18 tile_stats_count">
-                <div class="x_content">
-                  <span class="count" ></span>
-                   <b><font size="6" id = "intData">Intervalo de Datas</font></b>
-                </div>
-            </div>
+             <div class="col-md-14 col-sm-14 col-xs-18 tile_stats_count">
+                    <div id="reportrange3" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+                      <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                      <span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>
+                    </div>
+              </div>
 
               <div class="clearfix"></div>
 
@@ -297,7 +297,7 @@
     <script src="../vendors/fastclick/lib/fastclick.js"></script>
     <!-- NProgress -->
     <script src="../vendors/nprogress/nprogress.js"></script>
-    <!-- Chart.js -->
+  <!-- Chart.js -->
     <script src="../vendors/Chart.js/dist/Chart.min.js"></script>
 
     <script src="../vendors/DateJS/build/date.js"></script>
