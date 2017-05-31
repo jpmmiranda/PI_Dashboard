@@ -500,7 +500,7 @@ if (typeof NProgress != 'undefined') {
 			 
 			};
 			
-			$('#reportrange span').html(moment().format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY'));
+			$('#reportrange span').html(moment().startOf('month').format('DD/MM/YYYY')+ ' - ' + moment().endOf('month').format('DD/MM/YYYY'));
 			$('#reportrange').daterangepicker(optionSet1, cb);
 			$('#reportrange').on('show.daterangepicker', function() {
 			  console.log("show event fired");
@@ -587,7 +587,7 @@ if (typeof NProgress != 'undefined') {
 			 
 			};
 			
-			$('#reportrange1 span').html(moment().format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY'));
+			$('#reportrange1 span').html(moment().startOf('month').format('DD/MM/YYYY')+ ' - ' + moment().endOf('month').format('DD/MM/YYYY'));
 			$('#reportrange1').daterangepicker(optionSet1, cb);
 			$('#reportrange1').on('show.daterangepicker', function() {
 			  console.log("show event fired");
@@ -673,7 +673,7 @@ if (typeof NProgress != 'undefined') {
 			 
 			};
 			
-			$('#reportrange2 span').html(moment().format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY'));
+			$('#reportrange2 span').html(moment().startOf('month').format('DD/MM/YYYY')+ ' - ' + moment().endOf('month').format('DD/MM/YYYY'));
 			$('#reportrange2').daterangepicker(optionSet1, cb);
 			$('#reportrange2').on('show.daterangepicker', function() {
 			  console.log("show event fired");
@@ -761,7 +761,7 @@ if (typeof NProgress != 'undefined') {
 			 
 			};
 			
-			$('#reportrange3 span').html(moment().format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY'));
+			$('#reportrange3 span').html(moment().startOf('month').format('DD/MM/YYYY')+ ' - ' + moment().endOf('month').format('DD/MM/YYYY'));
 			$('#reportrange3').daterangepicker(optionSet1, cb);
 			$('#reportrange3').on('show.daterangepicker', function() {
 			  console.log("show event fired");
@@ -2396,6 +2396,7 @@ window.onload = function() {
 														name: data[i].nome,
 														radius: 5
 												}).addTo(map).on('click', function(){
+															  document.getElementById('Pilarete').innerHTML = this.options.name;
 																inicializa_graficos(this.options.name) 
 									});
 							circle.bindPopup(data[i].nome);
@@ -2416,6 +2417,7 @@ window.onload = function() {
 														name: data[i].nome,
 														radius: 5
 								}).addTo(map).on('click', function(e){
+																document.getElementById('Pilarete').innerHTML = this.options.name;
 																inicializa_graficos(this.options.name),
 																pilareteSelecionado=this.options.name; 
 												});
