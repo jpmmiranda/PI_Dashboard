@@ -47,7 +47,7 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
 	var ate= moment().subtract(1, 'year').endOf('year');
 	var barGraph=null, barGraph1;
 	var compAnos;
-	var barGraphPilaretes=null,barGraphContribuintePorPilarete,barGraphTelefonePorPilarete;
+	var barGraphPilaretes=null,barGraphContribuintePorPilarete,barGraphTelefonePorPilarete, barGraphUtiPilaretes=null;
 	var pieChart;
 	var barGraphUtilizador=null;
 	var barGraphUtilizadorTelefone=null;
@@ -930,6 +930,8 @@ if (typeof NProgress != 'undefined') {
 				
 			/*Grafico de linhas da pagina Pilaretes */
 			if ($('#lineChartPilaretes').length ){
+							 		$('#loadinglineChartPilaretes').show();
+
                 var labels=["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
                 var tipo=0;
                 var nomeLabel;
@@ -1088,6 +1090,7 @@ if (typeof NProgress != 'undefined') {
 
             			});
             	document.getElementById('js-legend1').innerHTML = barGraph1.generateLegend();
+							 		$('#loadinglineChartPilaretes').hide();
 
             		},
             		error: function(data) {
@@ -1100,6 +1103,7 @@ if (typeof NProgress != 'undefined') {
 
 		
 		if ($('#acessosContribuintePorPilarete').length ){ 
+							 		$('#loadingacessosContribuintePorPilarete').show();
 
 		$.ajax({
 				url: url + "acessosContribuintePorPilarete.php",
@@ -1141,6 +1145,8 @@ if (typeof NProgress != 'undefined') {
 						type: 'bar',
 						data: chartdata
 					});
+												 		$('#loadingacessosContribuintePorPilarete').hide();
+
 				},
 				error: function(data) {
 					console.log(data);
@@ -1149,6 +1155,7 @@ if (typeof NProgress != 'undefined') {
 			  
 		}
 		if ($('#acessosTelefonePorPilarete').length ){ 
+												 		$('#loadingacessosTelefonePorPilarete').show();
 
 		$.ajax({
 				url: url + "acessosTelefonePorPilarete.php",
@@ -1190,6 +1197,8 @@ if (typeof NProgress != 'undefined') {
 						type: 'bar',
 						data: chartdata
 					});
+					$('#loadingacessosTelefonePorPilarete').hide();
+
 				},
 				error: function(data) {
 					console.log(data);
@@ -1228,6 +1237,8 @@ if (typeof NProgress != 'undefined') {
 			  /* Grafico de linhas da pagina Acessos Concedidos*/
 	
 			if ($('#lineChart').length ){
+				    $('#loadingAcessos').show();
+
                 var labels=["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
                 var tipo=0;
                 var nomeLabel;
@@ -1264,7 +1275,7 @@ if (typeof NProgress != 'undefined') {
 
                 var de = c.toISOString().substring(0, 19).replace('T', ' ')
                 var ate = d.toISOString().substring(0, 19).replace('T', ' ')
-							
+								
                  $.ajax({
 
                     type: 'POST',
@@ -1308,12 +1319,12 @@ if (typeof NProgress != 'undefined') {
 	            				if (data[i].es=="Saída"){
 
 	            						posvaloresS=label.indexOf(data[i].lab);
-	            						valoresS.splice(posvaloresS, 0, data[i].AcessosConcedidos);
+	            						valoresS.splice(posvaloresS, 0, parseInt(data[i].AcessosConcedidos));
 	            				}
 	            				if (data[i].ee=="Entrada"){
 
 	            					posvaloresE=label.indexOf(data[i].lab);
-	            					valoresE.splice(posvaloresE, 0, data[i].AcessosConcedidos);
+	            					valoresE.splice(posvaloresE, 0, parseInt(data[i].AcessosConcedidos));
 
 	            				} 
 	            			}
@@ -1385,6 +1396,7 @@ if (typeof NProgress != 'undefined') {
 
             			});
             	document.getElementById('js-legend1').innerHTML = barGraph.generateLegend();
+											    $('#loadingAcessos').hide();
 
             		},
             		error: function(data) {
@@ -1399,7 +1411,7 @@ if (typeof NProgress != 'undefined') {
 			  
 			if ($('#acessosPorPilareteBarras').length ){ 
             			  
-            	
+            		$('#loadingacessosPorPilareteBarras').show();
                 var c = new Date(de)
                 var d = new Date(ate)
                 var de = c.toISOString().substring(0, 19).replace('T', ' ')
@@ -1448,12 +1460,12 @@ if (typeof NProgress != 'undefined') {
 	            				if (data[i].es=="Saída"){
 
 	            						posvaloresS=label.indexOf(data[i].Pilarete);
-	            						valoresS.splice(posvaloresS, 0, data[i].AcessosConcedidos);
+	            						valoresS.splice(posvaloresS, 0, parseInt(data[i].AcessosConcedidos));
 	            				}
 	            				if (data[i].ee=="Entrada"){
 
 	            					posvaloresE=label.indexOf(data[i].Pilarete);
-	            					valoresE.splice(posvaloresE, 0, data[i].AcessosConcedidos);
+	            					valoresE.splice(posvaloresE, 0, parseInt(data[i].AcessosConcedidos));
 
 	            				} 
 
@@ -1534,6 +1546,7 @@ if (typeof NProgress != 'undefined') {
 
             			});
             	    document.getElementById('js-legend2').innerHTML = barGraphPilaretes.generateLegend();
+            		$('#loadingacessosPorPilareteBarras').hide();
 
             		},
             		error: function(data) {
@@ -1546,6 +1559,7 @@ if (typeof NProgress != 'undefined') {
 			
 					  
 		if ($('#acessosPorUtilizadorBarras').length ){ 
+            		$('#loadingacessosPorUtilizadorBarras').show();
 
 		$.ajax({
 				url: url + "acessosPorUtilizador.php",
@@ -1556,8 +1570,8 @@ if (typeof NProgress != 'undefined') {
 					var telefone = []
 
 					for(var i in data) {
-						valores.push(data[i].AcessosConcedidos);
-						telefone.push(data[i].nContribuinte);
+						valores.push(parseInt(data[i].AcessosConcedidos));
+						telefone.push(parseInt(data[i].nContribuinte));
 
 					}
 
@@ -1587,6 +1601,8 @@ if (typeof NProgress != 'undefined') {
 						type: 'bar',
 						data: chartdata
 					});
+          $('#loadingacessosPorUtilizadorBarras').hide();
+
 				},
 				error: function(data) {
 					console.log(data);
@@ -1595,6 +1611,7 @@ if (typeof NProgress != 'undefined') {
 			  
 		} 
 		if ($('#acessosPorUtilizadorBarrasTelefone').length ){ 
+            		$('#loadingacessosPorUtilizadorBarrasTelefone').show();
 
 		$.ajax({
 				url: url + "acessosPorUtilizadorTelefone.php",
@@ -1605,8 +1622,8 @@ if (typeof NProgress != 'undefined') {
 					var telefone = []
 
 					for(var i in data) {
-						valores.push(data[i].AcessosConcedidos);
-						telefone.push(data[i].telemovel);
+						valores.push(parseInt(data[i].AcessosConcedidos));
+						telefone.push(parseInt(data[i].telemovel));
 
 					}
 
@@ -1636,6 +1653,8 @@ if (typeof NProgress != 'undefined') {
 						type: 'bar',
 						data: chartdata
 					});
+            		$('#loadingacessosPorUtilizadorBarrasTelefone').hide();
+
 				},
 				error: function(data) {
 					console.log(data);
@@ -1645,6 +1664,7 @@ if (typeof NProgress != 'undefined') {
 		} 
 			if ($('#acessosNegadosTelefoneBarras').length ){ 
 			  
+        	$('#loadingacessosNegadosTelefoneBarras').show();
 
 				
           var c = new Date(de)
@@ -1658,13 +1678,12 @@ if (typeof NProgress != 'undefined') {
 						url: url + "acessosNegadosPorTelefone.php",
 						data: {de : de, ate : ate},
 						success: function(data) {
-							console.log(data);
 							var valores = [];
 							var telefone = []
 
 							for(var i in data) {
-								valores.push(data[i].AcessosNaoConcedidos);
-								telefone.push(data[i].Telefone);
+								valores.push(parseInt(data[i].AcessosNaoConcedidos));
+								telefone.push(parseInt(data[i].Telefone));
 
 							}
 
@@ -1694,6 +1713,7 @@ if (typeof NProgress != 'undefined') {
 								type: 'bar',
 								data: chartdata
 							});
+							$('#loadingacessosNegadosTelefoneBarras').hide();
 						},
 						error: function(data) {
 							console.log(data);
@@ -1703,19 +1723,19 @@ if (typeof NProgress != 'undefined') {
 			}
 			if ($('#acessosNegadosContribuinteBarras').length ){ 
 			  
+							$('#loadingacessosNegadosContribuinteBarras').show();
 
 				$.ajax({
 						method: "GET",
 						url: url + "acessosNegadosPorContribuinte.php",
 						data: {de : de, ate : ate},
 						success: function(data) {
-							console.log(data);
 							var valores = [];
 							var contribuinte = []
 
 							for(var i in data) {
-								valores.push(data[i].AcessosNaoConcedidos);
-								contribuinte.push(data[i].nContribuinte);
+								valores.push(parseInt(data[i].AcessosNaoConcedidos));
+								contribuinte.push(parseInt(data[i].nContribuinte));
 
 							}
 
@@ -1745,6 +1765,8 @@ if (typeof NProgress != 'undefined') {
 								type: 'bar',
 								data: chartdata
 							});
+							$('#loadingacessosNegadosContribuinteBarras').hide();
+
 						},
 						error: function(data) {
 							console.log(data);
@@ -1754,7 +1776,8 @@ if (typeof NProgress != 'undefined') {
 			}
 
 			if ($('#acessosNegadosRazoesPie').length ){
-				  
+				  							$('#loadingacessosNegadosRazoesPie').show();
+
 				  $.ajax({
 						url: url + "acessosNegadosRazoes.php",
 						method: "GET",
@@ -1764,7 +1787,7 @@ if (typeof NProgress != 'undefined') {
 							var razao = []
 
 							for(var i in data) {
-								valores.push(data[i].AcessosNaoConcedidos);
+								valores.push(parseInt(data[i].AcessosNaoConcedidos));
 								razao.push(data[i].ValidacaoAcesso);
 							}
 
@@ -1810,7 +1833,7 @@ if (typeof NProgress != 'undefined') {
 								type: 'pie'
 								
 							});
-							//document.getElementById('js-legend1').innerHTML = pieChartNegadosRazoes.generateLegend();
+				  							$('#loadingacessosNegadosRazoesPie').hide();
 						},
 						error: function(data) {
 							console.log(data);
@@ -1851,6 +1874,8 @@ if (typeof NProgress != 'undefined') {
 		// Função para a  criação dos gráficos da utilizadores
 		function init_utilizdorComp_anos(utilizador, ano){
 			var ctx = document.getElementById("compAnosUtilizador");
+							  							$('#loadingcompAnosUtilizador').show();
+
 			  $.ajax({
 	
           type: 'POST',
@@ -1861,8 +1886,8 @@ if (typeof NProgress != 'undefined') {
 					var anoY = [];
 					for(var i in data) {
 						if (data[i].year==ano)
-							{score.push(data[i].AcessosConcedidos);}
-						else {anoY.push(data[i].AcessosConcedidos);}
+							{score.push(parseInt(data[i].AcessosConcedidos));}
+						else {anoY.push(parseInt(data[i].AcessosConcedidos));}
 					}
 
 					var chartdata = {
@@ -1918,6 +1943,7 @@ if (typeof NProgress != 'undefined') {
                             }
 					});
 				 document.getElementById('js-legend4').innerHTML = compAnosUtilizador.generateLegend();
+							  							$('#loadingcompAnosUtilizador').hide();
 
 				},
 				error: function(data) {
@@ -1936,7 +1962,7 @@ if (typeof NProgress != 'undefined') {
 				compAnosUtilizador.destroy();
 
 			}
-							init_utilizador(de,ate,utilizador);
+			init_utilizador(de,ate,utilizador);
 
 		}
 
@@ -1971,7 +1997,8 @@ if (typeof NProgress != 'undefined') {
 			}
 
 			if ($('#pieChartAcessos2').length ){
-				  
+				  			$('#loadingpieChartAcessos2').show();
+
                 var c = new Date(de)
                 var d = new Date(ate)
 								var de = c.toISOString().substring(0, 19).replace('T', ' ')
@@ -1986,7 +2013,7 @@ if (typeof NProgress != 'undefined') {
 							var r = "Viatura fora do local"
 
 							for(var i in data) {
-								valores.push(data[i].AcessosNaoConcedidos);
+								valores.push(parseInt(data[i].AcessosNaoConcedidos));
 								razao.push(data[i].ValidacaoAcesso);
 							}
 
@@ -2026,6 +2053,8 @@ if (typeof NProgress != 'undefined') {
 								
 							});
 							document.getElementById('js-legend1').innerHTML = pieChart.generateLegend();
+											  			$('#loadingpieChartAcessos2').hide();
+
 						},
 						error: function(data) {
 							console.log(data);
@@ -2066,6 +2095,8 @@ if (typeof NProgress != 'undefined') {
 			   }
 
 				if ($('#linhasTotalAcessos').length) {
+								  			$('#loadinglinhasTotalAcessos').show();
+
 					var labels=["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
                 var tipo=0;
                 var nomeLabel;
@@ -2109,7 +2140,6 @@ if (typeof NProgress != 'undefined') {
             				url: url + "utilizadorAcessosTotais.php",
                     data: {de : de, ate : ate, utilizador:utilizador, tipo:tipo}, 
             		success: function(data) {
-            			console.log(data);
             					var valoresE = new Array();
             			var valoresS = new Array();
                   var label =new Array();
@@ -2146,12 +2176,12 @@ if (typeof NProgress != 'undefined') {
 	            				if (data[i].es=="Saída"){
 
 	            						posvaloresS=label.indexOf(data[i].lab);
-	            						valoresS.splice(posvaloresS, 0, data[i].AcessosConcedidos);
+	            						valoresS.splice(posvaloresS, 0, parseInt(data[i].AcessosConcedidos));
 	            				}
 	            				if (data[i].ee=="Entrada"){
 
 	            					posvaloresE=label.indexOf(data[i].lab);
-	            					valoresE.splice(posvaloresE, 0, data[i].AcessosConcedidos);
+	            					valoresE.splice(posvaloresE, 0, parseInt(data[i].AcessosConcedidos));
 
 	            				} 
 	            			}
@@ -2227,6 +2257,7 @@ if (typeof NProgress != 'undefined') {
 
             			});
             		document.getElementById('js-legend3').innerHTML = barGraph.generateLegend();
+								  			$('#loadinglinhasTotalAcessos').hide();
 
             		},
             		error: function(data) {
@@ -2237,6 +2268,7 @@ if (typeof NProgress != 'undefined') {
 			}
 
 			if ($('#utilizadorAcessosPorPilareteBarras').length) {
+								  			$('#loadingutilizadorAcessosPorPilareteBarras').show();
 
                 var c = new Date(de)
                 var d = new Date(ate)
@@ -2256,77 +2288,78 @@ if (typeof NProgress != 'undefined') {
                         var posvaloresS= 0;
                         var x;
 												  for (var i in data){
-                        	valoresE.push(data[i].entradas);
-            				valoresS.push(data[i].saidas);
+                        	valoresE.push(parseInt(data[i].entradas));
+            				valoresS.push(parseInt(data[i].saidas));
             				label.push(data[i].pilarete);
                         }
 
-            			  var numberWithCommas = function(x) {
-							    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-							  };
             			var chartdata = {
 
             				labels:  label,
 
             				datasets : [
             					{
+
             						label: "Total de Entradas",
             						backgroundColor: "rgba(38, 185, 154, 0.7)",
             						backgroundColor: "rgba(38, 185, 154, 0.7)",
-									hoverBorderWidth: 2,
-									hoverBorderColor: 'lightgrey',
 
             						data: valoresE
             					},{
+
 									label: "Total de Saídas",
 									backgroundColor: "rgba(3, 88, 106, 0.7)",
 									backgroundColor: "rgba(3, 88, 106, 0.7)",
 
-									hoverBorderWidth: 2,
-									hoverBorderColor: 'lightgrey',
+								
 									data: valoresS
 
 								}	
             				]	
 
             			};
-            			
-            			var ctx = $('#utilizadorAcessosPorPilareteBarras');
+            			var numberWithCommas = function(x) {
+                  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                };
+
+            			var ctx = document.getElementById("utilizadorAcessosPorPilareteBarras").getContext("2d");
 
             			 barGraphUtiPilaretes = new Chart(ctx, {
             				type: 'bar',
             				data: chartdata,
+
             				options: {
+											
+            				tooltips: {
 
-
-            					tooltips: {
-
-										mode: 'label',
-								          callbacks: {
-								          label: function(tooltipItem, data) { 
-								          	return data.datasets[tooltipItem.datasetIndex].label + ": " + numberWithCommas(tooltipItem.yLabel);
-								          }
-								          }
-         						},
-            					scales:{
-            						  xAxes: [{ 
-								          	stacked: true,
-								          	gridLines: { display: false },
- 
-								            }],
-            						   yAxes: [{
-            						   		stacked: true, 
-            							  ticks: {
-            								beginAtZero: true,
-     				 
-            							  },
-            							}],
-
-            						  }
-
-            						}
+                    mode: 'label',
+                          callbacks: {
+                          label: function(tooltipItem, data) { 
+                            return data.datasets[tooltipItem.datasetIndex].label + ": " + numberWithCommas(tooltipItem.yLabel);
+                          }
+                          }
+                    },            					responsive: true,
+       
+        							scales: {
+                        yAxes: [{
+												stacked:true,
+                        scaleLabel: {
+									        display: true,
+									        labelString: 'Acessos'
+									    },
+                         ticks: {
+                                beginAtZero: true,
+																}
+                          }],
+                          xAxes: [{
+														stacked:true,
+																	}]
+																}
+															}
+            		
             			});
             	    document.getElementById('js-legend2').innerHTML = barGraphUtiPilaretes.generateLegend();
+								  			$('#loadingutilizadorAcessosPorPilareteBarras').hide();
 
             		},
             		error: function(data) {
@@ -2454,7 +2487,8 @@ window.onload = function() {
 		//Gráfico que compara 2 anos seguidos
 
 		function init_graficoAnos(ano,checkedBoxes){
-			 	
+			 		$('#loadingcompAnos').show();
+
 				var listados;
 				if(checkedBoxes == null) listados = '.*';
 				if(checkedBoxes!=null) listados = checkboxSelecionados(checkedBoxes);
@@ -2470,8 +2504,8 @@ window.onload = function() {
 					var anoY = [];
 					for(var i in data) {
 						if (data[i].year==ano)
-							{score.push(data[i].AcessosConcedidos);}
-						else {anoY.push(data[i].AcessosConcedidos);}
+							{score.push(parseInt(data[i].AcessosConcedidos));}
+						else {anoY.push(parseInt(data[i].AcessosConcedidos));}
 					}
 
 					var chartdata = {
@@ -2527,6 +2561,7 @@ window.onload = function() {
                             }
 					});
 				 document.getElementById('js-legend3').innerHTML = compAnos.generateLegend();
+			 		$('#loadingcompAnos').hide();
 
 				},
 				error: function(data) {
@@ -2835,8 +2870,8 @@ function demoFromHTML(de,ate) {
 					var valores = [];
 					var telefone = []
 					for(var i in data) {
-						valores.push(data[i].AcessosConcedidos);
-						telefone.push(data[i].nContribuinte);
+						valores.push(parseInt(data[i].AcessosConcedidos));
+						telefone.push(parseInt(data[i].nContribuinte));
 
 					}
 
@@ -2929,12 +2964,12 @@ function demoFromHTML(de,ate) {
 	            				if (data[i].es=="Saída"){
 
 	            						posvaloresS=label.indexOf(data[i].lab);
-	            						valoresS.splice(posvaloresS, 0, data[i].AcessosConcedidos);
+	            						valoresS.splice(posvaloresS, 0, parseInt(data[i].AcessosConcedidos));
 	            				}
 	            				if (data[i].ee=="Entrada"){
 
 	            					posvaloresE=label.indexOf(data[i].lab);
-	            					valoresE.splice(posvaloresE, 0, data[i].AcessosConcedidos);
+	            					valoresE.splice(posvaloresE, 0, parseInt(data[i].AcessosConcedidos));
 
 	            				} 
 	            			}
@@ -3059,12 +3094,12 @@ $.ajax({
 	            				if (data[i].es=="Saída"){
 
 	            						posvaloresS=label.indexOf(data[i].Pilarete);
-	            						valoresS.splice(posvaloresS, 0, data[i].AcessosConcedidos);
+	            						valoresS.splice(posvaloresS, 0, parseInt(data[i].AcessosConcedidos));
 	            				}
 	            				if (data[i].ee=="Entrada"){
 
 	            					posvaloresE=label.indexOf(data[i].Pilarete);
-	            					valoresE.splice(posvaloresE, 0, data[i].AcessosConcedidos);
+	            					valoresE.splice(posvaloresE, 0, parseInt(data[i].AcessosConcedidos));
 
 	            				} 
 
@@ -3144,8 +3179,8 @@ $.ajax({
 					var telefone = []
 
 					for(var i in data) {
-						valores.push(data[i].AcessosConcedidos);
-						telefone.push(data[i].telemovel);
+						valores.push(parseInt(data[i].AcessosConcedidos));
+						telefone.push(parseInt(data[i].telemovel));
 
 					}
 
@@ -3204,8 +3239,8 @@ $.ajax({
 							var telefone = []
 
 							for(var i in data) {
-								valores.push(data[i].AcessosNaoConcedidos);
-								telefone.push(data[i].Telefone);
+								valores.push(parseInt(data[i].AcessosNaoConcedidos));
+								telefone.push(parseInt(data[i].Telefone));
 
 							}
 
@@ -3265,8 +3300,8 @@ $.ajax({
 							var contribuinte = []
 
 							for(var i in data) {
-								valores.push(data[i].AcessosNaoConcedidos);
-								contribuinte.push(data[i].nContribuinte);
+								valores.push(parseInt(data[i].AcessosNaoConcedidos));
+								contribuinte.push(parseInt(data[i].nContribuinte));
 
 							}
 
