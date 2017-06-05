@@ -42,7 +42,7 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
     $NAV_MENU = $('.nav_menu'),
     $FOOTER = $('footer');
 
-	var url = "http://localhost:8888/"
+	var url = "http://smap.cm-braga.pt/scripts/"
 	var de = moment().subtract(1, 'day').startOf('day');
 	var ate= moment().subtract(1, 'day').endOf('day');
 	var barGraph=null, barGraph1;
