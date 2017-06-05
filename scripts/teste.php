@@ -29,17 +29,17 @@ if($tipo == 1)
 			on RA.nContribuinte = UT.nContribuinte
 		 where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída') and UT.TipoUtente REGEXP '$listados' group by hour(DataHora), EstadoEspiraE, EstadoEspiraS, TipoUtente;");
 else if($tipo == 2)
-		$query = sprintf("SELECT count(*) as AcessosConcedidos, day(DataHora) as lab,EstadoEspiraE as ee, EstadoEspiraS as es, TipoUtente FROM RegistoAcessos as RA inner join Utentes as UT
+		$query = sprintf("SELECT count(*) as AcessosConcedidos, DataHora as dh, day(DataHora) as lab,EstadoEspiraE as ee, EstadoEspiraS as es, TipoUtente FROM RegistoAcessos as RA inner join Utentes as UT
 			on RA.nContribuinte = UT.nContribuinte
-		where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída')and UT.TipoUtente REGEXP '$listados'  group by day(DataHora), EstadoEspiraE, EstadoEspiraS, TipoUtente;");
+		where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída')and UT.TipoUtente REGEXP '$listados'  group by day(DataHora), EstadoEspiraE, EstadoEspiraS, TipoUtente order by DataHora;");
 else if($tipo == 3)
-		$query = sprintf("SELECT count(*) as AcessosConcedidos, day(DataHora) as lab ,EstadoEspiraE as ee, EstadoEspiraS as es, TipoUtente FROM RegistoAcessos as RA inner join Utentes as UT
+		$query = sprintf("SELECT count(*) as AcessosConcedidos,DataHora as dh, day(DataHora) as lab ,EstadoEspiraE as ee, EstadoEspiraS as es, TipoUtente FROM RegistoAcessos as RA inner join Utentes as UT
 			on RA.nContribuinte = UT.nContribuinte 
-		where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída') and UT.TipoUtente REGEXP '$listados' group by day(DataHora), EstadoEspiraE, EstadoEspiraS, TipoUtente;");
+		where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída') and UT.TipoUtente REGEXP '$listados' group by day(DataHora), EstadoEspiraE, EstadoEspiraS, TipoUtente order by DataHora;");
 else if($tipo == 4)
-		$query = sprintf("SELECT count(*) as AcessosConcedidos, dayofmonth(DataHora) as lab,EstadoEspiraE as ee, EstadoEspiraS as es, TipoUtente FROM RegistoAcessos as RA inner join Utentes as UT
+		$query = sprintf("SELECT count(*) as AcessosConcedidos, DataHora as dh,dayofmonth(DataHora) as lab,EstadoEspiraE as ee, EstadoEspiraS as es, TipoUtente FROM RegistoAcessos as RA inner join Utentes as UT
 			on RA.nContribuinte = UT.nContribuinte 
-		where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída') and UT.TipoUtente REGEXP '$listados' group by dayofmonth(DataHora), EstadoEspiraE, EstadoEspiraS, TipoUtente;");
+		where DataHora between '$inicio' and '$fim' and ValidacaoAcesso like 'Acesso Concedido' and (EstadoEspiraE like 'Entrada' or EstadoEspiraS like 'Saída') and UT.TipoUtente REGEXP '$listados' group by dayofmonth(DataHora), EstadoEspiraE, EstadoEspiraS, TipoUtente order by DataHora;");
 else if($tipo == 5)
 		$query = sprintf("SELECT count(*) as AcessosConcedidos, month(DataHora) as lab,EstadoEspiraE as ee, EstadoEspiraS as es, TipoUtente FROM RegistoAcessos as RA inner join Utentes as UT
 			on RA.nContribuinte = UT.nContribuinte 

@@ -43,8 +43,8 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
     $FOOTER = $('footer');
 
 	var url = "http://localhost:8888/"
-	var de = moment().subtract(1, 'year').startOf('year');
-	var ate= moment().subtract(1, 'year').endOf('year');
+	var de = moment().subtract(1, 'day').startOf('day');
+	var ate= moment().subtract(1, 'day').endOf('day');
 	var barGraph=null, barGraph1;
 	var compAnos;
 	var barGraphPilaretes=null,barGraphContribuintePorPilarete,barGraphTelefonePorPilarete, barGraphUtiPilaretes=null;
@@ -1245,8 +1245,8 @@ if (typeof NProgress != 'undefined') {
                 var c = new Date(de)
                 var d = new Date(ate)
                 var prim = moment(de,'YYYY/MM/DD');
-							  var ult = moment(ate,'YYYY/MM/DD');
-								var diffDays = ult.diff(prim, 'days');
+				var ult = moment(ate,'YYYY/MM/DD');
+				var diffDays = ult.diff(prim, 'days');
 
                 if(diffDays==0){
                     tipo=1;
@@ -1279,12 +1279,12 @@ if (typeof NProgress != 'undefined') {
                  $.ajax({
 
                     type: 'POST',
-            				url: url + "teste.php",
+            		url: url + "teste.php",
                     data: {de : de, ate : ate, tipo : tipo, listados : listados}, 
             		success: function(data) {
-            			console.log(data);
-            					var valoresE = new Array();
-            			var valoresS = new Array();
+
+            		var valoresE = new Array();
+            		var valoresS = new Array();
                   var label =new Array();
                   var posvaloresE=0;
                   var posvaloresS=0;
@@ -1977,7 +1977,7 @@ if (typeof NProgress != 'undefined') {
 						data: {utilizador : utilizador},
 						success: function(data) {
 							var tipo = '';
-							var contri = '';
+							var contri = 0;
 							for(var i in data){
 								tipo = data[i].tipo;
 								contri = data[i].contribuinte
