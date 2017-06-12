@@ -15,22 +15,21 @@ if(!$connection->conn){
 }
 
 mysqli_set_charset($connection->conn, "utf8");
+
 $utilizador = $_POST["utilizador"];
 
 
 
 //query to get data from the table
-/*$query = sprintf("SELECT Utentes.TipoUtente as tipo, Utentes.nContribuinte as contribuinte
-		 FROM Utentes INNER JOIN RegistoAcessos ON Utentes.nContribuinte = RegistoAcessos.nContribuinte
-		where RegistoAcessos.Telefone = '$utilizador' LIMIT 1;");
-*/
+$query = sprintf("SELECT Utentes.Nome as nome, Utentes.Morada as morada, Utentes.Localidade as localidade, 
+	Acessos.numTelf as telemovel, Utentes.Email as email, Utentes.ProcessoGD as processo, 
+	Utentes.TipoUtente as tipo, Utentes.nContribuinte as contribuinte 
+	FROM Utentes INNER JOIN Acessos ON Acessos.Contribuinte = Utentes.nContribuinte
+		where Acessos.Contribuinte = '$utilizador' ");
+
 //execute query
 
-$query = sprintf("SELECT count(*) as q from Acessos
-		where Acessos.numTelf = '$utilizador';");
-
 $result = $connection->conn->query($query);
-
 
 //loop through the returned data
 $data = array();

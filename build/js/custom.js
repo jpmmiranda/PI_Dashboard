@@ -778,9 +778,11 @@ if (typeof NProgress != 'undefined') {
 					barGraph.destroy();
 					barGraphUtiPilaretes.destroy();
 					if(tip==1){
+						$("#tabela  tbody tr").remove();
 						init_utilizador(de,ate,document.getElementById('Tel').value,1);
 
 					}else{
+						$("#tabela  tbody tr").remove();
 						init_utilizador(de,ate,document.getElementById('Cont').value,2);
 
 					}
@@ -2038,11 +2040,13 @@ if (typeof NProgress != 'undefined') {
 			}
 		}
 
-		function init_destroyer(numtel,utilizador,tipo){
+		function init_destroyer(utilizador,tipo){
 			tip=tipo;
 			if(tipo==2){
-				if (numtel == "Contribuinte" || numtel == "Número Inválido"){}
+				if ($("#tabela  tbody tr").length == 0){
+}	
 				else {
+					$("#tabela  tbody tr").remove();
 					pieChart.destroy();
 					barGraph.destroy();
 					barGraphUtiPilaretes.destroy();
@@ -2050,8 +2054,10 @@ if (typeof NProgress != 'undefined') {
 
 				}
 			}else{
-				if (numtel == "Telemóvel" || numtel == "Número Inválido"){}
+				if ($("#tabela  tbody tr").length == 0){
+}	
 				else {
+					$("#tabela  tbody tr").remove();
 					pieChart.destroy();
 					barGraph.destroy();
 					barGraphUtiPilaretes.destroy();
@@ -2066,28 +2072,29 @@ if (typeof NProgress != 'undefined') {
 		function init_utilizador(de,ate,utilizador,tipo){
 
 			if(tipo==1){
-				if (utilizador.length < 9 || utilizador.length > 9) {document.getElementById('numTel').innerHTML = 'Número Inválido';}
-				else {document.getElementById('numTel').innerHTML = utilizador;}
+				if (utilizador.length < 9 || utilizador.length > 9) {$("#myModal").modal()}
+				
 				if ($('#tipoUtil').length ){
 					$.ajax({
 							url: url + "tipoUtilizador.php",
 							method: "POST",
 							data: {utilizador : utilizador},
 							success: function(data) {
-								var tipo = '';
-								var contri = '';
+								var tipo;
+								
 								for(var i in data){
-									tipo = data[i].tipo;
-									contri = data[i].contribuinte
+									tipo = data[i].q;
 								}
-								if (contri == '') {
-									document.getElementById('numContri').innerHTML = "Número de Telemóvel não existe";
-									document.getElementById('tipoUtil').innerHTML = "Tipo de Utilizador";
+
+								if (tipo == 0) {
+									$("#myModal").modal()
+									//document.getElementById('numContri').innerHTML = "Número de Telemóvel não existe";
+									//document.getElementById('tipoUtil').innerHTML = "Tipo de Utilizador";
 								}
-								else{
+								/*else{
 									document.getElementById('tipoUtil').innerHTML = tipo;
 									document.getElementById('numContri').innerHTML = contri;
-								}
+								}*/
 							},
 							error: function(data){
 								console.log(data);
@@ -2095,6 +2102,25 @@ if (typeof NProgress != 'undefined') {
 							}
 						})
 
+				}
+				if($('#tabela').length){
+					 $.ajax({
+				        url : url + "tabelaUtilizadorTele.php",
+				        type : 'POST',
+				        data: {utilizador : utilizador},
+				        success : function(data) {
+
+				        	for(var i in data){
+								$('#tabela tbody').append("<tr><td>" + data[i].nome + "</td><td>" + data[i].morada + "</td><td>" + data[i].localidade +
+								"</td><td>" + data[i].contribuinte + "</td><td>"  + data[i].telemovel + "</td><td>" +  data[i].tipo + "</td><td>" 
+								+ data[i].email + "</td><td>"  + data[i].processo + "</td></tr>" );							}
+
+								
+				        },
+				        error : function() {
+				            console.log('error');
+				        }
+				    });
 				}
 
 				if ($('#pieChartAcessos2').length ){
@@ -2466,38 +2492,54 @@ if (typeof NProgress != 'undefined') {
 				}
 			}else{
 
-				if (utilizador.length > 9) {document.getElementById('numContri').innerHTML = 'Número Inválido';}
-					else {document.getElementById('numContri').innerHTML = utilizador;}
+				/*if (utilizador.length > 9) {document.getElementById('numContri').innerHTML = 'Número Inválido';}
+					else {document.getElementById('numContri').innerHTML = utilizador;}*/
 				if ($('#tipoUtil').length ){
 					$.ajax({
 							url: url + "tipoUtilizadorCont.php",
 							method: "POST",
 							data: {utilizador : utilizador},
 							success: function(data) {
-								var tipo = '';
-								var contri = '';
+								var tipo;
 								for(var i in data){
-									tipo = data[i].tipo;
-									contri = data[i].contribuinte
+									tipo = data[i].q;
 								}
-								if (contri == '') {
-									document.getElementById('numContri').innerHTML = "Número de Contribuinte não existe";
-									document.getElementById('tipoUtil').innerHTML = "Tipo de Utilizador";
+								if (tipo == 0) {
+									$("#modalContri").modal()
+									//document.getElementById('numContri').innerHTML = "Número de Contribuinte não existe";
+									//document.getElementById('tipoUtil').innerHTML = "Tipo de Utilizador";
 								}
-								else{
+								/*else{
 									document.getElementById('tipoUtil').innerHTML = tipo;
 									document.getElementById('numContri').innerHTML = contri;
 
-								}
+								}*/
 							},
 							error: function(data){
 								console.log(data);
-								console.log("erro");
 							}
 						})
 
 				}
+				if($('#tabela').length){
+					 $.ajax({
+				        url : url + "tabelaUtilizador.php",
+				        type : 'POST',
+				        data: {utilizador : utilizador},
+				        success : function(data) {
 
+				        	for(var i in data){
+								$('#tabela tbody').append("<tr><td>" + data[i].nome + "</td><td>" + data[i].morada + "</td><td>" + data[i].localidade +
+								"</td><td>" + data[i].contribuinte + "</td><td>"  + data[i].telemovel + "</td><td>" +  data[i].tipo + "</td><td>" 
+								+ data[i].email + "</td><td>"  + data[i].processo + "</td></tr>" );							}
+
+								
+				        },
+				        error : function() {
+				            console.log('error');
+				        }
+				    });
+				}
 				if ($('#pieChartAcessos2').length ){
 					  $('#loadingpieChartAcessos2').show();
 
