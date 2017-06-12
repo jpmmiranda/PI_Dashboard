@@ -42,7 +42,7 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
     $NAV_MENU = $('.nav_menu'),
     $FOOTER = $('footer');
 
-	var url = "http://smap.cm-braga.pt/scripts/";	
+	var url = "http://localhost:8888/";	
 	var de = moment().subtract(1, 'day').startOf('day');
 	var ate= moment().subtract(1, 'day').endOf('day');
 	var barGraph=null, barGraph1;
@@ -55,6 +55,7 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
 	var barGraphNegadosTelefoneBarras
 	var barGraphNegadosContribuinteBarras
 	var pieChartNegadosRazoes
+	var tip=0;
 
 
 // Sidebar
@@ -776,8 +777,13 @@ if (typeof NProgress != 'undefined') {
 					pieChart.destroy();
 					barGraph.destroy();
 					barGraphUtiPilaretes.destroy();
-					
-					init_utilizador(de,ate,document.getElementById('Tel').value);
+					if(tip==1){
+						init_utilizador(de,ate,document.getElementById('Tel').value,1);
+
+					}else{
+						init_utilizador(de,ate,document.getElementById('Cont').value,2);
+
+					}
 
 			});
 			$('#reportrange3').on('cancel.daterangepicker', function(ev, picker) {
@@ -1872,7 +1878,8 @@ if (typeof NProgress != 'undefined') {
 		}
 
 		// Função para a  criação dos gráficos da utilizadores
-		function init_utilizdorComp_anos(utilizador, ano){
+		function init_utilizdorComp_anos(utilizador, ano, tipo){
+			if(tipo==1){
 			var ctx = document.getElementById("compAnosUtilizador");
 							  							$('#loadingcompAnosUtilizador').show();
 
@@ -1950,425 +1957,918 @@ if (typeof NProgress != 'undefined') {
 					console.log(data);
 				}
 			});
-		}
+			}else{
+				var ctx = document.getElementById("compAnosUtilizador");
+							  							$('#loadingcompAnosUtilizador').show();
 
-		function init_destroyer(numtel,utilizador){
+			  $.ajax({
+	
+          type: 'POST',
+					url: url +"utilizadorCompAnosContri.php",
+          data: {utilizador : utilizador , ano: ano},
+				success: function(data) {
+					var score = [];
+					var anoY = [];
+					for(var i in data) {
+						if (data[i].year==ano)
+							{score.push(parseInt(data[i].AcessosConcedidos));}
+						else {anoY.push(parseInt(data[i].AcessosConcedidos));}
+					}
 
-			if (numtel == "Número de Telemóvel" || numtel == "Número Inválido"){}
-			else {
-				pieChart.destroy();
-				barGraph.destroy();
-				barGraphUtiPilaretes.destroy();
-				compAnosUtilizador.destroy();
+					var chartdata = {
+						labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+						datasets : [
+							{
+								label: ano,
+								backgroundColor: "rgba(38, 185, 154, 0.31)",
+								borderColor: "rgba(38, 185, 154, 0.7)",
+								pointBorderColor: "rgba(38, 185, 154, 0.7)",
+								pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
+								pointHoverBackgroundColor: "#fff",
+								pointHoverBorderColor: "rgba(220,220,220,1)",
+								pointBorderWidth: 1,
+								data: score
+							},  {
+								label: ano-1,
+								backgroundColor: "rgba(3, 88, 106, 0.3)",
+								borderColor: "rgba(3, 88, 106, 0.70)",
+								pointBorderColor: "rgba(3, 88, 106, 0.70)",
+								pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
+								pointHoverBackgroundColor: "#fff",
+								pointHoverBorderColor: "rgba(151,187,205,1)",
+								pointBorderWidth: 1,
+								data: anoY
+								}	
+						]
+					};
 
-			}
-			init_utilizador(de,ate,utilizador);
+					var ctx = $("#compAnosUtilizador");
 
-		}
-
-		function init_utilizador(de,ate,utilizador){
-
-			if (utilizador.length < 9 || utilizador.length > 9) {document.getElementById('numTel').innerHTML = 'Número Inválido';}
-				else {document.getElementById('numTel').innerHTML = utilizador;}
-			if ($('#tipoUtil').length ){
-				$.ajax({
-						url: url + "tipoUtilizador.php",
-						method: "POST",
-						data: {utilizador : utilizador},
-						success: function(data) {
-							var tipo = '';
-							var contri = '';
-							for(var i in data){
-								tipo = data[i].tipo;
-								contri = data[i].contribuinte
-							}
-							if (contri == '') {
-								document.getElementById('numContri').innerHTML = "Número de Telemóvel não existe";
-								document.getElementById('tipoUtil').innerHTML = "Tipo de Utilizador";
-							}
-							else{
-								document.getElementById('tipoUtil').innerHTML = tipo;
-								document.getElementById('numContri').innerHTML = contri;
-							}
-						},
-						error: function(data){
-							console.log(data);
-							console.log("erro");
-						}
-					})
-
-			}
-
-			if ($('#pieChartAcessos2').length ){
-				  			$('#loadingpieChartAcessos2').show();
-
-                var c = new Date(de)
-                var d = new Date(ate)
-								var de = c.toISOString().substring(0, 19).replace('T', ' ')
-                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
-				  $.ajax({
-						url: url + "utilizadorAcessosNaoConcebidos.php",
-						method: "POST",
-						data: {de: de,ate:ate,utilizador : utilizador},
-						success: function(data) {
-							var valores = [];
-							var razao = [];
-							var r = "Viatura fora do local"
-
-							for(var i in data) {
-								valores.push(parseInt(data[i].AcessosNaoConcedidos));
-								razao.push(data[i].ValidacaoAcesso);
-							}
-
-							for (var raz in razao){
-								if (razao[raz] == "Acesso Nao Concedido - Loops nao ativo") razao[raz] = r;
-								razao[raz]=razao[raz].replace('Acesso Nao Concedido - ','');
-								razao[raz]=razao[raz].replace('Acesso Recusado - ','');
-							};
-
-							var colors = [
-											"#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
-									        "#FFDBE5", "#7A4900", "#0000A6", "#63FFAC", "#B79762", "#004D43", "#8FB0FF", "#997D87",
-									        "#5A0007", "#809693", "#FEFFE6", "#1B4400", "#4FC601", "#3B5DFF", "#4A3B53", "#FF2F80",
-									        "#61615A", "#BA0900", "#6B7900", "#00C2A0", "#FFAA92", "#FF90C9", "#B903AA", "#D16100",
-									        "#DDEFFF", "#000035", "#7B4F4B", "#A1C299", "#300018", "#0AA6D8", "#013349", "#00846F",
-									        "#372101", "#FFB500", "#C2FFED", "#A079BF", "#CC0744", "#C0B9B2", "#C2FF99", "#001E09",
-									        "#00489C", "#6F0062", "#0CBD66", "#EEC3FF", "#456D75", "#B77B68", "#7A87A1", "#788D66",
-									        "#885578", "#FAD09F", "#FF8A9A", "#D157A0", "#BEC459", "#456648", "#0086ED", "#886F4C"
-										];
-							
-							var chartdata = {
-								labels:  razao,
-								datasets : [
-									{
-										label: "Total de Acessos Negados",
-										backgroundColor: colors,
-										data: valores,
-									}
-								]
-							};
-
-							var ctx = $('#pieChartAcessos2');
-
-							pieChart = new Chart(ctx, {
-								data: chartdata,
-								type: 'pie'
-								
-							});
-							document.getElementById('js-legend1').innerHTML = pieChart.generateLegend();
-											  			$('#loadingpieChartAcessos2').hide();
-
-						},
-						error: function(data) {
-							console.log(data);
-						}
-					});
-				  
-			  }
-
-			  if ($('#totalacesso').length ){
-
-			  	 $.ajax({
-
-					url: url + "totalAcessos.php",
-					method: "POST",
-					data: {utilizador : utilizador},
-					success: function(data) {
-						var total = 0;
-						var saidas = 0;
-						var entradas = 0;
-						var recusados = 0;
-						var aceites = 0;
-							
-						for(var i in data) {
-							total = data[i].total;
-							saidas = data[i].saidas;
-							entradas = data[i].entradas;
-							recusados = data[i].recusados;
-							aceites = data[i].aceites;
-						}
-		  				document.getElementById('totalacesso2').innerHTML = total;
-		  				document.getElementById('totalentradas').innerHTML = entradas;
-		  				document.getElementById('totalsaidas').innerHTML = saidas;
-		  				document.getElementById('totalRecusadas').innerHTML = recusados;
-		  				document.getElementById('totalConcedidos').innerHTML = aceites;
-			  		}
-			  	})
-
-			   }
-
-				if ($('#linhasTotalAcessos').length) {
-								  			$('#loadinglinhasTotalAcessos').show();
-
-					var labels=["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-                var tipo=0;
-                var nomeLabel;
-                var c = new Date(de)
-                var d = new Date(ate)
-                var prim = moment(de,'YYYY/MM/DD');
-							  var ult = moment(ate,'YYYY/MM/DD');
-								var diffDays = ult.diff(prim, 'days');
-
-                if(diffDays==0){
-                    tipo=1;
-                    nomeLabel="Horas"
-                }
-
-                else if (diffDays==1){
-                     tipo =2;
-                     nomeLabel="Dias"
-
-                 }
-
-                else if (diffDays<=31){
-                     tipo =4;
-                     nomeLabel="Dias"
-                 }
-
-                else if(diffDays<7){
-                	  tipo =3;
-                      nomeLabel="Dias"
-                }
-                else{
-                    tipo =5;
-                    nomeLabel="Meses"
-                }
-
-                var de = c.toISOString().substring(0, 19).replace('T', ' ')
-                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
-							
-                 $.ajax({
-
-                    type: 'POST',
-            				url: url + "utilizadorAcessosTotais.php",
-                    data: {de : de, ate : ate, utilizador:utilizador, tipo:tipo}, 
-            		success: function(data) {
-            					var valoresE = new Array();
-            			var valoresS = new Array();
-                  var label =new Array();
-                  var posvaloresE=0;
-                  var posvaloresS=0;
-
-            			for(var i in data) {
-
-            				if($.inArray(data[i].lab, label)!=-1){
-
-	            				if (data[i].ee=="Entrada"){
-
-	            					 posvaloresE=label.indexOf(data[i].lab);
-
-	            					 if (valoresE[posvaloresE] === undefined) valoresE[posvaloresE]=parseInt((data[i].AcessosConcedidos));
-	            					 else valoresE[posvaloresE] = parseInt(valoresE[posvaloresE]) + parseInt((data[i].AcessosConcedidos));
-	            					
-	            					
-	            				}
-
-	            				if (data[i].es=="Saída"){
-
-
-	            					 posvaloresS=label.indexOf(data[i].lab);
-
-	            					 if (valoresS[posvaloresS] === undefined) valoresS[posvaloresS]=parseInt((data[i].AcessosConcedidos));
-	            					 else valoresS[posvaloresS] = parseInt(valoresS[posvaloresS]) + parseInt((data[i].AcessosConcedidos));
-	            					
-	            					
-	            				}
-	            			}else{
-	            				
-	            			   label.push(data[i].lab);
-	            				if (data[i].es=="Saída"){
-
-	            						posvaloresS=label.indexOf(data[i].lab);
-	            						valoresS.splice(posvaloresS, 0, parseInt(data[i].AcessosConcedidos));
-	            				}
-	            				if (data[i].ee=="Entrada"){
-
-	            					posvaloresE=label.indexOf(data[i].lab);
-	            					valoresE.splice(posvaloresE, 0, parseInt(data[i].AcessosConcedidos));
-
-	            				} 
-	            			}
-
-            				
-            			}
-            			if(tipo==5){
-
-            				for(var i in label) {
-	                            label[i]=labels[i];
-
-            				}
-            			}
-
-
-
-            			
-            			var chartdata = {
-            				labels:  label,
-            				datasets : [
-            					{
-            						label: "Total de Entradas",
-            						backgroundColor: "rgba(38, 185, 154, 0.31)",
-            						borderColor: "rgba(38, 185, 154, 0.7)",
-            						pointBorderColor: "rgba(38, 185, 154, 0.7)",
-            						pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
-            						pointHoverBackgroundColor: "#fff",
-            						pointHoverBorderColor: "rgba(220,220,220,1)",
-            						pointBorderWidth: 1,
-            						data: valoresE
-            					},{
-												label: "Total de Saídas",
-												backgroundColor: "rgba(3, 88, 106, 0.3)",
-												borderColor: "rgba(3, 88, 106, 0.70)",
-												pointBorderColor: "rgba(3, 88, 106, 0.70)",
-												pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
-												pointHoverBackgroundColor: "#fff",
-												pointHoverBorderColor: "rgba(151,187,205,1)",
-												pointBorderWidth: 1,
-												data: valoresS
-											}	
-
-            				]
-            			};
-
-            			
-
-            			var ctx = $("#linhasTotalAcessos");
-
-            			barGraph = new Chart(ctx, {
-            				type: 'line',
-            				data: chartdata,
-                            options: {
-                                scales: {
-                                    yAxes: [{
-                                    	scaleLabel: {
+					   compAnosUtilizador = new Chart(ctx, {
+						type: 'line',
+						data: chartdata,
+						options: {
+                     scales: {
+                        yAxes: [{
+                         scaleLabel: {
 									        display: true,
 									        labelString: 'Acessos'
 									    },
-                                        ticks: {
-                                            beginAtZero: true,
-
-                                        }
-                                    }],
-                                    xAxes: [{
-                                    	scaleLabel: {
+                      ticks: {
+                        beginAtZero: true,
+                          }
+                          }],
+                        xAxes: [{
+										     	scaleLabel: {
 									        display: true,
-									        labelString: "Meses"
+									        labelString: 'Meses'
 									    }
                                     }]
                                 }
                             }
+					});
+				 document.getElementById('js-legend4').innerHTML = compAnosUtilizador.generateLegend();
+							  							$('#loadingcompAnosUtilizador').hide();
 
-            			});
-            		document.getElementById('js-legend3').innerHTML = barGraph.generateLegend();
-								  			$('#loadinglinhasTotalAcessos').hide();
-
-            		},
-            		error: function(data) {
-            			console.log(data);
-            		}
-
-	               });	
+				},
+				error: function(data) {
+					console.log(data);
+				}
+			});
 			}
+		}
 
-			if ($('#utilizadorAcessosPorPilareteBarras').length) {
-								  			$('#loadingutilizadorAcessosPorPilareteBarras').show();
+		function init_destroyer(numtel,utilizador,tipo){
+			tip=tipo;
+			if(tipo==2){
+				if (numtel == "Contribuinte" || numtel == "Número Inválido"){}
+				else {
+					pieChart.destroy();
+					barGraph.destroy();
+					barGraphUtiPilaretes.destroy();
+					compAnosUtilizador.destroy();
 
-                var c = new Date(de)
-                var d = new Date(ate)
-                var de = c.toISOString().substring(0, 19).replace('T', ' ')
-                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
-				$.ajax({
-            			method: "POST",
-            			url: url + "utilizadorAcessosPorPilareteBarras.php",
+				}
+			}else{
+				if (numtel == "Telemóvel" || numtel == "Número Inválido"){}
+				else {
+					pieChart.destroy();
+					barGraph.destroy();
+					barGraphUtiPilaretes.destroy();
+					compAnosUtilizador.destroy();
 
-                  data: {de:de,ate:ate,utilizador : utilizador},
+				}
+			}
+			init_utilizador(de,ate,utilizador,tipo);
 
-            			success: function(data) {
-            				var valoresE = new Array();
-            						var valoresS = new Array();
-                        var label =new Array();
-                        var posvaloresE= 0;
-                        var posvaloresS= 0;
-                        var x;
-												  for (var i in data){
-                        	valoresE.push(parseInt(data[i].entradas));
-            				valoresS.push(parseInt(data[i].saidas));
-            				label.push(data[i].pilarete);
-                        }
+		}
 
-            			var chartdata = {
+		function init_utilizador(de,ate,utilizador,tipo){
 
-            				labels:  label,
+			if(tipo==1){
+				if (utilizador.length < 9 || utilizador.length > 9) {document.getElementById('numTel').innerHTML = 'Número Inválido';}
+				else {document.getElementById('numTel').innerHTML = utilizador;}
+				if ($('#tipoUtil').length ){
+					$.ajax({
+							url: url + "tipoUtilizador.php",
+							method: "POST",
+							data: {utilizador : utilizador},
+							success: function(data) {
+								var tipo = '';
+								var contri = '';
+								for(var i in data){
+									tipo = data[i].tipo;
+									contri = data[i].contribuinte
+								}
+								if (contri == '') {
+									document.getElementById('numContri').innerHTML = "Número de Telemóvel não existe";
+									document.getElementById('tipoUtil').innerHTML = "Tipo de Utilizador";
+								}
+								else{
+									document.getElementById('tipoUtil').innerHTML = tipo;
+									document.getElementById('numContri').innerHTML = contri;
+								}
+							},
+							error: function(data){
+								console.log(data);
+								console.log("erro");
+							}
+						})
 
-            				datasets : [
-            					{
+				}
 
-            						label: "Total de Entradas",
-            						backgroundColor: "rgba(38, 185, 154, 0.7)",
-            						backgroundColor: "rgba(38, 185, 154, 0.7)",
+				if ($('#pieChartAcessos2').length ){
+					$('#loadingpieChartAcessos2').show();
 
-            						data: valoresE
-            					},{
+	                var c = new Date(de)
+	                var d = new Date(ate)
+					var de = c.toISOString().substring(0, 19).replace('T', ' ')
+	                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+					
+					$.ajax({
+							url: url + "utilizadorAcessosNaoConcebidos.php",
+							method: "POST",
+							data: {de: de,ate:ate,utilizador : utilizador},
+							success: function(data) {
+								var valores = [];
+								var razao = [];
+								var r = "Viatura fora do local"
 
-									label: "Total de Saídas",
-									backgroundColor: "rgba(3, 88, 106, 0.7)",
-									backgroundColor: "rgba(3, 88, 106, 0.7)",
+								for(var i in data) {
+									valores.push(parseInt(data[i].AcessosNaoConcedidos));
+									razao.push(data[i].ValidacaoAcesso);
+								}
 
+								for (var raz in razao){
+									if (razao[raz] == "Acesso Nao Concedido - Loops nao ativo") razao[raz] = r;
+									razao[raz]=razao[raz].replace('Acesso Nao Concedido - ','');
+									razao[raz]=razao[raz].replace('Acesso Recusado - ','');
+								};
+
+								var colors = [
+												"#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
+										        "#FFDBE5", "#7A4900", "#0000A6", "#63FFAC", "#B79762", "#004D43", "#8FB0FF", "#997D87",
+										        "#5A0007", "#809693", "#FEFFE6", "#1B4400", "#4FC601", "#3B5DFF", "#4A3B53", "#FF2F80",
+										        "#61615A", "#BA0900", "#6B7900", "#00C2A0", "#FFAA92", "#FF90C9", "#B903AA", "#D16100",
+										        "#DDEFFF", "#000035", "#7B4F4B", "#A1C299", "#300018", "#0AA6D8", "#013349", "#00846F",
+										        "#372101", "#FFB500", "#C2FFED", "#A079BF", "#CC0744", "#C0B9B2", "#C2FF99", "#001E09",
+										        "#00489C", "#6F0062", "#0CBD66", "#EEC3FF", "#456D75", "#B77B68", "#7A87A1", "#788D66",
+										        "#885578", "#FAD09F", "#FF8A9A", "#D157A0", "#BEC459", "#456648", "#0086ED", "#886F4C"
+											];
 								
-									data: valoresS
+								var chartdata = {
+									labels:  razao,
+									datasets : [
+										{
+											label: "Total de Acessos Negados",
+											backgroundColor: colors,
+											data: valores,
+										}
+									]
+								};
 
-								}	
-            				]	
+								var ctx = $('#pieChartAcessos2');
 
-            			};
-            			var numberWithCommas = function(x) {
-                  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                };
+								pieChart = new Chart(ctx, {
+									data: chartdata,
+									type: 'pie'
+									
+								});
+								document.getElementById('js-legend1').innerHTML = pieChart.generateLegend();
+												  			$('#loadingpieChartAcessos2').hide();
 
-            			var ctx = document.getElementById("utilizadorAcessosPorPilareteBarras").getContext("2d");
+							},
+							error: function(data) {
+								console.log(data);
+							}
+						});
+					  
+				  }
 
-            			 barGraphUtiPilaretes = new Chart(ctx, {
-            				type: 'bar',
-            				data: chartdata,
+				  if ($('#totalacesso').length ){
 
-            				options: {
-											
-            				tooltips: {
+				  	 $.ajax({
 
-                    mode: 'label',
-                          callbacks: {
-                          label: function(tooltipItem, data) { 
-                            return data.datasets[tooltipItem.datasetIndex].label + ": " + numberWithCommas(tooltipItem.yLabel);
-                          }
-                          }
-                    },            					responsive: true,
-       
-        							scales: {
-                        yAxes: [{
-												stacked:true,
-                        scaleLabel: {
-									        display: true,
-									        labelString: 'Acessos'
-									    },
-                         ticks: {
-                                beginAtZero: true,
+						url: url + "totalAcessos.php",
+						method: "POST",
+						data: {utilizador : utilizador},
+						success: function(data) {
+							var total = 0;
+							var saidas = 0;
+							var entradas = 0;
+							var recusados = 0;
+							var aceites = 0;
+								
+							for(var i in data) {
+								total = data[i].total;
+								saidas = data[i].saidas;
+								entradas = data[i].entradas;
+								recusados = data[i].recusados;
+								aceites = data[i].aceites;
+							}
+			  				document.getElementById('totalacesso2').innerHTML = total;
+			  				document.getElementById('totalentradas').innerHTML = entradas;
+			  				document.getElementById('totalsaidas').innerHTML = saidas;
+			  				document.getElementById('totalRecusadas').innerHTML = recusados;
+			  				document.getElementById('totalConcedidos').innerHTML = aceites;
+				  		}
+				  	})
+
+				   }
+
+					if ($('#linhasTotalAcessos').length) {
+						$('#loadinglinhasTotalAcessos').show();
+						var labels=["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+		                var tipo=0;
+		                var nomeLabel;
+		                var c = new Date(de)
+		                var d = new Date(ate)
+		                var prim = moment(de,'YYYY/MM/DD');
+						var ult = moment(ate,'YYYY/MM/DD');
+						var diffDays = ult.diff(prim, 'days');
+
+		                if(diffDays==0){
+		                    tipo=1;
+		                    nomeLabel="Horas"
+		                }
+
+		                else if (diffDays==1){
+		                     tipo =2;
+		                     nomeLabel="Dias"
+
+		                 }
+
+		                else if (diffDays<=31){
+		                     tipo =4;
+		                     nomeLabel="Dias"
+		                 }
+
+		                else if(diffDays<7){
+		                	  tipo =3;
+		                      nomeLabel="Dias"
+		                }
+		                else{
+		                    tipo =5;
+		                    nomeLabel="Meses"
+		                }
+
+		                var de = c.toISOString().substring(0, 19).replace('T', ' ');
+		                var ate = d.toISOString().substring(0, 19).replace('T', ' ');
+									
+	                 $.ajax({
+
+	                    type: 'POST',
+	            		url: url + "utilizadorAcessosTotais.php",
+	                    data: {de : de, ate : ate, utilizador:utilizador, tipo:tipo}, 
+	            		success: function(data){
+	            			var valoresE = new Array();
+	            			var valoresS = new Array();
+			                var label =new Array();
+			                var posvaloresE=0;
+			                var posvaloresS=0;
+
+	            			for(var i in data) {
+
+	            				if($.inArray(data[i].lab, label)!=-1){
+
+		            				if (data[i].ee=="Entrada"){
+
+		            					 posvaloresE=label.indexOf(data[i].lab);
+
+		            					 if (valoresE[posvaloresE] === undefined) valoresE[posvaloresE]=parseInt((data[i].AcessosConcedidos));
+		            					 else valoresE[posvaloresE] = parseInt(valoresE[posvaloresE]) + parseInt((data[i].AcessosConcedidos));
+		            					
+		            					
+		            				}
+
+		            				if (data[i].es=="Saída"){
+
+
+		            					 posvaloresS=label.indexOf(data[i].lab);
+
+		            					 if (valoresS[posvaloresS] === undefined) valoresS[posvaloresS]=parseInt((data[i].AcessosConcedidos));
+		            					 else valoresS[posvaloresS] = parseInt(valoresS[posvaloresS]) + parseInt((data[i].AcessosConcedidos));
+		            					
+		            					
+		            				}
+		            			}else{
+		            				
+		            			   label.push(data[i].lab);
+		            				if (data[i].es=="Saída"){
+
+		            						posvaloresS=label.indexOf(data[i].lab);
+		            						valoresS.splice(posvaloresS, 0, parseInt(data[i].AcessosConcedidos));
+		            				}
+		            				if (data[i].ee=="Entrada"){
+
+		            					posvaloresE=label.indexOf(data[i].lab);
+		            					valoresE.splice(posvaloresE, 0, parseInt(data[i].AcessosConcedidos));
+
+		            				} 
+		            			}
+
+	            				
+	            			}
+	            			if(tipo==5){
+
+	            				for(var i in label) {
+		                            label[i]=labels[i];
+
+	            				}
+	            			}
+
+
+
+	            			
+	            			var chartdata = {
+	            				labels:  label,
+	            				datasets : [
+	            					{
+	            						label: "Total de Entradas",
+	            						backgroundColor: "rgba(38, 185, 154, 0.31)",
+	            						borderColor: "rgba(38, 185, 154, 0.7)",
+	            						pointBorderColor: "rgba(38, 185, 154, 0.7)",
+	            						pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
+	            						pointHoverBackgroundColor: "#fff",
+	            						pointHoverBorderColor: "rgba(220,220,220,1)",
+	            						pointBorderWidth: 1,
+	            						data: valoresE
+	            					},{
+													label: "Total de Saídas",
+													backgroundColor: "rgba(3, 88, 106, 0.3)",
+													borderColor: "rgba(3, 88, 106, 0.70)",
+													pointBorderColor: "rgba(3, 88, 106, 0.70)",
+													pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
+													pointHoverBackgroundColor: "#fff",
+													pointHoverBorderColor: "rgba(151,187,205,1)",
+													pointBorderWidth: 1,
+													data: valoresS
+												}	
+
+	            				]
+	            			};
+
+	            			
+
+	            			var ctx = $("#linhasTotalAcessos");
+
+	            			barGraph = new Chart(ctx, {
+	            				type: 'line',
+	            				data: chartdata,
+	                            options: {
+	                                scales: {
+	                                    yAxes: [{
+	                                    	scaleLabel: {
+										        display: true,
+										        labelString: 'Acessos'
+										    },
+	                                        ticks: {
+	                                            beginAtZero: true,
+
+	                                        }
+	                                    }],
+	                                    xAxes: [{
+	                                    	scaleLabel: {
+										        display: true,
+										        labelString: "Meses"
+										    }
+	                                    }]
+	                                }
+	                            }
+
+	            			});
+	            		document.getElementById('js-legend3').innerHTML = barGraph.generateLegend();
+						$('#loadinglinhasTotalAcessos').hide();
+					}
+				})
+		        
+				}
+
+				if ($('#utilizadorAcessosPorPilareteBarras').length) {
+					$('#loadingutilizadorAcessosPorPilareteBarras').show();
+
+	                var c = new Date(de)
+	                var d = new Date(ate)
+	                var de = c.toISOString().substring(0, 19).replace('T', ' ')
+	                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+					$.ajax({
+	            			method: "POST",
+	            			url: url + "utilizadorAcessosPorPilareteBarras.php",
+
+	                  data: {de:de,ate:ate,utilizador : utilizador},
+
+	            			success: function(data) {
+	            				var valoresE = new Array();
+	            						var valoresS = new Array();
+	                        var label =new Array();
+	                        var posvaloresE= 0;
+	                        var posvaloresS= 0;
+	                        var x;
+													  for (var i in data){
+	                        	valoresE.push(parseInt(data[i].entradas));
+	            				valoresS.push(parseInt(data[i].saidas));
+	            				label.push(data[i].pilarete);
+	                        }
+
+	            			var chartdata = {
+
+	            				labels:  label,
+
+	            				datasets : [
+	            					{
+
+	            						label: "Total de Entradas",
+	            						backgroundColor: "rgba(38, 185, 154, 0.7)",
+	            						backgroundColor: "rgba(38, 185, 154, 0.7)",
+
+	            						data: valoresE
+	            					},{
+
+										label: "Total de Saídas",
+										backgroundColor: "rgba(3, 88, 106, 0.7)",
+										backgroundColor: "rgba(3, 88, 106, 0.7)",
+
+									
+										data: valoresS
+
+									}	
+	            				]	
+
+	            			};
+	            			var numberWithCommas = function(x) {
+	                  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	                };
+
+	            			var ctx = document.getElementById("utilizadorAcessosPorPilareteBarras").getContext("2d");
+
+	            			 barGraphUtiPilaretes = new Chart(ctx, {
+	            				type: 'bar',
+	            				data: chartdata,
+
+	            				options: {
+												
+	            				tooltips: {
+
+	                    mode: 'label',
+	                          callbacks: {
+	                          label: function(tooltipItem, data) { 
+	                            return data.datasets[tooltipItem.datasetIndex].label + ": " + numberWithCommas(tooltipItem.yLabel);
+	                          }
+	                          }
+	                    },            					responsive: true,
+	       
+	        							scales: {
+	                        yAxes: [{
+													stacked:true,
+	                        scaleLabel: {
+										        display: true,
+										        labelString: 'Acessos'
+										    },
+	                         ticks: {
+	                                beginAtZero: true,
+																	}
+	                          }],
+	                          xAxes: [{
+															stacked:true,
+																		}]
+																	}
 																}
-                          }],
-                          xAxes: [{
-														stacked:true,
-																	}]
-																}
-															}
-            		
-            			});
-            	    document.getElementById('js-legend2').innerHTML = barGraphUtiPilaretes.generateLegend();
-								  			$('#loadingutilizadorAcessosPorPilareteBarras').hide();
+	            		
+	            			});
+	            	    document.getElementById('js-legend2').innerHTML = barGraphUtiPilaretes.generateLegend();
+									  			$('#loadingutilizadorAcessosPorPilareteBarras').hide();
 
-            		},
-            		error: function(data) {
-            			console.log(data);
-            		}
-	           });
+	            		},
+	            		error: function(data) {
+	            			console.log(data);
+	            		}
+		           });
+				}
+			}else{
+
+				if (utilizador.length > 9) {document.getElementById('numContri').innerHTML = 'Número Inválido';}
+					else {document.getElementById('numContri').innerHTML = utilizador;}
+				if ($('#tipoUtil').length ){
+					$.ajax({
+							url: url + "tipoUtilizadorCont.php",
+							method: "POST",
+							data: {utilizador : utilizador},
+							success: function(data) {
+								var tipo = '';
+								var contri = '';
+								for(var i in data){
+									tipo = data[i].tipo;
+									contri = data[i].contribuinte
+								}
+								if (contri == '') {
+									document.getElementById('numContri').innerHTML = "Número de Contribuinte não existe";
+									document.getElementById('tipoUtil').innerHTML = "Tipo de Utilizador";
+								}
+								else{
+									document.getElementById('tipoUtil').innerHTML = tipo;
+									document.getElementById('numContri').innerHTML = contri;
+
+								}
+							},
+							error: function(data){
+								console.log(data);
+								console.log("erro");
+							}
+						})
+
+				}
+
+				if ($('#pieChartAcessos2').length ){
+					  $('#loadingpieChartAcessos2').show();
+
+	                var c = new Date(de)
+	                var d = new Date(ate)
+					var de = c.toISOString().substring(0, 19).replace('T', ' ')
+	                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+					  $.ajax({
+							url: url + "utilizadorAcessosNaoConcedidosContri.php",
+							method: "POST",
+							data: {de: de,ate:ate,utilizador : utilizador},
+							success: function(data) {
+								var valores = [];
+								var razao = [];
+								var r = "Viatura fora do local"
+
+								for(var i in data) {
+									valores.push(parseInt(data[i].AcessosNaoConcedidos));
+									razao.push(data[i].ValidacaoAcesso);
+								}
+
+								for (var raz in razao){
+									if (razao[raz] == "Acesso Nao Concedido - Loops nao ativo") razao[raz] = r;
+									razao[raz]=razao[raz].replace('Acesso Nao Concedido - ','');
+									razao[raz]=razao[raz].replace('Acesso Recusado - ','');
+								};
+
+								var colors = [
+												"#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
+										        "#FFDBE5", "#7A4900", "#0000A6", "#63FFAC", "#B79762", "#004D43", "#8FB0FF", "#997D87",
+										        "#5A0007", "#809693", "#FEFFE6", "#1B4400", "#4FC601", "#3B5DFF", "#4A3B53", "#FF2F80",
+										        "#61615A", "#BA0900", "#6B7900", "#00C2A0", "#FFAA92", "#FF90C9", "#B903AA", "#D16100",
+										        "#DDEFFF", "#000035", "#7B4F4B", "#A1C299", "#300018", "#0AA6D8", "#013349", "#00846F",
+										        "#372101", "#FFB500", "#C2FFED", "#A079BF", "#CC0744", "#C0B9B2", "#C2FF99", "#001E09",
+										        "#00489C", "#6F0062", "#0CBD66", "#EEC3FF", "#456D75", "#B77B68", "#7A87A1", "#788D66",
+										        "#885578", "#FAD09F", "#FF8A9A", "#D157A0", "#BEC459", "#456648", "#0086ED", "#886F4C"
+											];
+								
+								var chartdata = {
+									labels:  razao,
+									datasets : [
+										{
+											label: "Total de Acessos Negados",
+											backgroundColor: colors,
+											data: valores,
+										}
+									]
+								};
+
+								var ctx = $('#pieChartAcessos2');
+
+								pieChart = new Chart(ctx, {
+									data: chartdata,
+									type: 'pie'
+									
+								});
+								document.getElementById('js-legend1').innerHTML = pieChart.generateLegend();
+												  			$('#loadingpieChartAcessos2').hide();
+
+							},
+							error: function(data) {
+								console.log(data);
+							}
+						});
+					  
+				  }
+
+				  if ($('#totalacesso').length ){
+
+				  	 $.ajax({
+
+						url: url + "totalAcessosContri.php",
+						method: "POST",
+						data: {utilizador : utilizador},
+						success: function(data) {
+							var total = 0;
+							var saidas = 0;
+							var entradas = 0;
+							var recusados = 0;
+							var aceites = 0;
+								
+							for(var i in data) {
+								total = data[i].total;
+								saidas = data[i].saidas;
+								entradas = data[i].entradas;
+								recusados = data[i].recusados;
+								aceites = data[i].aceites;
+							}
+			  				document.getElementById('totalacesso2').innerHTML = total;
+			  				document.getElementById('totalentradas').innerHTML = entradas;
+			  				document.getElementById('totalsaidas').innerHTML = saidas;
+			  				document.getElementById('totalRecusadas').innerHTML = recusados;
+			  				document.getElementById('totalConcedidos').innerHTML = aceites;
+				  		}
+				  	})
+
+				   }
+
+					if ($('#linhasTotalAcessos').length) {
+									  			$('#loadinglinhasTotalAcessos').show();
+
+						var labels=["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+	                var tipo=0;
+	                var nomeLabel;
+	                var c = new Date(de)
+	                var d = new Date(ate)
+	                var prim = moment(de,'YYYY/MM/DD');
+								  var ult = moment(ate,'YYYY/MM/DD');
+									var diffDays = ult.diff(prim, 'days');
+
+	                if(diffDays==0){
+	                    tipo=1;
+	                    nomeLabel="Horas"
+	                }
+
+	                else if (diffDays==1){
+	                     tipo =2;
+	                     nomeLabel="Dias"
+
+	                 }
+
+	                else if (diffDays<=31){
+	                     tipo =4;
+	                     nomeLabel="Dias"
+	                 }
+
+	                else if(diffDays<7){
+	                	  tipo =3;
+	                      nomeLabel="Dias"
+	                }
+	                else{
+	                    tipo =5;
+	                    nomeLabel="Meses"
+	                }
+
+	                var de = c.toISOString().substring(0, 19).replace('T', ' ')
+	                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+								
+	                 $.ajax({
+
+	                    type: 'POST',
+	            				url: url + "utilizadorAcessosTotaisContri.php",
+	                    data: {de : de, ate : ate, utilizador:utilizador, tipo:tipo}, 
+	            		success: function(data) {
+	            					var valoresE = new Array();
+	            			var valoresS = new Array();
+	                  var label =new Array();
+	                  var posvaloresE=0;
+	                  var posvaloresS=0;
+
+	            			for(var i in data) {
+
+	            				if($.inArray(data[i].lab, label)!=-1){
+
+		            				if (data[i].ee=="Entrada"){
+
+		            					 posvaloresE=label.indexOf(data[i].lab);
+
+		            					 if (valoresE[posvaloresE] === undefined) valoresE[posvaloresE]=parseInt((data[i].AcessosConcedidos));
+		            					 else valoresE[posvaloresE] = parseInt(valoresE[posvaloresE]) + parseInt((data[i].AcessosConcedidos));
+		            					
+		            					
+		            				}
+
+		            				if (data[i].es=="Saída"){
+
+
+		            					 posvaloresS=label.indexOf(data[i].lab);
+
+		            					 if (valoresS[posvaloresS] === undefined) valoresS[posvaloresS]=parseInt((data[i].AcessosConcedidos));
+		            					 else valoresS[posvaloresS] = parseInt(valoresS[posvaloresS]) + parseInt((data[i].AcessosConcedidos));
+		            					
+		            					
+		            				}
+		            			}else{
+		            				
+		            			   label.push(data[i].lab);
+		            				if (data[i].es=="Saída"){
+
+		            						posvaloresS=label.indexOf(data[i].lab);
+		            						valoresS.splice(posvaloresS, 0, parseInt(data[i].AcessosConcedidos));
+		            				}
+		            				if (data[i].ee=="Entrada"){
+
+		            					posvaloresE=label.indexOf(data[i].lab);
+		            					valoresE.splice(posvaloresE, 0, parseInt(data[i].AcessosConcedidos));
+
+		            				} 
+		            			}
+
+	            				
+	            			}
+	            			if(tipo==5){
+
+	            				for(var i in label) {
+		                            label[i]=labels[i];
+
+	            				}
+	            			}
+
+
+
+	            			
+	            			var chartdata = {
+	            				labels:  label,
+	            				datasets : [
+	            					{
+	            						label: "Total de Entradas",
+	            						backgroundColor: "rgba(38, 185, 154, 0.31)",
+	            						borderColor: "rgba(38, 185, 154, 0.7)",
+	            						pointBorderColor: "rgba(38, 185, 154, 0.7)",
+	            						pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
+	            						pointHoverBackgroundColor: "#fff",
+	            						pointHoverBorderColor: "rgba(220,220,220,1)",
+	            						pointBorderWidth: 1,
+	            						data: valoresE
+	            					},{
+													label: "Total de Saídas",
+													backgroundColor: "rgba(3, 88, 106, 0.3)",
+													borderColor: "rgba(3, 88, 106, 0.70)",
+													pointBorderColor: "rgba(3, 88, 106, 0.70)",
+													pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
+													pointHoverBackgroundColor: "#fff",
+													pointHoverBorderColor: "rgba(151,187,205,1)",
+													pointBorderWidth: 1,
+													data: valoresS
+												}	
+
+	            				]
+	            			};
+
+	            			
+
+	            			var ctx = $("#linhasTotalAcessos");
+
+	            			barGraph = new Chart(ctx, {
+	            				type: 'line',
+	            				data: chartdata,
+	                            options: {
+	                                scales: {
+	                                    yAxes: [{
+	                                    	scaleLabel: {
+										        display: true,
+										        labelString: 'Acessos'
+										    },
+	                                        ticks: {
+	                                            beginAtZero: true,
+
+	                                        }
+	                                    }],
+	                                    xAxes: [{
+	                                    	scaleLabel: {
+										        display: true,
+										        labelString: "Meses"
+										    }
+	                                    }]
+	                                }
+	                            }
+
+	            			});
+	            		document.getElementById('js-legend3').innerHTML = barGraph.generateLegend();
+									  			$('#loadinglinhasTotalAcessos').hide();
+
+	            		},
+	            		error: function(data) {
+	            			console.log(data);
+	            		}
+
+		               });	
+				}
+
+				if ($('#utilizadorAcessosPorPilareteBarras').length) {
+					$('#loadingutilizadorAcessosPorPilareteBarras').show();
+
+	                var c = new Date(de)
+	                var d = new Date(ate)
+	                var de = c.toISOString().substring(0, 19).replace('T', ' ')
+	                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+					$.ajax({
+	            			method: "POST",
+	            			url: url + "utilizadorAcessosPorPilaretesBarrasContri.php",
+
+	                  data: {de:de,ate:ate,utilizador : utilizador},
+
+	            			success: function(data) {
+	            				var valoresE = new Array();
+	            						var valoresS = new Array();
+	                        var label =new Array();
+	                        var posvaloresE= 0;
+	                        var posvaloresS= 0;
+	                        var x;
+													  for (var i in data){
+	                        	valoresE.push(parseInt(data[i].entradas));
+	            				valoresS.push(parseInt(data[i].saidas));
+	            				label.push(data[i].pilarete);
+	                        }
+
+	            			var chartdata = {
+
+	            				labels:  label,
+
+	            				datasets : [
+	            					{
+
+	            						label: "Total de Entradas",
+	            						backgroundColor: "rgba(38, 185, 154, 0.7)",
+	            						backgroundColor: "rgba(38, 185, 154, 0.7)",
+
+	            						data: valoresE
+	            					},{
+
+										label: "Total de Saídas",
+										backgroundColor: "rgba(3, 88, 106, 0.7)",
+										backgroundColor: "rgba(3, 88, 106, 0.7)",
+
+									
+										data: valoresS
+
+									}	
+	            				]	
+
+	            			};
+	            			var numberWithCommas = function(x) {
+	                  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	                };
+
+	            			var ctx = document.getElementById("utilizadorAcessosPorPilareteBarras").getContext("2d");
+
+	            			 barGraphUtiPilaretes = new Chart(ctx, {
+	            				type: 'bar',
+	            				data: chartdata,
+
+	            				options: {
+												
+	            				tooltips: {
+
+	                    mode: 'label',
+	                          callbacks: {
+	                          label: function(tooltipItem, data) { 
+	                            return data.datasets[tooltipItem.datasetIndex].label + ": " + numberWithCommas(tooltipItem.yLabel);
+	                          }
+	                          }
+	                    },            					responsive: true,
+	       
+	        							scales: {
+	                        yAxes: [{
+													stacked:true,
+	                        scaleLabel: {
+										        display: true,
+										        labelString: 'Acessos'
+										    },
+	                         ticks: {
+	                                beginAtZero: true,
+																	}
+	                          }],
+	                          xAxes: [{
+															stacked:true,
+																		}]
+																	}
+																}
+	            		
+	            			});
+	            	    document.getElementById('js-legend2').innerHTML = barGraphUtiPilaretes.generateLegend();
+									  			$('#loadingutilizadorAcessosPorPilareteBarras').hide();
+
+	            		},
+	            		error: function(data) {
+	            			console.log(data);
+	            		}
+		           });
+				}
 			}
 
 		}
