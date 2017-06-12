@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Resize function without multiple trigger
  * 
  * Usage:
@@ -42,7 +42,7 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
     $NAV_MENU = $('.nav_menu'),
     $FOOTER = $('footer');
 
-	var url = "http://smap.cm-braga.pt/scripts/"
+	var url = "http://smap.cm-braga.pt/scripts/";	
 	var de = moment().subtract(1, 'day').startOf('day');
 	var ate= moment().subtract(1, 'day').endOf('day');
 	var barGraph=null, barGraph1;
@@ -1972,25 +1972,28 @@ if (typeof NProgress != 'undefined') {
 				else {document.getElementById('numTel').innerHTML = utilizador;}
 			if ($('#tipoUtil').length ){
 				$.ajax({
-						url: url + "getTipoUtil.php",
+						url: url + "tipoUtilizador.php",
 						method: "POST",
 						data: {utilizador : utilizador},
 						success: function(data) {
 							var tipo = '';
-							var contri = 0;
+							var contri = '';
 							for(var i in data){
 								tipo = data[i].tipo;
 								contri = data[i].contribuinte
 							}
-
-							if (contri == "") {
-								document.getElementById('numContri').innerHTML = "Número de Telefone não existe";
+							if (contri == '') {
+								document.getElementById('numContri').innerHTML = "Número de Telemóvel não existe";
 								document.getElementById('tipoUtil').innerHTML = "Tipo de Utilizador";
 							}
 							else{
 								document.getElementById('tipoUtil').innerHTML = tipo;
 								document.getElementById('numContri').innerHTML = contri;
 							}
+						},
+						error: function(data){
+							console.log(data);
+							console.log("erro");
 						}
 					})
 
