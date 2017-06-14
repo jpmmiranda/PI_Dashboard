@@ -42,7 +42,8 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
     $NAV_MENU = $('.nav_menu'),
     $FOOTER = $('footer');
 
-	var url = "http://localhost:8888/";	
+	//var url = "http://localhost:8888/";	
+	var url = "http://smap.cm-braga.pt/scripts/"
 	var de = moment().subtract(1, 'day').startOf('day');
 	var ate= moment().subtract(1, 'day').endOf('day');
 	var barGraph=null, barGraph1;
@@ -1219,7 +1220,6 @@ if (typeof NProgress != 'undefined') {
 		/* Função que inicializa os graficos */
 
 		function init_charts(de, ate,checkedBoxes) {
-
 				
 						 
 			 	var listados;
@@ -1743,8 +1743,8 @@ if (typeof NProgress != 'undefined') {
 
 							for(var i in data) {
 								valores.push(parseInt(data[i].AcessosNaoConcedidos));
-								contribuinte.push(parseInt(data[i].nContribuinte));
-
+								if(data[i].nContribuinte != 0) contribuinte.push(parseInt(data[i].nContribuinte));
+								else contribuinte.push("Não registados");
 							}
 
 							var chartdata = {
@@ -2914,9 +2914,48 @@ if (typeof NProgress != 'undefined') {
 			}
 
 		}
+
+function init_checkboxes(){
+	if(document.getElementById('horariosID') !== null){
+		var p;
+		var checkbox;
+		var label;
+		$.ajax({
+			url: url + "checkboxes.php",
+			method: "GET",
+			success: function(data){
+				var horario;
+
+				for(var i in data){
+					if(data[i].horarios == 'teste' || data[i].horarios == 'Feira de Velharias' || data[i].horarios == 'Serviços Acção social');
+					else {p = document.createElement('p');
+						horariosID.appendChild(p);
+						checkbox = document.createElement('input');
+						label = document.createElement('label');
+						horario = data[i].horarios;
+						checkbox.type = "checkbox";
+						checkbox.name = horario;
+						checkbox.value = "value"+i;
+						checkbox.id = "id"+i;
+						label.htmlFor = "idhtml"+i;
+						label.appendChild(document.createTextNode(horario));
+						horariosID.appendChild(checkbox);
+						horariosID.appendChild(label);}
+					
+				}
+			}
+		})
+				
+				
+
+				
+			}
+}
 		
 /* Mapa de pilaretes */
 window.onload = function() {
+
+
 		var contador=0;
 
         var tileLayer = L.tileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}.png", {maxZoom: 18, minZoom: 15});
@@ -3952,6 +3991,7 @@ function templatePDF(){
 	  init_ano();
 	  init_Utilizadorano();
 	  init_graficoAnos($('#selecaoano option:selected').val(),checkedBoxes);
+	  init_checkboxes();
 		init_sidebar();
 		init_InputMask();
 		init_TagsInput();

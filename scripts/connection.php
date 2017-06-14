@@ -1,9 +1,9 @@
 <?php
 
-define('DB_HOST', '127.0.0.1');
-define('DB_USERNAME', 'root');
-define('DB_PASSWORD', 'ruiborges');
-define('DB_NAME', 'pilaretes');
+define('DB_HOST', '192.168.206.1');
+define('DB_USERNAME', 'CMBragaPI');
+define('DB_PASSWORD', 'S4G7JCRafbu');
+define('DB_NAME', 'pilaretesCMB2015');
 
 class connection
 {
