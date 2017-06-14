@@ -42,8 +42,8 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
     $NAV_MENU = $('.nav_menu'),
     $FOOTER = $('footer');
 
-	//var url = "http://localhost:8888/";	
-	var url = "http://smap.cm-braga.pt/scripts/"
+	var url = "http://localhost:8888/";	
+	//var url = "http://smap.cm-braga.pt/scripts/"
 	var de = moment().subtract(1, 'day').startOf('day');
 	var ate= moment().subtract(1, 'day').endOf('day');
 	var barGraph=null, barGraph1;
@@ -502,7 +502,7 @@ if (typeof NProgress != 'undefined') {
 			 
 			};
 			
-			$('#reportrange span').html(moment().startOf('month').format('DD/MM/YYYY')+ ' - ' + moment().endOf('month').format('DD/MM/YYYY'));
+			$('#reportrange span').html(de.format('DD/MM/YYYY')+ ' Até ' + ate.format('DD/MM/YYYY'));
 			$('#reportrange').daterangepicker(optionSet1, cb);
 			$('#reportrange').on('show.daterangepicker', function() {
 			  console.log("show event fired");
@@ -515,8 +515,8 @@ if (typeof NProgress != 'undefined') {
           de = picker.startDate.format('YYYY/MM/DD HH:mm');
 					ate = picker.endDate.format('YYYY/MM/DD HH:mm');
 					barGraph.destroy();
-		      barGraphPilaretes.destroy();
-		      barGraphUtilizador.destroy();
+		      		barGraphPilaretes.destroy();
+		     		barGraphUtilizador.destroy();
 					barGraphUtilizadorTelefone.destroy();
           init_charts(picker.startDate.format('YYYY/MM/DD HH:mm'),picker.endDate.format('YYYY/MM/DD HH:mm'),getCheckedBoxes('1'));
 
@@ -589,7 +589,7 @@ if (typeof NProgress != 'undefined') {
 			 
 			};
 			
-			$('#reportrange1 span').html(moment().startOf('month').format('DD/MM/YYYY')+ ' - ' + moment().endOf('month').format('DD/MM/YYYY'));
+			$('#reportrange1 span').html(de.format('DD/MM/YYYY')+ ' Até ' + ate.format('DD/MM/YYYY'));
 			$('#reportrange1').daterangepicker(optionSet1, cb);
 			$('#reportrange1').on('show.daterangepicker', function() {
 			  console.log("show event fired");
@@ -675,7 +675,7 @@ if (typeof NProgress != 'undefined') {
 			 
 			};
 			
-			$('#reportrange2 span').html(moment().startOf('month').format('DD/MM/YYYY')+ ' - ' + moment().endOf('month').format('DD/MM/YYYY'));
+			$('#reportrange2 span').html(de.format('DD/MM/YYYY')+ ' Até ' + ate.format('DD/MM/YYYY'));
 			$('#reportrange2').daterangepicker(optionSet1, cb);
 			$('#reportrange2').on('show.daterangepicker', function() {
 			  console.log("show event fired");
@@ -763,7 +763,7 @@ if (typeof NProgress != 'undefined') {
 			 
 			};
 			
-			$('#reportrange3 span').html(moment().startOf('month').format('DD/MM/YYYY')+ ' - ' + moment().endOf('month').format('DD/MM/YYYY'));
+			$('#reportrange3 span').html(de.format('DD/MM/YYYY')+ ' Até ' + ate.format('DD/MM/YYYY'));
 			$('#reportrange3').daterangepicker(optionSet1, cb);
 			$('#reportrange3').on('show.daterangepicker', function() {
 			  console.log("show event fired");
@@ -2192,12 +2192,12 @@ if (typeof NProgress != 'undefined') {
 				  }
 
 				  if ($('#totalacesso').length ){
-
+				  	
 				  	 $.ajax({
 
 						url: url + "totalAcessos.php",
 						method: "POST",
-						data: {utilizador : utilizador},
+						data: {de:de,ate:ate,utilizador : utilizador},
 						success: function(data) {
 							var total = 0;
 							var saidas = 0;
@@ -2212,11 +2212,22 @@ if (typeof NProgress != 'undefined') {
 								recusados = data[i].recusados;
 								aceites = data[i].aceites;
 							}
+							if(total!=0){
+
 			  				document.getElementById('totalacesso2').innerHTML = total;
 			  				document.getElementById('totalentradas').innerHTML = entradas;
 			  				document.getElementById('totalsaidas').innerHTML = saidas;
 			  				document.getElementById('totalRecusadas').innerHTML = recusados;
 			  				document.getElementById('totalConcedidos').innerHTML = aceites;
+
+							}else{
+
+			  				document.getElementById('totalacesso2').innerHTML = 0;
+			  				document.getElementById('totalentradas').innerHTML = 0;
+			  				document.getElementById('totalsaidas').innerHTML = 0;
+			  				document.getElementById('totalRecusadas').innerHTML = 0;
+			  				document.getElementById('totalConcedidos').innerHTML = 0;
+							}
 				  		}
 				  	})
 
@@ -2613,7 +2624,7 @@ if (typeof NProgress != 'undefined') {
 
 						url: url + "totalAcessosContri.php",
 						method: "POST",
-						data: {utilizador : utilizador},
+						data: {de:de, ate:ate,utilizador : utilizador},
 						success: function(data) {
 							var total = 0;
 							var saidas = 0;
@@ -2627,12 +2638,22 @@ if (typeof NProgress != 'undefined') {
 								entradas = data[i].entradas;
 								recusados = data[i].recusados;
 								aceites = data[i].aceites;
-							}
+							}if(total!=0){
+
 			  				document.getElementById('totalacesso2').innerHTML = total;
 			  				document.getElementById('totalentradas').innerHTML = entradas;
 			  				document.getElementById('totalsaidas').innerHTML = saidas;
 			  				document.getElementById('totalRecusadas').innerHTML = recusados;
 			  				document.getElementById('totalConcedidos').innerHTML = aceites;
+
+							}else{
+
+			  				document.getElementById('totalacesso2').innerHTML = 0;
+			  				document.getElementById('totalentradas').innerHTML = 0;
+			  				document.getElementById('totalsaidas').innerHTML = 0;
+			  				document.getElementById('totalRecusadas').innerHTML = 0;
+			  				document.getElementById('totalConcedidos').innerHTML = 0;
+							}
 				  		}
 				  	})
 
@@ -4017,7 +4038,10 @@ function templatePDF(){
         $('#selecaoanoUtilizador').change(function(){
 
 			 compAnosUtilizador.destroy();
-	  		 init_utilizdorComp_anos(document.getElementById('numTel').textContent, $('#selecaoanoUtilizador option:selected').val());
+			 if(tip==1)
+	  		 init_utilizdorComp_anos(document.getElementById('Tel').textContent, $('#selecaoanoUtilizador option:selected').val());
+	  		else 	 init_utilizdorComp_anos(document.getElementById('Cont').textContent, $('#selecaoanoUtilizador option:selected').val());
+
         });
 				
 	});	

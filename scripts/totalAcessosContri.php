@@ -17,6 +17,8 @@ if(!$connection->conn){
 mysqli_set_charset($connection->conn, "utf8");
 
 $utilizador = $_POST["utilizador"];
+$de = $_POST["de"];
+$ate = $_POST["ate"];
 
 //query to get data from the table
 $query = sprintf("SELECT count(*) total,
@@ -25,7 +27,7 @@ $query = sprintf("SELECT count(*) total,
     sum(case when EstadoEspiraS = 'Saída' and ValidacaoAcesso like 'Acesso Concedido' then 1 else 0 end) saidas,
     sum(case when (ValidacaoAcesso regexp '^Acesso Nao Concedido' or ValidacaoAcesso regexp '^Acesso Recusado') then 1 else 0 end) recusados
 from RegistoAcessos
-where nContribuinte = '$utilizador' and year(DataHora) > 2015 group by nContribuinte;");
+where nContribuinte = '$utilizador' and (DataHora between '$de' and '$ate');");
 
 //execute query
 $result = $connection->conn->query($query);
