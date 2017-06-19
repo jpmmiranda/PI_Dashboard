@@ -42,8 +42,8 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
     $NAV_MENU = $('.nav_menu'),
     $FOOTER = $('footer');
 
-	var url = "http://localhost:8888/";	
-	//var url = "http://smap.cm-braga.pt/scripts/"
+	//var url = "http://localhost:8888/";	
+	var url = "http://smap.cm-braga.pt/scripts/"
 	var de = moment().subtract(1, 'day').startOf('day');
 	var ate= moment().subtract(1, 'day').endOf('day');
 	var barGraph=null, barGraph1;
@@ -974,6 +974,8 @@ if (typeof NProgress != 'undefined') {
                     tipo =5;
                     nomeLabel="Meses"
                 }
+
+                
 
                 var de = c.toISOString().substring(0, 19).replace('T', ' ')
                 var ate = d.toISOString().substring(0, 19).replace('T', ' ')
@@ -2151,6 +2153,8 @@ if (typeof NProgress != 'undefined') {
 									razao[raz]=razao[raz].replace('Acesso Recusado - ','');
 								};
 
+								
+
 								var colors = [
 												"#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
 										        "#FFDBE5", "#7A4900", "#0000A6", "#63FFAC", "#B79762", "#004D43", "#8FB0FF", "#997D87",
@@ -3039,6 +3043,86 @@ window.onload = function() {
 			  	})
 
     };
+
+    // FUNÇÃO PARA INICIAR OS ALERTAS!!!
+    function init_alertas(){
+    	if($('#tabelaAlertas').length){
+					 $.ajax({
+				        url : url + "alertas.php",
+				        type : 'GET',
+				        success : function(data) {
+
+				        	for(var i in data){
+								$('#tabelaAlertas tbody').append("<tr><td>" + data[i].dhai + "</td><td>" + data[i].ta + "</td><td>" + data[i].p +
+								"</td><td>" + data[i].Estado + "</td></tr>" );							}
+
+								
+				        },
+				        error : function() {
+				            console.log('error');
+				        }
+				    });
+				}
+				
+				if($('#tabelaAlertasUtilizador').length){
+					 $.ajax({
+				        url : url + "alertasUtilizadores.php",
+				        type : 'GET',
+				        success : function(data) {
+				        	var entradas = [];
+				        	var saidas = [];
+				        	var paraTabela = []
+
+				        	for(var i in data){
+				        		if(data[i].e =="Entrada" && data[i].s !="Saída") {
+
+				        			entradas.push(data[i].tel);
+				        			entradas.push(data[i].nome);
+				        			entradas.push(data[i].tu);
+				        			entradas.push(data[i].dh);
+				        			entradas.push(data[i].tempo)
+				        		}
+				        		if(data[i].e != "Entrada" && data[i].s == "Saída"){
+
+				        			saidas.push(data[i].tel);
+				        			saidas.push(data[i].dh);
+				        		}
+				        	}
+				        	var flag;
+				        	for(var x = 0; x<entradas.length; x+=5){
+				        		if(!saidas.includes(entradas[x]))
+				        		{
+				        			if(entradas[x+4] > 30) {
+				        				$('#tabelaAlertasUtilizador tbody').append("<tr><td>" + entradas[x] + "</td><td>" + entradas[x+1] + "</td><td>" + entradas[x+2] +
+								"</td><td>" + entradas[x+4] + "</td></tr>" );
+				        			}
+				        		}
+				        		else{
+				        			flag = 0;
+				        			for(var j = 0; j<saidas.length; j+=2){
+				        				if(entradas[x+3]<saidas[j+1]) flag=1;
+				        			}
+				        			if (flag==0){
+				        				$('#tabelaAlertasUtilizador tbody').append("<tr><td>" + entradas[x] + "</td><td>" + entradas[x+1] + "</td><td>" + entradas[x+2] +
+								"</td><td>" + entradas[x+4] + "</td></tr>" );
+				        			}
+				        		}
+				        	}
+
+
+				        	//for(var i in data){
+							//	$('#tabelaAlertasUtilizador tbody').append("<tr><td>" + data[i].nome + "</td><td>" + data[i].tel + "</td><td>" + data[i].tu +
+							//	"</td><td>" + data[i].tempo + "</td></tr>" );							}
+
+								
+				        },
+				        error : function() {
+				            console.log('error');
+				        }
+				    });
+				}
+		}
+
 		function inicializa_graficos(e) {
 			barGraph1.destroy();
 			barGraphContribuintePorPilarete.destroy();
@@ -4009,6 +4093,7 @@ function templatePDF(){
 	$(document).ready(function() {
  	  var checkedBoxes = getCheckedBoxes("1");
 		init_chartsPilaretes(de, ate,'.*');
+		init_alertas();
 	  init_ano();
 	  init_Utilizadorano();
 	  init_graficoAnos($('#selecaoano option:selected').val(),checkedBoxes);
