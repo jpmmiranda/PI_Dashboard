@@ -1025,11 +1025,13 @@ if (typeof NProgress != 'undefined') {
 
 	            						posvaloresS=label.indexOf(data[i].lab);
 	            						valoresS.splice(posvaloresS, 0, data[i].AcessosConcedidos);
+	            						valoresE.splice(posvaloresS, 0, 0);
 	            				}
 	            				if (data[i].ee=="Entrada"){
 
 	            					posvaloresE=label.indexOf(data[i].lab);
 	            					valoresE.splice(posvaloresE, 0, data[i].AcessosConcedidos);
+	            					valoresS.splice(posvaloresE, 0, 0);
 
 	            				} 
 	            			}
@@ -1137,15 +1139,7 @@ if (typeof NProgress != 'undefined') {
 								label: "Total de Acessos",
 								backgroundColor: "rgba(38, 185, 154, 0.31)",
 								data: valores,
-								options: {
-								  scales: {
-									yAxes: [{
-									  ticks: {
-										beginAtZero: true
-									  }
-									}]
-								  }
-								}
+								
 							}
 						]
 					};
@@ -1154,7 +1148,16 @@ if (typeof NProgress != 'undefined') {
 
 					 barGraphContribuintePorPilarete = new Chart(ctx, {
 						type: 'bar',
-						data: chartdata
+						data: chartdata,
+						options: {
+								  scales: {
+									yAxes: [{
+									  ticks: {
+										beginAtZero: true
+									  }
+									}]
+								  }
+								}
 					});
 												 		$('#loadingacessosContribuintePorPilarete').hide();
 
@@ -1189,15 +1192,7 @@ if (typeof NProgress != 'undefined') {
 								label: "Total de Acessos",
 								backgroundColor: "rgba(38, 185, 154, 0.31)",
 								data: valores,
-								options: {
-								  scales: {
-									yAxes: [{
-									  ticks: {
-										beginAtZero: true
-									  }
-									}]
-								  }
-								}
+								
 							}
 						]
 					};
@@ -1206,7 +1201,16 @@ if (typeof NProgress != 'undefined') {
 
 					barGraphTelefonePorPilarete = new Chart(ctx, {
 						type: 'bar',
-						data: chartdata
+						data: chartdata,
+						options: {
+								  scales: {
+									yAxes: [{
+									  ticks: {
+										beginAtZero: true
+									  }
+									}]
+								  }
+								}
 					});
 					$('#loadingacessosTelefonePorPilarete').hide();
 
@@ -1285,14 +1289,14 @@ if (typeof NProgress != 'undefined') {
 
                 var de = c.toISOString().substring(0, 19).replace('T', ' ')
                 var ate = d.toISOString().substring(0, 19).replace('T', ' ')
-								
                  $.ajax({
 
                     type: 'POST',
             		url: url + "teste.php",
                     data: {de : de, ate : ate, tipo : tipo, listados : listados}, 
-            		success: function(data) {
 
+            		success: function(data) {
+            			console.log(de)
             		var valoresE = new Array();
             		var valoresS = new Array();
                   var label =new Array();
@@ -1330,11 +1334,13 @@ if (typeof NProgress != 'undefined') {
 
 	            						posvaloresS=label.indexOf(data[i].lab);
 	            						valoresS.splice(posvaloresS, 0, parseInt(data[i].AcessosConcedidos));
+	            						valoresE.splice(posvaloresS, 0, 0);
 	            				}
 	            				if (data[i].ee=="Entrada"){
 
 	            					posvaloresE=label.indexOf(data[i].lab);
 	            					valoresE.splice(posvaloresE, 0, parseInt(data[i].AcessosConcedidos));
+	            					valoresS.splice(posvaloresE, 0, 0);
 
 	            				} 
 	            			}
@@ -1592,15 +1598,7 @@ if (typeof NProgress != 'undefined') {
 								label: "Total de Acessos",
 								backgroundColor: "rgba(38, 185, 154, 0.31)",
 								data: valores,
-								options: {
-								  scales: {
-									yAxes: [{
-									  ticks: {
-										beginAtZero: true
-									  }
-									}]
-								  }
-								}
+								
 							}
 						]
 					};
@@ -1609,7 +1607,16 @@ if (typeof NProgress != 'undefined') {
 
 					 barGraphUtilizador = new Chart(ctx, {
 						type: 'bar',
-						data: chartdata
+						data: chartdata,
+						options: {
+								  scales: {
+									yAxes: [{
+									  ticks: {
+										beginAtZero: true
+									  }
+									}]
+								  }
+								}
 					});
           $('#loadingacessosPorUtilizadorBarras').hide();
 
@@ -1644,15 +1651,7 @@ if (typeof NProgress != 'undefined') {
 								label: "Total de Acessos",
 								backgroundColor: "rgba(38, 185, 154, 0.31)",
 								data: valores,
-								options: {
-								  scales: {
-									yAxes: [{
-									  ticks: {
-										beginAtZero: true
-									  }
-									}]
-								  }
-								}
+								
 							}
 						]
 					};
@@ -1661,7 +1660,16 @@ if (typeof NProgress != 'undefined') {
 
 					 barGraphUtilizadorTelefone = new Chart(ctx, {
 						type: 'bar',
-						data: chartdata
+						data: chartdata,
+						options: {
+								  scales: {
+									yAxes: [{
+									  ticks: {
+										beginAtZero: true
+									  }
+									}]
+								  }
+								}
 					});
             		$('#loadingacessosPorUtilizadorBarrasTelefone').hide();
 
@@ -1704,15 +1712,7 @@ if (typeof NProgress != 'undefined') {
 										label: "Total de Acessos Negados",
 										backgroundColor: "rgba(38, 185, 154, 0.31)",
 										data: valores,
-										options: {
-										  scales: {
-											yAxes: [{
-											  ticks: {
-												beginAtZero: true
-											  }
-											}]
-										  }
-										}
+										
 									}
 								]
 							};
@@ -1721,7 +1721,17 @@ if (typeof NProgress != 'undefined') {
 
 							 barGraphNegadosTelefoneBarras = new Chart(ctx, {
 								type: 'bar',
-								data: chartdata
+								data: chartdata,
+								options: {
+										  scales: {
+											yAxes: [{
+
+											  ticks: {
+												beginAtZero: true,
+											  }
+											}]
+										  }
+										}
 							});
 							$('#loadingacessosNegadosTelefoneBarras').hide();
 						},
@@ -1756,15 +1766,7 @@ if (typeof NProgress != 'undefined') {
 										label: "Total de Acessos Negados",
 										backgroundColor: "rgba(38, 185, 154, 0.31)",
 										data: valores,
-										options: {
-										  scales: {
-											yAxes: [{
-											  ticks: {
-												beginAtZero: true
-											  }
-											}]
-										  }
-										}
+										
 									}
 								]
 							};
@@ -1773,7 +1775,16 @@ if (typeof NProgress != 'undefined') {
 
 							 barGraphNegadosContribuinteBarras = new Chart(ctx, {
 								type: 'bar',
-								data: chartdata
+								data: chartdata,
+								options: {
+										  scales: {
+											yAxes: [{
+											  ticks: {
+												beginAtZero: true
+											  }
+											}]
+										  }
+										}
 							});
 							$('#loadingacessosNegadosContribuinteBarras').hide();
 
@@ -1797,33 +1808,29 @@ if (typeof NProgress != 'undefined') {
 							var razao = []
 
 							for(var i in data) {
-								valores.push(parseInt(data[i].AcessosNaoConcedidos));
-								razao.push(data[i].ValidacaoAcesso);
+								if(data[i].ValidacaoAcesso != 'Acesso Nao Concedido - Loop Saida nao ativo'){
+									valores.push(parseInt(data[i].AcessosNaoConcedidos));
+									razao.push(data[i].ValidacaoAcesso);
+								}
 							}
 
-							var index = razao.indexOf('Acesso Nao Concedido - Loop Saida nao ativo');
+
+							/*var index = razao.indexOf('Acesso Nao Concedido - Loop Saida nao ativo');
 							var valor = valores[index];
 							if(index > -1){
 								razao.splice(index,1);
 								valores.splice(index,1);
 							}
 							var index = razao.indexOf('Acesso Nao Concedido - Loops nao ativo');
-							valores[index] = parseInt(valores[index]) + parseInt(valor);
+							valores[index] = parseInt(valores[index]) + parseInt(valor);*/
 
 							for (var raz in razao){
 								razao[raz]=razao[raz].replace('Acesso Nao Concedido - ','');
 								razao[raz]=razao[raz].replace('Acesso Recusado - ','');
 							};
 							var colors = [
-											"#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
-									        "#FFDBE5", "#7A4900", "#0000A6", "#63FFAC", "#B79762", "#004D43", "#8FB0FF", "#997D87",
-									        "#5A0007", "#809693", "#FEFFE6", "#1B4400", "#4FC601", "#3B5DFF", "#4A3B53", "#FF2F80",
-									        "#61615A", "#BA0900", "#6B7900", "#00C2A0", "#FFAA92", "#FF90C9", "#B903AA", "#D16100",
-									        "#DDEFFF", "#000035", "#7B4F4B", "#A1C299", "#300018", "#0AA6D8", "#013349", "#00846F",
-									        "#372101", "#FFB500", "#C2FFED", "#A079BF", "#CC0744", "#C0B9B2", "#C2FF99", "#001E09",
-									        "#00489C", "#6F0062", "#0CBD66", "#EEC3FF", "#456D75", "#B77B68", "#7A87A1", "#788D66",
-									        "#885578", "#FAD09F", "#FF8A9A", "#D157A0", "#BEC459", "#456648", "#0086ED", "#886F4C"
-										];
+												"#2F4F4F", "#008080", "#2E8B57", "#3CB371", "#90EE90"
+											];
 							
 							var chartdata = {
 								labels:  razao,
@@ -1843,6 +1850,7 @@ if (typeof NProgress != 'undefined') {
 								type: 'pie'
 								
 							});
+						 document.getElementById('js-legend2').innerHTML = pieChartNegadosRazoes.generateLegend();
 				  							$('#loadingacessosNegadosRazoesPie').hide();
 						},
 						error: function(data) {
@@ -2156,14 +2164,7 @@ if (typeof NProgress != 'undefined') {
 								
 
 								var colors = [
-												"#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
-										        "#FFDBE5", "#7A4900", "#0000A6", "#63FFAC", "#B79762", "#004D43", "#8FB0FF", "#997D87",
-										        "#5A0007", "#809693", "#FEFFE6", "#1B4400", "#4FC601", "#3B5DFF", "#4A3B53", "#FF2F80",
-										        "#61615A", "#BA0900", "#6B7900", "#00C2A0", "#FFAA92", "#FF90C9", "#B903AA", "#D16100",
-										        "#DDEFFF", "#000035", "#7B4F4B", "#A1C299", "#300018", "#0AA6D8", "#013349", "#00846F",
-										        "#372101", "#FFB500", "#C2FFED", "#A079BF", "#CC0744", "#C0B9B2", "#C2FF99", "#001E09",
-										        "#00489C", "#6F0062", "#0CBD66", "#EEC3FF", "#456D75", "#B77B68", "#7A87A1", "#788D66",
-										        "#885578", "#FAD09F", "#FF8A9A", "#D157A0", "#BEC459", "#456648", "#0086ED", "#886F4C"
+												"#2F4F4F", "#008080", "#2E8B57", "#3CB371", "#90EE90"
 											];
 								
 								var chartdata = {
@@ -2318,12 +2319,15 @@ if (typeof NProgress != 'undefined') {
 		            				if (data[i].es=="Saída"){
 
 		            						posvaloresS=label.indexOf(data[i].lab);
+		            						console.log(posvaloresS)
 		            						valoresS.splice(posvaloresS, 0, parseInt(data[i].AcessosConcedidos));
+		            						valoresE.splice(posvaloresS, 0, 0);
 		            				}
 		            				if (data[i].ee=="Entrada"){
 
 		            					posvaloresE=label.indexOf(data[i].lab);
 		            					valoresE.splice(posvaloresE, 0, parseInt(data[i].AcessosConcedidos));
+		            					valoresS.splice(posvaloresE, 0, 0);
 
 		            				} 
 		            			}
@@ -2583,14 +2587,7 @@ if (typeof NProgress != 'undefined') {
 								};
 
 								var colors = [
-												"#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
-										        "#FFDBE5", "#7A4900", "#0000A6", "#63FFAC", "#B79762", "#004D43", "#8FB0FF", "#997D87",
-										        "#5A0007", "#809693", "#FEFFE6", "#1B4400", "#4FC601", "#3B5DFF", "#4A3B53", "#FF2F80",
-										        "#61615A", "#BA0900", "#6B7900", "#00C2A0", "#FFAA92", "#FF90C9", "#B903AA", "#D16100",
-										        "#DDEFFF", "#000035", "#7B4F4B", "#A1C299", "#300018", "#0AA6D8", "#013349", "#00846F",
-										        "#372101", "#FFB500", "#C2FFED", "#A079BF", "#CC0744", "#C0B9B2", "#C2FF99", "#001E09",
-										        "#00489C", "#6F0062", "#0CBD66", "#EEC3FF", "#456D75", "#B77B68", "#7A87A1", "#788D66",
-										        "#885578", "#FAD09F", "#FF8A9A", "#D157A0", "#BEC459", "#456648", "#0086ED", "#886F4C"
+												"#2F4F4F", "#008080", "#2E8B57", "#3CB371", "#90EE90"
 											];
 								
 								var chartdata = {
@@ -2611,7 +2608,8 @@ if (typeof NProgress != 'undefined') {
 									type: 'pie'
 									
 								});
-								document.getElementById('js-legend1').innerHTML = pieChart.generateLegend();
+								document.getElementById('js-legend2').innerHTML = pieChart.generateLegend();
+
 												  			$('#loadingpieChartAcessos2').hide();
 
 							},
@@ -3046,6 +3044,7 @@ window.onload = function() {
 
     // FUNÇÃO PARA INICIAR OS ALERTAS!!!
     function init_alertas(){
+    	
     	if($('#tabelaAlertas').length){
 					 $.ajax({
 				        url : url + "alertas.php",
@@ -3071,8 +3070,11 @@ window.onload = function() {
 				        success : function(data) {
 				        	var entradas = [];
 				        	var saidas = [];
-				        	var paraTabela = []
-
+				        	var dataE;
+				        	var dataS;
+				        	var horas;
+				        	var minutos;
+				        	var tempoFinal = "";
 				        	for(var i in data){
 				        		if(data[i].e =="Entrada" && data[i].s !="Saída") {
 
@@ -3080,7 +3082,8 @@ window.onload = function() {
 				        			entradas.push(data[i].nome);
 				        			entradas.push(data[i].tu);
 				        			entradas.push(data[i].dh);
-				        			entradas.push(data[i].tempo)
+				        			entradas.push(data[i].tempo);
+				        			entradas.push(data[i].pilarete);
 				        		}
 				        		if(data[i].e != "Entrada" && data[i].s == "Saída"){
 
@@ -3089,30 +3092,35 @@ window.onload = function() {
 				        		}
 				        	}
 				        	var flag;
-				        	for(var x = 0; x<entradas.length; x+=5){
+				        	for(var x = 0; x<entradas.length; x+=6){
 				        		if(!saidas.includes(entradas[x]))
 				        		{
 				        			if(entradas[x+4] > 30) {
-				        				$('#tabelaAlertasUtilizador tbody').append("<tr><td>" + entradas[x] + "</td><td>" + entradas[x+1] + "</td><td>" + entradas[x+2] +
-								"</td><td>" + entradas[x+4] + "</td></tr>" );
+				        				horas = Math.floor(entradas[x+4]/60);
+				        				minutos = entradas[x+4] % 60;
+				        				tempoFinal = horas + "h" + ":" + minutos + "m";
+				        				entradas[x+4] = tempoFinal;
+				        				$('#tabelaAlertasUtilizador tbody').append("<tr><td>" + entradas[x+1] + "</td><td>" + entradas[x] + "</td><td>" + entradas[x+2] +
+								"</td><td>" + entradas[x+5] + "</td><td>" + entradas[x+4] + "</td></tr>" );
 				        			}
 				        		}
 				        		else{
+				        			horas = Math.floor(entradas[x+4]/60);
+				        			minutos = entradas[x+4] % 60;
+				        			tempoFinal = horas + "h" + ":" + minutos + "m";
+				        			entradas[x+4] = tempoFinal;
 				        			flag = 0;
 				        			for(var j = 0; j<saidas.length; j+=2){
-				        				if(entradas[x+3]<saidas[j+1]) flag=1;
+				        				dataE = new Date(entradas[x+3]);
+				        				dataS = new Date(saidas[j+1]);
+				        				if(entradas[x] == saidas[j] && dataE.getTime() < dataS.getTime()) flag=1;
 				        			}
 				        			if (flag==0){
-				        				$('#tabelaAlertasUtilizador tbody').append("<tr><td>" + entradas[x] + "</td><td>" + entradas[x+1] + "</td><td>" + entradas[x+2] +
-								"</td><td>" + entradas[x+4] + "</td></tr>" );
+				        				$('#tabelaAlertasUtilizador tbody').append("<tr><td>" + entradas[x+1] + "</td><td>" + entradas[x] + "</td><td>" + entradas[x+2] +
+								"</td><td>" + entradas[x+5] + "</td><td>" + entradas[x+4] + "</td></tr>" );
 				        			}
 				        		}
 				        	}
-
-
-				        	//for(var i in data){
-							//	$('#tabelaAlertasUtilizador tbody').append("<tr><td>" + data[i].nome + "</td><td>" + data[i].tel + "</td><td>" + data[i].tu +
-							//	"</td><td>" + data[i].tempo + "</td></tr>" );							}
 
 								
 				        },

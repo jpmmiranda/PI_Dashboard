@@ -19,9 +19,9 @@ mysqli_set_charset($connection->conn, "utf8");
 
 
 //query to get data from the table
-$query = sprintf("SELECT RA.DataHora as dh, ut.Nome as nome, RA.Telefone as tel, ut.TipoUtente as tu, RA.EstadoEspiraE as e, RA.EstadoEspiraS as s, (TIMESTAMPDIFF(minute,RA.DataHora, NOW()) ) as tempo
+$query = sprintf("SELECT RA.DataHora as dh, ut.Nome as nome, RA.Telefone as tel, ut.TipoUtente as tu, RA.EstadoEspiraE as e, RA.EstadoEspiraS as s, (TIMESTAMPDIFF(minute,RA.DataHora, NOW()) ) as tempo, RA.Pilarete as pilarete
 	FROM RegistoAcessos as RA INNER JOIN Utentes as ut on RA.nContribuinte = ut.nContribuinte
-	WHERE (RA.DataHora > DATE_SUB(NOW(),INTERVAL 2 HOUR) ) AND RA.ValidacaoAcesso like 'Acesso Concedido' AND ut.TipoUtente != '24h';");
+	WHERE (RA.DataHora > DATE_SUB(NOW(),INTERVAL 35 HOUR) ) AND RA.ValidacaoAcesso like 'Acesso Concedido' AND ut.TipoUtente != 'Morador com Garagem';");
 
 //execute query
 
