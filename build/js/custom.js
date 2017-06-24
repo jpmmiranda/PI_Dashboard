@@ -42,10 +42,10 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
     $NAV_MENU = $('.nav_menu'),
     $FOOTER = $('footer');
 
-	//var url = "http://localhost:8888/";	
-	var url = "http://smap.cm-braga.pt/scripts/"
-	var de = moment().subtract(1, 'day').startOf('day');
-	var ate= moment().subtract(1, 'day').endOf('day');
+	var url = "http://localhost:8888/";	
+	//var url = "http://smap.cm-braga.pt/scripts/"
+	var de = moment().utcOffset('+0000').subtract(1, 'day').startOf('day');
+	var ate= moment().utcOffset('+0000').subtract(1, 'day').endOf('day');
 	var barGraph=null, barGraph1;
 	var compAnos;
 	var barGraphPilaretes=null,barGraphContribuintePorPilarete,barGraphTelefonePorPilarete, barGraphUtiPilaretes=null;
@@ -921,6 +921,23 @@ if (typeof NProgress != 'undefined') {
 			
 		};
 		
+		/* Faz conversão da data */
+		Date.prototype.toIsoString = function() {
+		    var tzo = -this.getTimezoneOffset(),
+		        dif = tzo >= 0 ? '+' : '-',
+		        pad = function(num) {
+		            var norm = Math.abs(Math.floor(num));
+		            return (norm < 10 ? '0' : '') + norm;
+		        };
+		    return this.getFullYear() +
+		        '-' + pad(this.getMonth() + 1) +
+		        '-' + pad(this.getDate()) +
+		        'T' + pad(this.getHours()) +
+		        ':' + pad(this.getMinutes()) +
+		        ':' + pad(this.getSeconds()) +
+		        dif + pad(tzo / 60) +
+		        ':' + pad(tzo % 60);
+		}
 
 
 		/* Função inicializa charts da pagina dos Pilaretes */
@@ -947,8 +964,8 @@ if (typeof NProgress != 'undefined') {
                 var c = new Date(de)
                 var d = new Date(ate)
                 var prim = moment(de,'YYYY/MM/DD');
-							  var ult = moment(ate,'YYYY/MM/DD');
-								var diffDays = ult.diff(prim, 'days');
+				var ult = moment(ate,'YYYY/MM/DD');
+				var diffDays = ult.diff(prim, 'days');
 
                 if(diffDays==0){
                     tipo=1;
@@ -977,8 +994,8 @@ if (typeof NProgress != 'undefined') {
 
                 
 
-                var de = c.toISOString().substring(0, 19).replace('T', ' ')
-                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+                var de = c.toISOString()
+                var ate = d.toISOString()
 
 
                  $.ajax({
@@ -1287,8 +1304,11 @@ if (typeof NProgress != 'undefined') {
                     nomeLabel="Meses"
                 }
 
-                var de = c.toISOString().substring(0, 19).replace('T', ' ')
-                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+                var de = c.toIsoString();
+                var ate = d.toIsoString();
+                                           			console.log("antes de" +de)
+                            			console.log("antes ate" +ate)
+
                  $.ajax({
 
                     type: 'POST',
@@ -1296,13 +1316,13 @@ if (typeof NProgress != 'undefined') {
                     data: {de : de, ate : ate, tipo : tipo, listados : listados}, 
 
             		success: function(data) {
-            			console.log(de)
-            		var valoresE = new Array();
-            		var valoresS = new Array();
-                  var label =new Array();
-                  var posvaloresE=0;
-                  var posvaloresS=0;
-
+	            		var valoresE = new Array();
+	            		var valoresS = new Array();
+	                    var label =new Array();
+	                    var posvaloresE=0;
+	                    var posvaloresS=0;
+	                      			console.log("depois de" +de)
+                            			console.log("depois ate" +ate)
             			for(var i in data) {
 
             				if($.inArray(data[i].lab, label)!=-1){
@@ -1430,8 +1450,8 @@ if (typeof NProgress != 'undefined') {
             		$('#loadingacessosPorPilareteBarras').show();
                 var c = new Date(de)
                 var d = new Date(ate)
-                var de = c.toISOString().substring(0, 19).replace('T', ' ')
-                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+                var de = c.toISOString()
+                var ate = d.toISOString()
 								
             		$.ajax({
             			method: "POST",
@@ -1687,8 +1707,8 @@ if (typeof NProgress != 'undefined') {
 				
           var c = new Date(de)
           var d = new Date(ate)
-          var de = c.toISOString().substring(0, 19).replace('T', ' ')
-          var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+          var de = c.toISOString()
+          var ate = d.toISOString()
 								
           $.ajax({
 
@@ -1897,9 +1917,9 @@ if (typeof NProgress != 'undefined') {
 
 			  $.ajax({
 	
-          type: 'POST',
+         			type: 'POST',
 					url: url +"utilizadorCompAnos.php",
-          data: {utilizador : utilizador , ano: ano},
+          			data: {utilizador : utilizador , ano: ano},
 				success: function(data) {
 					var score = [];
 					var anoY = [];
@@ -1975,9 +1995,9 @@ if (typeof NProgress != 'undefined') {
 
 			  $.ajax({
 	
-          type: 'POST',
+          			type: 'POST',
 					url: url +"utilizadorCompAnosContri.php",
-          data: {utilizador : utilizador , ano: ano},
+          			data: {utilizador : utilizador , ano: ano},
 				success: function(data) {
 					var score = [];
 					var anoY = [];
@@ -2098,13 +2118,8 @@ if (typeof NProgress != 'undefined') {
 
 								if (tipo == 0) {
 									$("#myModal").modal()
-									//document.getElementById('numContri').innerHTML = "Número de Telemóvel não existe";
-									//document.getElementById('tipoUtil').innerHTML = "Tipo de Utilizador";
 								}
-								/*else{
-									document.getElementById('tipoUtil').innerHTML = tipo;
-									document.getElementById('numContri').innerHTML = contri;
-								}*/
+								
 							},
 							error: function(data){
 								console.log(data);
@@ -2138,8 +2153,8 @@ if (typeof NProgress != 'undefined') {
 
 	                var c = new Date(de)
 	                var d = new Date(ate)
-					var de = c.toISOString().substring(0, 19).replace('T', ' ')
-	                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+					var de = c.toISOString()
+	                var ate = d.toISOString()
 					
 					$.ajax({
 							url: url + "utilizadorAcessosNaoConcebidos.php",
@@ -2197,7 +2212,8 @@ if (typeof NProgress != 'undefined') {
 				  }
 
 				  if ($('#totalacesso').length ){
-				  	
+				  	console.log(de)
+				  	console.log(ate)
 				  	 $.ajax({
 
 						url: url + "totalAcessos.php",
@@ -2274,8 +2290,8 @@ if (typeof NProgress != 'undefined') {
 		                    nomeLabel="Meses"
 		                }
 
-		                var de = c.toISOString().substring(0, 19).replace('T', ' ');
-		                var ate = d.toISOString().substring(0, 19).replace('T', ' ');
+		                var de = c.toISOString()
+		                var ate = d.toISOString()
 									
 	                 $.ajax({
 
@@ -2414,8 +2430,8 @@ if (typeof NProgress != 'undefined') {
 
 	                var c = new Date(de)
 	                var d = new Date(ate)
-	                var de = c.toISOString().substring(0, 19).replace('T', ' ')
-	                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+	                var de = c.toISOString()
+	                var ate = d.toISOString()
 					$.ajax({
 	            			method: "POST",
 	            			url: url + "utilizadorAcessosPorPilareteBarras.php",
@@ -2511,8 +2527,6 @@ if (typeof NProgress != 'undefined') {
 				}
 			}else{
 
-				/*if (utilizador.length > 9) {document.getElementById('numContri').innerHTML = 'Número Inválido';}
-					else {document.getElementById('numContri').innerHTML = utilizador;}*/
 				if ($('#tipoUtil').length ){
 					$.ajax({
 							url: url + "tipoUtilizadorCont.php",
@@ -2525,14 +2539,7 @@ if (typeof NProgress != 'undefined') {
 								}
 								if (tipo == 0) {
 									$("#modalContri").modal()
-									//document.getElementById('numContri').innerHTML = "Número de Contribuinte não existe";
-									//document.getElementById('tipoUtil').innerHTML = "Tipo de Utilizador";
 								}
-								/*else{
-									document.getElementById('tipoUtil').innerHTML = tipo;
-									document.getElementById('numContri').innerHTML = contri;
-
-								}*/
 							},
 							error: function(data){
 								console.log(data);
@@ -2564,8 +2571,8 @@ if (typeof NProgress != 'undefined') {
 
 	                var c = new Date(de)
 	                var d = new Date(ate)
-					var de = c.toISOString().substring(0, 19).replace('T', ' ')
-	                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+					var de = c.toISOString()
+	                var ate = d.toISOString()
 					  $.ajax({
 							url: url + "utilizadorAcessosNaoConcedidosContri.php",
 							method: "POST",
@@ -2698,8 +2705,8 @@ if (typeof NProgress != 'undefined') {
 	                    nomeLabel="Meses"
 	                }
 
-	                var de = c.toISOString().substring(0, 19).replace('T', ' ')
-	                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+	                var de = c.toISOString()
+	                var ate = d.toISOString()
 								
 	                 $.ajax({
 
@@ -2839,8 +2846,8 @@ if (typeof NProgress != 'undefined') {
 
 	                var c = new Date(de)
 	                var d = new Date(ate)
-	                var de = c.toISOString().substring(0, 19).replace('T', ' ')
-	                var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+	                var de = c.toISOString()
+	                var ate = d.toISOString()
 					$.ajax({
 	            			method: "POST",
 	            			url: url + "utilizadorAcessosPorPilaretesBarrasContri.php",
@@ -3535,8 +3542,9 @@ window.onload = function() {
 		var pdf = document.getElementById('pdf');
 		if(pdf!==null){
 		pdf.addEventListener('click', function() {
-				
-				demoFromHTML(moment( 2017+'-'+02+'-'+01 + ' 00:00:00' ),moment( 2017+'-'+02+'-'+31 + ' 00:00:00' ));
+				var de = moment().subtract(3, 'month').startOf('month');
+				var ate= moment().subtract(3, 'month').endOf('month');
+				demoFromHTML(de,ate);
 			}, false);
 		}
 
@@ -3553,12 +3561,12 @@ var imagemTotaisContribuinteNegados='';
 function demoFromHTML(de,ate) {
 	
 	
-	listados='.*';
+	var listados=null;
 	var tipo=4;
   var c = new Date(de)
   var d = new Date(ate)
-  var de = c.toISOString().substring(0, 19).replace('T', ' ')
-  var ate = d.toISOString().substring(0, 19).replace('T', ' ')
+  var de = c.toISOString()
+  var ate = d.toISOString()
 	
 	$.ajax({
 				url: url+"acessosPorUtilizador.php",
@@ -3751,10 +3759,10 @@ function demoFromHTML(de,ate) {
 /*--------------------------------------------------------------------------------------------------------------------------------------------*/
 
 $.ajax({
-            			method: "POST",
             			url: url + "acessosPorPilarete.php",
+            			method: "POST",
 
-                  data: {de : de, ate : ate,listados : listados},
+                  		data: {de : de, ate : ate,listados : listados},
 
             			success: function(data) {
             						var valoresE = new Array();
@@ -3806,7 +3814,6 @@ $.ajax({
 
             				
             			}
-
             			var chartdata = {
 
             				labels:  label,
@@ -3932,6 +3939,7 @@ $.ajax({
 						url: url + "acessosNegadosPorTelefone.php",
 
 						method: "GET",
+						data: {de : de, ate : ate},
 						success: function(data) {
 							console.log(data);
 							var valores = [];
@@ -3993,6 +4001,7 @@ $.ajax({
 						url: url + "acessosNegadosPorContribuinte.php",
 
 						method: "GET",
+						data: {de : de, ate : ate},
 						success: function(data) {
 							console.log(data);
 							var valores = [];
@@ -4045,13 +4054,13 @@ $.ajax({
 						}
 					});
 
-setTimeout(templatePDF,5000);
+setTimeout(templatePDF(de,ate),5000);
 
 			
 }
 
 
-function templatePDF(){
+function templatePDF(de,ate){
 					var doc = new jsPDF("p", "pt", "a4");
 
 					var width = doc.internal.pageSize.width/2;    
@@ -4062,14 +4071,16 @@ function templatePDF(){
 					doc.setFontSize(20);
 
 					doc.text("Report Mensal", xOffset, 100);
+					doc.text("De " + de.substring(0,10) + " até " + ate.substring(0,10), xOffset-70, 200);
+
 					doc.addPage();
 					
-          doc.text('Acessos Concedidos',xOffset,25);
+          			doc.text('Acessos Concedidos',xOffset,25);
 					doc.setFontSize(16);
 					doc.text('Total de Acessos',10,60);
           
 					var h1=100;
-        	var aspectwidth1= ((doc.internal.pageSize.width)*(9/16));
+        			var aspectwidth1= ((doc.internal.pageSize.width)*(9/16));
 					doc.addImage(imagemTotaisAcessos, 'png',100, h1, aspectwidth1, (height-h1));
 					
 					doc.text('Total por Utilizador - Contribuinte',10,450);
@@ -4083,9 +4094,9 @@ function templatePDF(){
 					doc.text('Total por Pilarete',10,60);
 					doc.addImage(imagemTotaisPilarete, 'png',100, 100, aspectwidth1, (height-h1));
 				
-          doc.addPage();
+        			doc.addPage();
 					doc.setFontSize(20);
-          doc.text('Acessos Negados',xOffset,25);
+          			doc.text('Acessos Negados',xOffset,25);
 
 					doc.setFontSize(16);
 					doc.text('Total por Utilizador - Telefone',10,60);
@@ -4093,7 +4104,7 @@ function templatePDF(){
 					doc.text('Total por Utilizador - Contribuinte',10,450);
 					doc.addImage(imagemTotaisContribuinteNegados, 'png',100, 500, aspectwidth1, (height-h1));
 
-					doc.save("sample.pdf");
+					doc.save("ReportMes" +de.charAt(5) + de.charAt(6) + ".pdf");
 }
 			   
 	  
