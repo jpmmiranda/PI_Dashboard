@@ -8,17 +8,23 @@ header("Access-Control-Allow-Headers: X-Requested-With");
 require_once(dirname(__FILE__).'/connectionEventos.php');
 
 $connection = new connection();
-$connection->GetConnectionPDO();
+$connection->GetConnection();
 
-if(!$connection->bdd){
+if(!$connection->conn){
 
-	die("Connection failed: " . $connection->bdd->error);
+	die("Connection failed: " . $connection->conn->error);
 }
 
 $id = $_POST['id'];
-$sql = "DELETE from Eventos WHERE id=".$id;
-$q = $connection->bdd->prepare($sql);
-$q->execute();
+$query = sprintf("DELETE from Eventos WHERE id='$id';");
+
+
+//execute query
+
+$connection->conn->query($query) ;
+
+//close connection
+$connection->conn->close();
 
 ?>
 

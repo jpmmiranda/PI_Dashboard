@@ -8,21 +8,36 @@ header("Access-Control-Allow-Headers: X-Requested-With");
 require_once(dirname(__FILE__).'/connectionEventos.php');
 
 $connection = new connection();
-$connection->GetConnectionPDO();
+$connection->GetConnection();
 
-if(!$connection->bdd){
+if(!$connection->conn){
 
-	die("Connection failed: " . $connection->bdd->error);
+	die("Connection failed: " . $connection->conn->error);
 }
 
 
  // Query that retrieves events
- $requete = "SELECT id,title,start,end,description FROM Eventos ORDER BY id";
+$query = sprintf("SELECT id,title,start,end,description FROM Eventos ORDER BY id;"); 
 
  
  // Execute the query
- $resultat = $connection->bdd->query($requete) or die(print_r($connection->bdd->errorInfo()));
 
+//execute query
+$result = $connection->conn->query($query);
+
+//loop through the returned data
+$data = array();
+foreach ($result as $row) {
+	$data[] = $row;
+}
+
+//free memory associated with result
+$result->close();
+
+//close connection
+$connection->conn->close();
+
+//now print the data
+print json_encode($data);
  // sending the encoded result to success page
- echo json_encode($resultat->fetchAll(PDO::FETCH_ASSOC));
 ?>

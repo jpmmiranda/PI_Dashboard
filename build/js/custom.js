@@ -3293,6 +3293,7 @@ window.onload = function() {
 	   	/* CALENDAR */
 		  
 		    function  init_calendar() {
+
 				if( typeof ($.fn.fullCalendar) === 'undefined'){ return; }
 				console.log('init_calendar');
 				var date = new Date(),
@@ -3325,11 +3326,13 @@ window.onload = function() {
 					     element.html( start +' ' + event.title + '<span class="removeEvent glyphicon glyphicon-trash pull-right" id="Delete"></span>');
 
 					     
-					   },
+				},
 
 				  selectable: true,
 				  selectHelper: true,
+
 				  select: function(start, end, allDay) {
+				  	var idE
 					$('#fc_create').click();
 
 					started = start;
@@ -3350,11 +3353,18 @@ window.onload = function() {
 						   var desc = $("#descr").val();
 						   $.ajax({
 						   url: url + 'addEventos.php',
-						   data: 'title='+ title+'&start='+ start +'&end='+ end +'&description=' + desc,
-						   type: "POST",
+						   data:{ title:title,start: start, end: end, description:desc },
+						   method: "POST",
+						   success: function(data){
+						   	for(var i in data){
+						   		idE = data[0]
+						   		console.log(idE)
+						   	}
+						   }
 						   });
 						 calendar.fullCalendar('renderEvent',
 						   {
+						   id: idE,
 						   title: title,
 						   start: start,
 						   end: end,
@@ -3367,7 +3377,7 @@ window.onload = function() {
 					  }
 
 					  $('#title').val('');
-
+					  $("#descr").val('');
 					  calendar.fullCalendar('unselect');
 
 					  $('.antoclose').click();
@@ -3377,7 +3387,6 @@ window.onload = function() {
 
 					
 				  },
-
 				  editable: true,
 
 				  eventDrop: function(event, delta) {
@@ -3385,7 +3394,7 @@ window.onload = function() {
 					   var end = $.fullCalendar.moment(event.end, 'YYYY-MM-DD HH:MM:ss').toISOString();
 					   $.ajax({
 						   url: url + 'updateEventos.php',
-						   data: 'title='+ event.title+'&start='+ start +'&end='+ end +'&id='+ event.id + '&desc='+event.description ,
+						   data: 'title='+ event.title+'&start='+ start +'&end='+ end +'&id='+ event.id + '&desc='+event.description + '&flag=0',
 						   type: "POST",
 						 
 					   });
@@ -3396,51 +3405,51 @@ window.onload = function() {
 					   var end = $.fullCalendar.moment(event.end, 'YYYY-MM-DD HH:MM:ss').toISOString();
 					   $.ajax({
 					    url: url + 'updateEventos.php',
-					    data: 'title='+ event.title+'&start='+ start +'&end='+ end +'&id='+ event.id + '&desc='+event.description,
+					    data: 'title='+ event.title+'&start='+ start +'&end='+ end +'&id='+ event.id + '&desc='+event.description + '&flag=0',
 					    type: "POST",
 				
 					   });
 					},
 
-					eventClick: function(event, jsEvent,view) {
+					eventClick: function(calEvent, jsEvent,view) {
+						if (jsEvent.target.id === 'Delete') {
 
-						  if (jsEvent.target.id === 'Delete') {
-						  	var decision = confirm("Deseja eliminar o evento?"); 
+						  	var decision = confirm("Deseja eliminar o evento " + calEvent.title  + "?"); 
 							if (decision) {
-
+									console.log(calEvent.id)
 								$.ajax({
-									type: "POST",
+									method: "POST",
 									url: url + 'delEventos.php',
-									data: "&id=" + event.id,
+									data: {id:calEvent.id} ,
 								});
 
-								$('#calendar').fullCalendar('removeEvents', event.id);
+								$('#calendar').fullCalendar('removeEvents',  calEvent._id);
 
-								}
-						  }else {
+							}
+						}else {
 							  $('#fc_edit').click();
-								$('#title2').val(event.title);
-								$('#descr2').val(event.description)
+								$('#title2').val(calEvent.title);
+								$('#descr2').val(calEvent.description)
 								$(".antosubmit2").on("click", function() {
 
-								  event.title = $("#title2").val();
-								  event.description = $("#descr2").val();
+								  calEvent.title = $("#title2").val();
+								  calEvent.description = $("#descr2").val();
 								   $.ajax({
 								   	type: "POST",
 								    url: url + 'updateEventos.php',
-								    data: '&title='+ event.title+'&id='+ event.id + '&desc='+event.description,								   
+								    data: {id:calEvent.id, title: calEvent.title, desc: calEvent.description, flag: 1},								   
 								   });
-
-								   $('#calendar').fullCalendar('rerenderEvents',event);
-								   console.log(event.id);
+								   $('#calendar').fullCalendar('rerenderEvents',calEvent._id);
+								   alert(calEvent.id);
 								  $('.antoclose2').click();
-					}
+								}
 				
 
 							);
 							
 						  
 						}
+					
 					},
 				});
 				
