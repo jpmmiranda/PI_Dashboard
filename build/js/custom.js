@@ -44,8 +44,9 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
 
 	var url = "http://localhost:8888/";	
 	//var url = "http://smap.cm-braga.pt/scripts/"
-	var de = moment().utcOffset('+0000').subtract(1, 'day').startOf('day');
-	var ate= moment().utcOffset('+0000').subtract(1, 'day').endOf('day');
+	var de = moment().subtract(1, 'day').startOf('day');
+
+	var ate= moment().subtract(1, 'day').endOf('day');
 	var barGraph=null, barGraph1;
 	var compAnos;
 	var barGraphPilaretes=null,barGraphContribuintePorPilarete,barGraphTelefonePorPilarete, barGraphUtiPilaretes=null;
@@ -1306,6 +1307,7 @@ if (typeof NProgress != 'undefined') {
 
                 var de = c.toIsoString();
                 var ate = d.toIsoString();
+
                                            			console.log("antes de" +de)
                             			console.log("antes ate" +ate)
 
