@@ -2102,6 +2102,7 @@ if (typeof NProgress != 'undefined') {
 		}
 
 		function init_utilizador(de,ate,utilizador,tipo){
+			
 
 			if(tipo==1){
 				if (utilizador.length < 9 || utilizador.length > 9) {$("#myModal").modal()}
@@ -2227,6 +2228,7 @@ if (typeof NProgress != 'undefined') {
 							var entradas = 0;
 							var recusados = 0;
 							var aceites = 0;
+							var especial = 0;
 								
 							for(var i in data) {
 								total = data[i].total;
@@ -2234,6 +2236,7 @@ if (typeof NProgress != 'undefined') {
 								entradas = data[i].entradas;
 								recusados = data[i].recusados;
 								aceites = data[i].aceites;
+								especial = data[i].especial;
 							}
 							if(total!=0){
 
@@ -2242,6 +2245,8 @@ if (typeof NProgress != 'undefined') {
 			  				document.getElementById('totalsaidas').innerHTML = saidas;
 			  				document.getElementById('totalRecusadas').innerHTML = recusados;
 			  				document.getElementById('totalConcedidos').innerHTML = aceites;
+			  				document.getElementById('totalEspecial').innerHTML = especial;
+
 
 							}else{
 
@@ -2250,6 +2255,7 @@ if (typeof NProgress != 'undefined') {
 			  				document.getElementById('totalsaidas').innerHTML = 0;
 			  				document.getElementById('totalRecusadas').innerHTML = 0;
 			  				document.getElementById('totalConcedidos').innerHTML = 0;
+			  				document.getElementById('totalEspecial').innerHTML = 0;
 							}
 				  		}
 				  	})
@@ -2617,7 +2623,7 @@ if (typeof NProgress != 'undefined') {
 									type: 'pie'
 									
 								});
-								document.getElementById('js-legend2').innerHTML = pieChart.generateLegend();
+								document.getElementById('js-legend1').innerHTML = pieChart.generateLegend();
 
 												  			$('#loadingpieChartAcessos2').hide();
 
@@ -2642,6 +2648,7 @@ if (typeof NProgress != 'undefined') {
 							var entradas = 0;
 							var recusados = 0;
 							var aceites = 0;
+							var especial = 0;
 								
 							for(var i in data) {
 								total = data[i].total;
@@ -2649,6 +2656,7 @@ if (typeof NProgress != 'undefined') {
 								entradas = data[i].entradas;
 								recusados = data[i].recusados;
 								aceites = data[i].aceites;
+								especial = data[i].especial;
 							}if(total!=0){
 
 			  				document.getElementById('totalacesso2').innerHTML = total;
@@ -2656,6 +2664,7 @@ if (typeof NProgress != 'undefined') {
 			  				document.getElementById('totalsaidas').innerHTML = saidas;
 			  				document.getElementById('totalRecusadas').innerHTML = recusados;
 			  				document.getElementById('totalConcedidos').innerHTML = aceites;
+			  				document.getElementById('totalEspecial').innerHTML = especial;
 
 							}else{
 
@@ -2664,6 +2673,7 @@ if (typeof NProgress != 'undefined') {
 			  				document.getElementById('totalsaidas').innerHTML = 0;
 			  				document.getElementById('totalRecusadas').innerHTML = 0;
 			  				document.getElementById('totalConcedidos').innerHTML = 0;
+			  				document.getElementById('totalEspecial').innerHTML = 0;
 							}
 				  		}
 				  	})
