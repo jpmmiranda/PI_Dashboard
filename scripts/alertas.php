@@ -20,7 +20,7 @@ mysqli_set_charset($connection->conn, "utf8");
 
 //query to get data from the table
 $query = sprintf("SELECT DataHoraAlarmeInicio as dhai, TipoAlarme as ta, Pilarete as p, Estado
-	FROM Alarmes WHERE DataHoraAlarmeInicio > DATE_SUB(NOW(),INTERVAL 65 MINUTE);");
+	FROM Alarmes WHERE DataHoraAlarmeInicio > DATE_SUB(NOW(),INTERVAL 2 HOUR);");
 
 //execute query
 

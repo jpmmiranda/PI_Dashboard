@@ -42,8 +42,8 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
     $NAV_MENU = $('.nav_menu'),
     $FOOTER = $('footer');
 
-	var url = "http://localhost:8888/";	
-	//var url = "http://smap.cm-braga.pt/scripts/"
+	//var url = "http://localhost:8888/";	
+	var url = "http://smap.cm-braga.pt/scripts/"
 	var de = moment().subtract(1, 'day').startOf('day');
 
 	var ate= moment().subtract(1, 'day').endOf('day');
@@ -1308,8 +1308,7 @@ if (typeof NProgress != 'undefined') {
                 var de = c.toIsoString();
                 var ate = d.toIsoString();
 
-                                           			console.log("antes de" +de)
-                            			console.log("antes ate" +ate)
+
 
                  $.ajax({
 
@@ -1323,8 +1322,7 @@ if (typeof NProgress != 'undefined') {
 	                    var label =new Array();
 	                    var posvaloresE=0;
 	                    var posvaloresS=0;
-	                      			console.log("depois de" +de)
-                            			console.log("depois ate" +ate)
+
             			for(var i in data) {
 
             				if($.inArray(data[i].lab, label)!=-1){
@@ -1851,7 +1849,7 @@ if (typeof NProgress != 'undefined') {
 								razao[raz]=razao[raz].replace('Acesso Recusado - ','');
 							};
 							var colors = [
-												"#2F4F4F", "#008080", "#2E8B57", "#3CB371", "#90EE90"
+												"#2F4F4F", "#008080", "#2E8B57", "#3CB371", "#90EE90", "#4279a3", "#476c8a", "#49657b", "#7f8e9e"
 											];
 							
 							var chartdata = {
@@ -1889,7 +1887,7 @@ if (typeof NProgress != 'undefined') {
 
 		function init_ano() {
 			if(document.getElementById('selecaoano')!=null){
-				var min = 2016;
+				var min = 2017;
 				var max = new Date().getFullYear()+1;
 			    for(i = min; i <max; i++){        
 
@@ -1901,7 +1899,7 @@ if (typeof NProgress != 'undefined') {
 
 		function init_Utilizadorano() {
 			if(document.getElementById('selecaoanoUtilizador')!=null){
-				var min = 2016;
+				var min = 2017;
 				var max = new Date().getFullYear()+1;
 			    for(i = min; i <max; i++){        
 
@@ -1911,11 +1909,20 @@ if (typeof NProgress != 'undefined') {
 
 		}
 
+		function escondeRodas(){
+			$('#loadingcompAnosUtilizador').hide();
+			$('#loadinglinhasTotalAcessos').hide();
+			$('#loadingpieChartAcessos2').hide();
+			$('#loadingutilizadorAcessosPorPilareteBarras').hide();
+			$('#loadingcompAnos').hide();
+			
+		}
+
 		// Função para a  criação dos gráficos da utilizadores
 		function init_utilizdorComp_anos(utilizador, ano, tipo){
 			if(tipo==1){
 			var ctx = document.getElementById("compAnosUtilizador");
-							  							$('#loadingcompAnosUtilizador').show();
+							  						$('#loadingcompAnosUtilizador').show();
 
 			  $.ajax({
 	
@@ -2125,7 +2132,6 @@ if (typeof NProgress != 'undefined') {
 								
 							},
 							error: function(data){
-								console.log(data);
 								console.log("erro");
 							}
 						})
@@ -2182,7 +2188,7 @@ if (typeof NProgress != 'undefined') {
 								
 
 								var colors = [
-												"#2F4F4F", "#008080", "#2E8B57", "#3CB371", "#90EE90"
+												"#2F4F4F", "#008080", "#2E8B57", "#3CB371", "#90EE90", "#4279a3", "#476c8a", "#49657b", "#7f8e9e"
 											];
 								
 								var chartdata = {
@@ -2208,15 +2214,14 @@ if (typeof NProgress != 'undefined') {
 
 							},
 							error: function(data) {
-								console.log(data);
+								console.log("erro");
 							}
 						});
 					  
 				  }
 
 				  if ($('#totalacesso').length ){
-				  	console.log(de)
-				  	console.log(ate)
+
 				  	 $.ajax({
 
 						url: url + "totalAcessos.php",
@@ -2343,7 +2348,6 @@ if (typeof NProgress != 'undefined') {
 		            				if (data[i].es=="Saída"){
 
 		            						posvaloresS=label.indexOf(data[i].lab);
-		            						console.log(posvaloresS)
 		            						valoresS.splice(posvaloresS, 0, parseInt(data[i].AcessosConcedidos));
 		            						valoresE.splice(posvaloresS, 0, 0);
 		            				}
@@ -2529,7 +2533,7 @@ if (typeof NProgress != 'undefined') {
 
 	            		},
 	            		error: function(data) {
-	            			console.log(data);
+	            			console.log("erro");
 	            		}
 		           });
 				}
@@ -2550,7 +2554,7 @@ if (typeof NProgress != 'undefined') {
 								}
 							},
 							error: function(data){
-								console.log(data);
+								console.log("erro");
 							}
 						})
 
@@ -2602,7 +2606,7 @@ if (typeof NProgress != 'undefined') {
 								};
 
 								var colors = [
-												"#2F4F4F", "#008080", "#2E8B57", "#3CB371", "#90EE90"
+												"#2F4F4F", "#008080", "#2E8B57", "#3CB371", "#90EE90", "#4279a3", "#476c8a", "#49657b", "#7f8e9e"
 											];
 								
 								var chartdata = {
@@ -2629,7 +2633,7 @@ if (typeof NProgress != 'undefined') {
 
 							},
 							error: function(data) {
-								console.log(data);
+								console.log("erro");
 							}
 						});
 					  
@@ -2847,7 +2851,7 @@ if (typeof NProgress != 'undefined') {
 
 	            		},
 	            		error: function(data) {
-	            			console.log(data);
+	            			console.log("erro");
 	            		}
 
 		               });	
@@ -2949,7 +2953,7 @@ if (typeof NProgress != 'undefined') {
 
 	            		},
 	            		error: function(data) {
-	            			console.log(data);
+	            			console.log("erro");
 	            		}
 		           });
 				}
@@ -3114,7 +3118,7 @@ window.onload = function() {
 				        	for(var x = 0; x<entradas.length; x+=6){
 				        		if(!saidas.includes(entradas[x]))
 				        		{
-				        			if(entradas[x+4] > 30) {
+				        			if(entradas[x+4] >= 30) {
 				        				horas = Math.floor(entradas[x+4]/60);
 				        				minutos = entradas[x+4] % 60;
 				        				tempoFinal = horas + "h" + ":" + minutos + "m";
@@ -3134,7 +3138,7 @@ window.onload = function() {
 				        				dataS = new Date(saidas[j+1]);
 				        				if(entradas[x] == saidas[j] && dataE.getTime() < dataS.getTime()) flag=1;
 				        			}
-				        			if (flag==0){
+				        			if (flag==0 && entradas[x+4]>=30){
 				        				$('#tabelaAlertasUtilizador tbody').append("<tr><td>" + entradas[x+1] + "</td><td>" + entradas[x] + "</td><td>" + entradas[x+2] +
 								"</td><td>" + entradas[x+5] + "</td><td>" + entradas[x+4] + "</td></tr>" );
 				        			}
@@ -3204,13 +3208,15 @@ window.onload = function() {
 
 		//Gráfico que compara 2 anos seguidos
 
-		function init_graficoAnos(ano,checkedBoxes){
+		function init_graficoAnos(){
+			var ano = $('#selecaoano option:selected').val();
 			 		$('#loadingcompAnos').show();
 
 				var listados;
-				if(checkedBoxes == null) listados = '.*';
-				if(checkedBoxes!=null) listados = checkboxSelecionados(checkedBoxes);
-				if(ano == null ) ano = 2016;
+				//if(checkedBoxes == null) listados = '.*';
+				//if(checkedBoxes!=null) listados = checkboxSelecionados(checkedBoxes);
+				listados = '.*';
+				if(ano == null ) ano = 2017;
 			  var ctx = document.getElementById("compAnos");
 			  $.ajax({
 	
@@ -3283,7 +3289,7 @@ window.onload = function() {
 
 				},
 				error: function(data) {
-					console.log(data);
+					console.log("erro");
 				}
 			});
 		}
@@ -3292,7 +3298,7 @@ window.onload = function() {
 		function init_compose() {
 		
 			if( typeof ($.fn.slideToggle) === 'undefined'){ return; }
-			console.log('init_compose');
+
 		
 			$('#compose, .compose-close').click(function(){
 				$('.compose').slideToggle();
@@ -3305,7 +3311,7 @@ window.onload = function() {
 		    function  init_calendar() {
 
 				if( typeof ($.fn.fullCalendar) === 'undefined'){ return; }
-				console.log('init_calendar');
+
 				var date = new Date(),
 					d = date.getDate(),
 					m = date.getMonth(),
@@ -3368,7 +3374,7 @@ window.onload = function() {
 						   success: function(data){
 						   	for(var i in data){
 						   		idE = data[0]
-						   		console.log(idE)
+
 						   	}
 						   }
 						   });
@@ -3426,7 +3432,6 @@ window.onload = function() {
 
 						  	var decision = confirm("Deseja eliminar o evento " + calEvent.title  + "?"); 
 							if (decision) {
-									console.log(calEvent.id)
 								$.ajax({
 									method: "POST",
 									url: url + 'delEventos.php',
@@ -3471,10 +3476,10 @@ window.onload = function() {
 			
 			function init_DataTables() {
 				
-				console.log('run_datatables');
+
 				
 				if( typeof ($.fn.DataTable) === 'undefined'){ return; }
-				console.log('init_DataTables');
+
 				
 				var handleDataTableButtons = function() {
 				  if ($("#datatable-buttons").length) {
@@ -3645,7 +3650,7 @@ function demoFromHTML(de,ate) {
 					},
 					
 					error: function(data) {
-						console.log(data);
+						console.log("erro");
 				}
 			});  
 /*--------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -3775,6 +3780,9 @@ function demoFromHTML(de,ate) {
             		error: function(data) {
             			console.log(data);
             		}
+
+
+
 
 	               });
 /*--------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -4132,11 +4140,12 @@ function templatePDF(de,ate){
 	   
 	$(document).ready(function() {
  	  var checkedBoxes = getCheckedBoxes("1");
+ 	  escondeRodas();
 		init_chartsPilaretes(de, ate,'.*');
 		init_alertas();
 	  init_ano();
 	  init_Utilizadorano();
-	  init_graficoAnos($('#selecaoano option:selected').val(),checkedBoxes);
+	  //init_graficoAnos($('#selecaoano option:selected').val(),checkedBoxes);
 	  init_checkboxes();
 		init_sidebar();
 		init_InputMask();
@@ -4158,7 +4167,8 @@ function templatePDF(de,ate){
 		$('#selecaoano').change(function(){
 
 			 compAnos.destroy();
-	  		 init_graficoAnos($('#selecaoano option:selected').val(),checkedBoxes);
+	  		 //init_graficoAnos($('#selecaoano option:selected').val(),checkedBoxes);
+	  		 init_graficoAnos();
         });
         $('#selecaoanoUtilizador').change(function(){
 
