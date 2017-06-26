@@ -42,8 +42,8 @@ var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
     $NAV_MENU = $('.nav_menu'),
     $FOOTER = $('footer');
 
-	//var url = "http://localhost:8888/";	
-	var url = "http://smap.cm-braga.pt/scripts/"
+	var url = "http://localhost:8888/";	
+	//var url = "http://smap.cm-braga.pt/scripts/"
 	var de = moment().subtract(1, 'day').startOf('day');
 
 	var ate= moment().subtract(1, 'day').endOf('day');
@@ -3442,11 +3442,12 @@ window.onload = function() {
 
 							}
 						}else {
+							
 							  $('#fc_edit').click();
 								$('#title2').val(calEvent.title);
 								$('#descr2').val(calEvent.description)
-								$(".antosubmit2").on("click", function() {
-
+								/*$(".antosubmit2").on("click", function() {
+									
 								  calEvent.title = $("#title2").val();
 								  calEvent.description = $("#descr2").val();
 								   $.ajax({
@@ -3460,7 +3461,7 @@ window.onload = function() {
 								}
 				
 
-							);
+							);*/
 							
 						  
 						}
