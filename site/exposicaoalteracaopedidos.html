@@ -1,0 +1,49 @@
+<form action="../phpfiles/1_exposicaoalteracaopedidos.php" method="post" id="form">
+
+<label> Insira seu número de identificação fiscal:
+    <input type="text" name="identifiscal" required> </label>
+<label>
+<input name="escolha" value="escolha1" type="checkbox" />Vem requerer alteração de horário </label>
+
+<label><strong> Novo horário pretendido</strong>
+<input name="horario" type="text" /> </label>
+
+<label> Fundamentação
+<input name="fundamentacao" type="text" /> </label>
+
+<label>
+<input name="escolha" value="escolha2" type="checkbox" />Vem requerer alteração do contacto telefónico para acesso </label>
+
+<label> Contacto atual
+<input name="telemovel" type="tel" /> </label>
+
+<label> Novo contacto telefónico
+<input name="telemovel2" type="tel" /> </label>
+
+<label> Motivo
+<input name="motivo" type="text" /> </label>
+
+<label>
+<input name="escolha" value="escolha3" type="checkbox" />Vem requerer alteração do ponto de acesso (substituição ou adição aos existentes) </label>
+
+<label> Novo ponto de acesso
+<input name="novo_acesso" type="text" /> </label>
+
+<label> Para substituir o ponto de acesso
+<input name="acesso_antigo" type="text" /> </label>
+
+<label>
+<input name="escolha" value="escolha4" type="checkbox" />Vem comunicar alteração de matricula (substituição ou adição às existentes) </label>
+
+<label> Matrícula antiga
+<input name="matricula_antiga" type="text" /> </label>
+
+<label> Matrícula nova
+<input name="matricula_nova" type="text" /> </label>
+
+<label>
+<input name="escolha" value="escolha5" type="checkbox" />Vem comunicar a desativação do acesso à área Pedonal </label>
+
+<button type="submit" name="formSubmit" form="form" value="Finalizar">Finalizar</button>
+
+</form>
