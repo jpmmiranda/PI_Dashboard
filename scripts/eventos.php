@@ -14,6 +14,7 @@ if(!$connection->conn){
 
 	die("Connection failed: " . $connection->conn->error);
 }
+mysqli_set_charset($connection->conn, "utf8");
 
 
  // Query that retrieves events
@@ -38,6 +39,6 @@ $result->close();
 $connection->conn->close();
 
 //now print the data
-print json_encode($data);
+print json_encode($data,JSON_UNESCAPED_UNICODE);
  // sending the encoded result to success page
 ?>

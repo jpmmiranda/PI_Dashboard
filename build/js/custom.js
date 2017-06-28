@@ -2980,9 +2980,10 @@ function init_checkboxes(){
 						label = document.createElement('label');
 						horario = data[i].horarios;
 						checkbox.type = "checkbox";
-						checkbox.name = horario;
+						checkbox.name = "1";
 						checkbox.value = "value"+i;
 						checkbox.id = "id"+i;
+						checkbox.className=horario;
 						label.htmlFor = "idhtml"+i;
 						label.appendChild(document.createTextNode(horario));
 						horariosID.appendChild(checkbox);
@@ -3192,6 +3193,7 @@ window.onload = function() {
 
 		//Calcula string com os seleccionados da checkbox
 		function checkboxSelecionados(selecionados) {
+			console.log(selecionados);
 			var i,string="",contador=0;
 			var tamanho=selecionados.length;
 			for(i=0;i<tamanho;i++){
@@ -3220,9 +3222,9 @@ window.onload = function() {
 			  var ctx = document.getElementById("compAnos");
 			  $.ajax({
 	
-          type: 'POST',
-					url: url +"acessosAnos.php",
-          data: {ano: ano, listados: listados},
+          		type: 'POST',
+				url: url +"acessosAnos.php",
+         		data: {ano: ano, listados: listados},
 				success: function(data) {
 					var score = [];
 					var anoY = [];
@@ -3788,7 +3790,7 @@ function demoFromHTML(de,ate) {
 	               });
 /*--------------------------------------------------------------------------------------------------------------------------------------------*/
 
-$.ajax({
+				/*$.ajax({
             			url: url + "acessosPorPilarete.php",
             			method: "POST",
 
@@ -3903,7 +3905,7 @@ $.ajax({
             		error: function(data) {
             			console.log(data);
             		}
-	           });
+	           });*/
 /*----------------------------------------------------------------------------------------------------------------------------------------*/
 
 $.ajax({
@@ -4121,10 +4123,10 @@ function templatePDF(de,ate){
 					doc.addImage(imagemTotaisTelefone, 'png',100, 100, aspectwidth1, (height-h1));
 					doc.addPage();
 
-					doc.text('Total por Pilarete',10,60);
-					doc.addImage(imagemTotaisPilarete, 'png',100, 100, aspectwidth1, (height-h1));
+					//doc.text('Total por Pilarete',10,60);
+					//doc.addImage(imagemTotaisPilarete, 'png',100, 100, aspectwidth1, (height-h1));
 				
-        			doc.addPage();
+        			//doc.addPage();
 					doc.setFontSize(20);
           			doc.text('Acessos Negados',xOffset,25);
 

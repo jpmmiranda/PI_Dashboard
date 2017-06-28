@@ -1,4 +1,4 @@
-	<?php
+<?php
 //setting header to json
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -16,6 +16,7 @@ if(!$connection->conn){
 
 mysqli_set_charset($connection->conn, "utf8");
 
+
 $utilizador = $_POST["utilizador"];
 $de = $_POST["de"];
 $ate = $_POST["ate"];
@@ -31,16 +32,21 @@ from RegistoAcessos
 where Telefone = '$utilizador' and (DataHora between '$de' and '$ate');");
 
 //execute query
+
 $result = $connection->conn->query($query);
 
 //loop through the returned data
 $data = array();
+
 foreach ($result as $row) {
 	$data[] = $row;
 }
 
+
+
 //free memory associated with result
 $result->close();
+
 
 //close connection
 $connection->conn->close();
@@ -48,3 +54,4 @@ $connection->conn->close();
 //now print the data
 print json_encode($data,JSON_UNESCAPED_UNICODE);
 ?>
+
