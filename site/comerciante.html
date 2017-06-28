@@ -1,0 +1,24 @@
+<form action="../phpfiles/8_comerciante.php" method="post" id="form" enctype='multipart/form-data'>
+
+<input type="hidden" name="id" id="id" value="">
+
+<label> Submissão de Documentos
+</label>
+
+<label> Fotocópia simples do título do registo de propriedade do veículo ou outro documento, caso o veículo se encontre em outro regime e de titularidade (conforme n.o1, do artigo D-1/39.o do CRMB)</label>
+
+<input type="file" name="registoVeiculo" required>
+
+<label>Fotocópia simples do comprovativo de Estabelecimento (recibo da AGERE, ou EDP)</label>
+
+<input type="file" name="comprovativoResidencia" required>
+
+<label>Declaração de pelo menos um estabelecimento para os quais exige acesso à área pedonal, comprovando o fornecimento/abastecimento por parte do requerente, no caso de comerciante ou trabalhador independente</label>
+
+<input type="file" name="comerciante" required>
+
+<input type="submit" onchange="this.form.submit()" onclick="document.getElementById('id').value = localStorage.getItem('id');" name="formSubmit" value="Submeter Candidatura" form="form">
+
+<input type="submit" form="f" value="Retroceder" onclick="window.location.href='http://localhost:8888/formulario/tipo-de-utilizador/'">
+
+</form>

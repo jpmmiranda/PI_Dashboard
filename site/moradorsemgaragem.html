@@ -1,0 +1,30 @@
+<form action="../phpfiles/6_moradorsemgaragem.php" method="post" id="form" enctype='multipart/form-data'>
+
+<input type="hidden" name="id" id="id" value="">
+
+<label> Submissão de Documentos
+</label>
+
+<label> Fotocópia simples do título do registo de propriedade do veículo ou outro documento, caso o veículo se encontre em outro regime e de titularidade (conforme n.o1, do artigo D-1/39.o do CRMB), no caso de residente, de comerciante ou trabalhador
+</label>
+
+<input type="file" name="registoVeiculo" required>
+
+<label>Fotocópia simples do comprovativo da Residência (recibo da AGERE, ou EDP)</label>
+
+<input type="file" name="comprovativoResidencia" required>
+
+<label>Fotocópia da carta de condução</label>
+
+<input type="file" name="cartaConducao" required>
+
+<label>Fotocópia simples da procuração, se não indicou código de acesso à procuração on-line e se é procurador</label>
+
+<input type="file" name="procuracao" required>
+
+<input type="submit" onchange="this.form.submit()" 
+onclick="document.getElementById('id').value = localStorage.getItem('id');" name="formSubmit" value="Submeter Candidatura" form="form">
+
+<input type="submit" form="f" value="Retroceder" onclick="window.location.href='http://localhost:8888/formulario/tipo-de-utilizador/'">
+
+</form>

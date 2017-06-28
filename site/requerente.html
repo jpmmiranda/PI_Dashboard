@@ -1,0 +1,48 @@
+<form action="../phpfiles/2_requerente.php" method="post" id="form1">
+
+<label> Nome
+     <input type="text" name="nome" required> </label>
+
+<label> Morada
+     <input type="text" name="morada" required> </label>
+
+<label> Código Postal
+     <input type="text" name="cod_postal" required> </label>
+
+<label> Localidade
+     <input type="text" name="localidade" required> </label>
+
+<label> Nº Identificação Civil
+     <input type="text" name="id_Civil" required> </label>
+
+<label>  Nº Identificação Fiscal
+     <input type="text" name="id_Fiscal" id="id_Fiscal" required> </label>
+
+<label> CONTACTOS </label>
+
+<label> Telemóvel
+    <input type="tel" name="telemovel" required> </label> 
+
+<label> Telefone
+    <input type="tel" name="telefone"> </label> 
+
+<label> Telefax
+     <input type="text" name="telefax"> </label> 
+
+<label> Email
+    <input type="email" name="email" required> </label> 
+
+<label> Código da Certidão Comercial Permanente
+     <input type="text" name="CCCP"></label> 
+
+<label> Deseja ter um representante? </label>
+
+<input type="radio" name="representante" value="sim"> Sim <br>
+
+<input type="radio" name="representante" value="nao"> Não<br>
+
+<input type="submit" onclick="localStorage.removeItem('id');var input = document.getElementById('id_Fiscal');localStorage.setItem('id', input.value);" name="formSubmit" value="Enviar" form="form1">
+
+<input type="submit" name="formSubmit" value="Retroceder" form="form1" >
+
+</form>
